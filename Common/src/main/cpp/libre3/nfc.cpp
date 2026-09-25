@@ -50,10 +50,12 @@ struct firstnfc {
 	uint8_t crc16[2];
 	}  __attribute__ ((packed));
 
+#include "nfcresponse.hpp"
+
 struct nfc1 {
     uint8_t nfcbuf[50+sizeof(firstnfc)];
-	firstnfc *nfcptr;
-	bool error;
+	firstnfc *nfcptr = nullptr;
+	bool error = true;
 	const std::string_view getSerialNumber() const {
  		return std::string_view(nfcptr->serialnumber,9);
 		}
@@ -64,7 +66,7 @@ struct nfc1 {
             return;
             }
         jsize lens=env->GetArrayLength(jnfcout);
-		if(lens<(sizeof(firstnfc)+3)) {
+		if(lens<(sizeof(firstnfc)+3) || lens > sizeof(nfcbuf)) {
 			LOGGER("NFC: sizeof bytearray=%d sizeof(firstnfc)=%ld\n",lens,sizeof(firstnfc));
 			error=true;
 			return;
@@ -76,12 +78,12 @@ struct nfc1 {
 		LOGGERN(hex.str(),hex.size());
 		}
 #endif
-       auto *iter=nfcbuf+1;
-       while(*iter++==0xa5)
-           ;
-        nfcptr=reinterpret_cast<firstnfc*>(iter);
-		nfcptr->crc16[0]=0;
-		LOGGER("serialnumber=%s state=%d warmup=%d*5 wearduration=%d  sec_version=%hx localization=%hx puckgen=%hx firmwareversion=%x producttype=%hhx\n",nfcptr->serialnumber,nfcptr->state,nfcptr->warmup,nfcptr->wearduration,
+       if (env->ExceptionCheck()) return;
+       const size_t offset = libre3nfc::nfcPayloadOffset(nfcbuf, lens, sizeof(firstnfc));
+       if (offset == static_cast<size_t>(lens)) return;
+       nfcptr = reinterpret_cast<firstnfc*>(nfcbuf + offset);
+       error = false;
+		LOGGER("serialnumber=%.9s state=%d warmup=%d*5 wearduration=%d  sec_version=%hx localization=%hx puckgen=%hx firmwareversion=%x producttype=%hhx\n",nfcptr->serialnumber,nfcptr->state,nfcptr->warmup,nfcptr->wearduration,
 nfcptr->sec_version,
 nfcptr->localization,
 nfcptr->puckgen,
