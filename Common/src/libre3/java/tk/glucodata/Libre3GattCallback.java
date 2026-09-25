@@ -227,6 +227,12 @@ private boolean connected=false;
 
 //private    boolean waitingForMtu=false;
 //private int updated=0;
+    @Override
+    protected long connectionAttemptTimeoutMillis() {
+        // Recovery policy: retire a silent connection attempt after two minutes.
+        return 120_000L;
+    }
+
     @SuppressLint("MissingPermission")
     @Override 
     public void onConnectionStateChange(BluetoothGatt bluetoothGatt, int status, int newState) {
@@ -824,6 +830,7 @@ private void realdisconnected(BluetoothGatt bluetoothGatt,int status,long tim) {
     sendqueue.clear();
 //    if(autoconnect&&status!=19) 
     if(autoconnect) {
+        watchConnectionAttempt(bluetoothGatt);
         bluetoothGatt.connect();
         return;
         }

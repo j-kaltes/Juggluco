@@ -100,6 +100,30 @@ public static boolean doGadgetbridge=false;
     private long reconnectGeneration = 0L;
     private BluetoothGatt reconnectWaitingGatt = null;
     private static final long DISCONNECT_CALLBACK_TIMEOUT_MS = 2000L;
+    private final GattConnectDeadline<BluetoothGatt> connectDeadline = new GattConnectDeadline<>(
+            gattLock, (task, delay) -> {
+                final var future = Applic.scheduler.schedule(task, delay, TimeUnit.MILLISECONDS);
+                return () -> future.cancel(false);
+            }, this::connectionAttemptExpired);
+
+    protected long connectionAttemptTimeoutMillis() { return 0L; }
+
+    protected final void watchConnectionAttempt(BluetoothGatt attempt) {
+        synchronized (gattLock) {
+            if (mBluetoothGatt != attempt || stop) return;
+            final long timeout = connectionAttemptTimeoutMillis();
+            if (timeout > 0L) connectDeadline.arm(attempt, timeout);
+        }
+    }
+
+    private void connectionAttemptExpired(BluetoothGatt attempt) {
+        // The deadline holds gattLock, also used for GATT replacement.
+        if (mBluetoothGatt != attempt || stop || dataptr == 0L) return;
+        Log.i(LOG_ID, SerialNumber + " no connection result before deadline; retrying");
+        close();
+        connectDevice(0);
+    }
+
     boolean superseded=false;
     public final int sensorgen;
     int readrssi=9999;
@@ -114,6 +138,7 @@ protected    SuperGattCallback(String SerialNumber,long dataptr,int gen) {
     {if(doLog) {Log.i(LOG_ID, "new SuperGattCallback " + SerialNumber + " " + ((mActiveDeviceAddress != null) ? mActiveDeviceAddress : "null"));};};
     }
 public void disconnect() {
+    connectDeadline.cancel();
     final var thegatt= mBluetoothGatt;
     if(thegatt!=null) {
         {if(doLog) {Log.i(LOG_ID,"Disconnect");};};
@@ -185,6 +210,9 @@ protected final boolean acceptConnectionStateChange(BluetoothGatt gatt,int newSt
     synchronized(gattLock) {
         current=mBluetoothGatt;
         if(gatt==current) {
+            if(newState==android.bluetooth.BluetoothProfile.STATE_CONNECTED ||
+                    newState==android.bluetooth.BluetoothProfile.STATE_DISCONNECTED)
+                connectDeadline.completed(gatt);
             if(newState==android.bluetooth.BluetoothProfile.STATE_DISCONNECTED && reconnectWaitingGatt==gatt) {
                 reconnectWaitingGatt=null;
                 ++reconnectGeneration;
@@ -202,6 +230,7 @@ protected final boolean clearCurrentGatt(BluetoothGatt gatt) {
     synchronized(gattLock) {
         if(gatt!=mBluetoothGatt)
             return false;
+        connectDeadline.completed(gatt);
         if(reconnectWaitingGatt==gatt) {
             reconnectWaitingGatt=null;
             ++reconnectGeneration;
@@ -591,6 +620,7 @@ public void searchforDeviceAddress() {
         {if(doLog) {Log.i(LOG_ID,"close "+SerialNumber);};};
         final BluetoothGatt tmpgatt;
         synchronized(gattLock) {
+            connectDeadline.cancel();
             tmpgatt=mBluetoothGatt;
             mBluetoothGatt=null;
             reconnectWaitingGatt=null;
@@ -649,6 +679,7 @@ public void searchforDeviceAddress() {
                 }
             try {
                 synchronized(gattLock) {
+                    if (stop || dataptr == 0L) return;
                     if (cb.mBluetoothGatt != null) {
                         {if(doLog) {Log.d(LOG_ID, SerialNumber + " cb.mBluetoothGatt!=null");};};
                         return;
@@ -666,6 +697,7 @@ public void searchforDeviceAddress() {
                             }
                         }
                     cb.mBluetoothGatt=newGatt;
+                    watchConnectionAttempt(newGatt);
                     reconnectWaitingGatt=null;
                     setpriority(newGatt);
                     {if(doLog) {Log.i(LOG_ID,SerialNumber+" after connectGatt ="+newGatt);};};
@@ -686,6 +718,7 @@ public void searchforDeviceAddress() {
     }
 
  public boolean connectDevice(long delayMillis) {
+    if (stop || dataptr == 0L) return false;
     if(doLog) {Log.i(LOG_ID,"connectDevice("+delayMillis+") "+ SerialNumber);};
     Runnable connect=getConnectDevice();
     if(connect==null) 
