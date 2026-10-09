@@ -21,6 +21,11 @@
 #-renamesourcefileattribute SourceFile
 -repackageclasses
 -verbose
+# Named JNI entry points and exercise names obtained from the API constants.
+-keep class tk.glucodata.ActivityNative { native <methods>; }
+-keepclassmembers class androidx.health.connect.client.records.ExerciseSessionRecord {
+    public static final int EXERCISE_TYPE_*;
+}
 -keep,allowshrinking,allowoptimization class com.garmin.android.connectiq.IQDevice
 -keep,allowshrinking,allowoptimization class com.garmin.android.connectiq.IQApp
 -keep,allowshrinking,allowoptimization class android.widget.Spinner

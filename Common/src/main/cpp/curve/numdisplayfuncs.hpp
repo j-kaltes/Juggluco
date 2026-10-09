@@ -72,6 +72,7 @@ pair<int,int> NumDisplay::extremenums(JCurve &j,const pair<const int,const int> 
 	  return pair<int,int>(gmin,gmax);
 	  }
 void	NumDisplay::mealdisplay(JCurve &jcurve,float x,float y,const Num *num) const {
+    if(Num::issportref(num->mealptr)) return;
     
 
 	mealdata   *mdata=meals->datameal();

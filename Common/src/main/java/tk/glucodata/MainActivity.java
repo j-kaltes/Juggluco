@@ -908,6 +908,7 @@ static boolean tocalendarapp=false;
     protected void onResume() {
     if(doLog) {Log.i(LOG_ID,"onResume");};;
     super.onResume();
+    if(!isWearable && Build.VERSION.SDK_INT>=28) ActivityHealth.onResume(this);
     if(curve!=null) {
         if(!curve.waitnfc) {
             {if(doLog) {Log.d(LOG_ID,"onResume setnfc");};};
@@ -1167,6 +1168,7 @@ void activateresult(boolean res) {
                 }
             }
         super.onPause();
+    if(!isWearable && Build.VERSION.SDK_INT>=28) ActivityHealth.onPause();
         if(!Applic.Nativesloaded)
             return;
         Natives.wakeuploader();

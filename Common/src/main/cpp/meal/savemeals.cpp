@@ -202,6 +202,7 @@ bool writetabnumitem(FILE* handle,std::string_view item) {
 	}
 //savemeal(int handle,uint32_t date,const int index)  
 bool MealSave::savemeal(FILE* handle,const Num *num)  {
+    if(Num::issportref(num->mealptr)) return true;
 	const int index=num->mealptr;
 	extern Meal *meals;
 

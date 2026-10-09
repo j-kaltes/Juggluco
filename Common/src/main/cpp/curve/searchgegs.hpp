@@ -19,7 +19,7 @@ struct  Searchgegs {
             if(val>=under&&val<=above&&righttime(num->time)) {
                 extern int carbotype;
                 if(type==carbotype&&ingredients.size()>0) {
-                    return (num->mealptr>0)&& meals->datameal()->matchmeals(ingredients,amount,num->mealptr);
+                    return (num->mealptr>0)&&!Num::issportref(num->mealptr)&& meals->datameal()->matchmeals(ingredients,amount,num->mealptr);
                     }
                 return  true;
                 }

@@ -272,14 +272,14 @@ std::string amounts(const Period &p, uint32_t now, bool meals_only = false) {
         for (auto &c : cursors) {
             while (c.at < c.end && (!c.store->valid(c.at) ||
                 (meals_only && (c.at->type != settings->data()->mealvar ||
-                    c.at->type == settings->data()->bloodvar || !c.at->mealptr)))) ++c.at;
+                    c.at->type == settings->data()->bloodvar || !c.at->mealptr || Num::issportref(c.at->mealptr))))) ++c.at;
             if (c.at < c.end && (!oldest || c.at->time < oldest->at->time)) oldest = &c;
         }
         if (!oldest) break;
         const Num copy = *oldest->at;
         const int index = oldest->store->getfirstpos() + int(oldest->at - oldest->store->begin());
         const uint32_t meal_id = copy.type == settings->data()->mealvar &&
-            copy.type != settings->data()->bloodvar ? copy.mealptr : 0;
+            copy.type != settings->data()->bloodvar && !Num::issportref(copy.mealptr) ? copy.mealptr : 0;
         items.push_back({copy.time, copy.type, copy.value, oldest->source, index, meal_id});
         ++oldest->at;
     }

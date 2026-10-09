@@ -26,6 +26,7 @@ struct Num {
   uint32_t time;
   union {
       uint32_t mealptr;
+      uint32_t sportindex; // Opaque tagged reference; round-trips through Kerfstok.
       uint32_t librenr;
       struct {
         uint32_t calibration:31;
@@ -34,6 +35,8 @@ struct Num {
       };
   float32_t value;
   uint32_t type;
+ static constexpr uint32_t sportbit=0x80000000u;
+ static constexpr bool issportref(uint32_t ref) { return (ref&sportbit)!=0; }
  const uint32_t gettime() const {
      return time;
     };

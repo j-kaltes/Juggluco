@@ -619,7 +619,7 @@ Num * numsaveonly( const uint32_t time, const float32_t value, const uint32_t ty
         *num={.time=time,.exclude=(bool)mealptrin,.value=value,.type=type};
         }
     else {
-        uint32_t mealptr=meals->datameal()->endmeal(mealptrin);
+        uint32_t mealptr=Num::issportref(mealptrin)?mealptrin:meals->datameal()->endmeal(mealptrin);
         *num={.time=time,.mealptr=mealptr,.value=value,.type=type};
         }
     inclastpos();
@@ -651,7 +651,7 @@ void numsavepos(int pos, uint32_t time, float32_t value, uint32_t type,uint32_t 
     else {
         std::lock_guard<std::mutex> lck(nummutex);
         LOGGERTAG("numsavepos %d %d %f %s\n",pos,mealptr,value,settings->getlabel(type).data());
-        if(mealptr&&type!=settings->data()->bloodvar&&!meals->datameal()->goodmeal(mealptr)) {
+        if(mealptr&&type!=settings->data()->bloodvar&&!Num::issportref(mealptr)&&!meals->datameal()->goodmeal(mealptr)) {
             mealptr=0;
             }
         Num &num=at(pos);
@@ -764,7 +764,7 @@ void setlastchange(const Num *el) {
 
 void setmealptr(Num *hit,uint32_t mealptr) {
     LOGGERTAG("setmealptr(%d,%d)\n",index(hit),mealptr);
-    hit->mealptr= meals->datameal()->endmeal(mealptr);
+    hit->mealptr=Num::issportref(mealptr)?mealptr:meals->datameal()->endmeal(mealptr);
     }
 
 private:
@@ -989,7 +989,7 @@ void numchange(const Num *hit, uint32_t time, float32_t value, uint32_t type,uin
         *num={.time=time,.exclude=(bool)mealptr,.value=value,.type=type};
         }
     else {
-        mealptr=meals->datameal()->endmeal(mealptr);
+        mealptr=Num::issportref(mealptr)?mealptr:meals->datameal()->endmeal(mealptr);
         *num={.time=time,.mealptr=mealptr,.value=value,.type=type};
         }
 

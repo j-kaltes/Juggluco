@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="activity_import">Activities</string>
+    <string name="activity_details">Activity</string>
+    <string name="activity_retrieve">Retrieve</string>
+    <string name="activity_permissions">Permissions</string>
+    <string name="activity_access">Retrieval while the app is closed requires background access. Older records require history access.</string>
+    <string name="activity_measure_future">Measure changes apply to new amounts. Individual edits are preserved.</string>
+    <string name="activity_from">Retrieve from</string>
+    <string name="activity_interval">Automatic retrieval</string>
+    <string name="activity_last">Last retrieval:</string>
+    <string name="activity_never">Never</string>
+    <string name="activity_retrieving">Retrieving activities…</string>
+    <string name="activity_retrieved">Activities retrieved</string>
+    <string name="activity_labels">Labels</string>
+    <string name="activity_saved">Saved activities</string>
+    <string name="activity_default">General activity label</string>
+    <string name="activity_update_existing">Also relabel existing imported amounts</string>
+    <string name="activity_new_label">New label</string>
+    <string name="activity_choose_label">Choose or create an activity label</string>
+    <string name="activity_none">No saved activities</string>
+    <string name="activity_unavailable">Activity details are unavailable on this device</string>
+    <string name="activity_source">Source</string>
+    <string name="activity_heart_source">Heart rate source</string>
+    <string name="activity_source_deleted">This source was deleted in Health Connect</string>
+    <string name="activity_not_returned">Not in the current Health Connect retrieval</string>
+    <string name="activity_excess">Mean HR − resting HR</string>
+    <string name="activity_link">Link to amount</string>
+    <string name="activity_no_match">No unlinked activity amounts in this time interval</string>
+    <string-array name="activity_intervals">
+        <item>Off</item><item>15 minutes</item><item>30 minutes</item><item>1 hour</item>
+        <item>3 hours</item><item>6 hours</item><item>24 hours</item>
+    </string-array>
+    <string-array name="activity_measures">
+        <item>Elapsed duration (min)</item><item>Distance (km)</item><item>Mean HR − resting HR (bpm)</item>
+        <item>Mean heart rate (bpm)</item><item>Heart rate SD (bpm)</item><item>Active energy (kcal)</item>
+        <item>Mean speed (km/h)</item><item>Steps</item><item>Elevation gained (m)</item>
+        <item>Mean power (W)</item><item>Mean cycling cadence (rpm)</item>
+    </string-array>
+    <string-array name="activity_fields">
+        <item>Elapsed duration (s)</item><item>Distance (m)</item><item>Resting HR (bpm)</item>
+        <item>Mean HR (bpm)</item><item>HR SD (bpm)</item><item>HR coverage (s)</item>
+        <item>Active energy (kcal)</item><item>Mean speed (m/s)</item><item>Steps</item>
+        <item>Elevation gained (m)</item><item>Mean power (W)</item><item>Cycling cadence (rpm)</item>
+    </string-array>
+</resources>

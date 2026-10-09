@@ -200,6 +200,7 @@ void closenumview() {
     if (newnumview != null) {
         removeContentView(newnumview);
         newnumview=null;
+        if(!isWearable && android.os.Build.VERSION.SDK_INT>=28) ActivityHealth.numberEditorClosed();
         }
     editfocus.clearedittext(valueedit);
     spinner=null;
@@ -501,7 +502,15 @@ public   View addnumberview(MainActivity context,final int bron,final long time,
     }
 
     };
-    mealbutton.setOnClickListener(menucall);
+    mealbutton.setOnClickListener(v -> {
+        if(currentnum!=0L && currentnum!=numio.newhit && Natives.hittype(currentnum)!=Natives.getbloodvar() && (Natives.hitmeal(currentnum)&0x80000000)!=0) {
+            try {
+                int activity=ActivityNative.reference(currentnum);
+                if(activity!=0) ActivitySettings.details(context,newnumview,activity);
+                else Toast.makeText(context,R.string.activity_unavailable,Toast.LENGTH_LONG).show();
+            } catch(Exception e) {Toast.makeText(context,e.getMessage(),Toast.LENGTH_LONG).show();}
+        } else menucall.onClick(v);
+    });
     lasttime=time;
     Date dat = new Date(time);
    if(isWearable)
@@ -713,6 +722,11 @@ public void  addnumberview(MainActivity activity, int bron, int pos) {
 long thedate=0;
 int thetime=-1;
 private boolean saveamount(Activity activity,TextView timeview,TextView value,int mealptr,long lasttime) {
+    if(currentnum!=0L && currentnum!=numio.newhit && Natives.hittype(currentnum)!=Natives.getbloodvar() &&
+        (Natives.hitmeal(currentnum)&0x80000000)!=0 && !ActivityNative.labelAllowed(labelsel)) {
+        Toast.makeText(activity,R.string.activity_choose_label,Toast.LENGTH_LONG).show();
+        return false;
+    }
     final String strval= value.getText().toString();
     float val=0.0f;
     try {
@@ -1046,6 +1060,14 @@ pick.setCurrentMinute(minin);
 LabelAdapter<String> numspinadapt;
 
 void setmealbutton(int labelsel,int bron,int mealptr,boolean exclude) {
+        if(labelsel!=Natives.getbloodvar() && (mealptr&0x80000000)!=0) {
+            mealbutton.setText(R.string.activity_details);
+            mealbutton.setVisibility(VISIBLE);
+            source.setVisibility(GONE);
+            excludebox.setVisibility(GONE);
+            return;
+        }
+        mealbutton.setText(R.string.mealname);
 //       if(doLog) {Log.i(LOG_ID,"bron="+bron+" mealptr="+mealptr);};
         if(!isWearable&&labelsel==Natives.getmealvar() &&(bron==1|| mealptr>0)) {
             mealbutton.setVisibility(VISIBLE);

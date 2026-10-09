@@ -10,6 +10,17 @@
 
 <!-- s/^[	 ]*\(.*\)[	 ]*$/<uses-permission android:name="\1"\/>/g -->
 <uses-permission android:name="android.permission.health.WRITE_BLOOD_GLUCOSE"/>
+<uses-permission android:name="android.permission.health.READ_EXERCISE"/>
+<uses-permission android:name="android.permission.health.READ_HEART_RATE"/>
+<uses-permission android:name="android.permission.health.READ_RESTING_HEART_RATE"/>
+<uses-permission android:name="android.permission.health.READ_DISTANCE"/>
+<uses-permission android:name="android.permission.health.READ_ACTIVE_CALORIES_BURNED"/>
+<uses-permission android:name="android.permission.health.READ_SPEED"/>
+<uses-permission android:name="android.permission.health.READ_STEPS"/>
+<uses-permission android:name="android.permission.health.READ_ELEVATION_GAINED"/>
+<uses-permission android:name="android.permission.health.READ_POWER"/>
+<uses-permission android:name="android.permission.health.READ_HEALTH_DATA_IN_BACKGROUND"/>
+<uses-permission android:name="android.permission.health.READ_HEALTH_DATA_HISTORY"/>
 <uses-feature android:name="android.hardware.type.automotive" android:required="false" />
 
 <queries>
@@ -49,6 +60,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme.Base">
+        <service android:name=".ActivityImportJob" android:exported="true" android:permission="android.permission.BIND_JOB_SERVICE" />
         <provider
             android:name="tk.glucodata.JugglucoChat$ExportProvider"
             android:authorities="${applicationId}.chat.exports"
