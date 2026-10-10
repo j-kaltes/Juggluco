@@ -30,13 +30,23 @@ Amount is created when the chosen measure is available.
 
 Long-press an Amount and press **Activity** in the existing editor to inspect
 the original activity information. Its normal label/value/time controls make
-individual edits. The mapping dialog can relabel previously generated Amounts;
-it preserves individual overrides and manually entered Amounts. Changing a
-mapping's measure affects future Amounts. Source corrections update generated
-values still using their original measure and update unedited generated times.
+individual edits. **Update label and measure of existing imported amounts** is
+checked by default: saving a mapping updates both fields of previously generated
+Amounts and refreshes the open Amount editor. It preserves individual overrides,
+unsaved editor changes and manually entered Amounts. Uncheck it to apply the
+mapping only to future Amounts. If a new measure is unavailable, the existing
+Amount keeps its old label and value. Source corrections use each Amount's saved
+measure and update unedited generated times.
 Deleting an Amount does not cause
 the next retrieval to recreate it. Deleting a source in Health Connect keeps
 the saved record, marks the source deleted, and keeps the user's Amount.
+
+Generated Amounts are rounded to one decimal place (whole numbers for steps);
+the original activity measurements retain their precision. Details use the
+system region for km/km/h or mi/mi/h, independently of Juggluco's language.
+Elapsed duration and HR coverage use `hours:min:secs`, with a days component when
+needed. Amount mappings explicitly offer both distance and speed units; changing
+the system region does not change existing Amount values or their saved units.
 
 ## Native data
 
@@ -97,12 +107,26 @@ Run the included Linux test from the repository root with a C++26 compiler:
 clang++ -std=c++26 -pthread -O1 -g -fsanitize=undefined \
   Common/src/main/cpp/activity/tests/store_test.cpp -o /tmp/activity-store-test
 /tmp/activity-store-test
+clang++ -std=c++26 -pthread -O1 -g -fsanitize=undefined \
+  Common/src/main/cpp/activity/tests/amount_test.cpp -o /tmp/activity-amount-test
+/tmp/activity-amount-test
 ```
 
 The test covers reopen without serialization, mapping growth, exact-ID replay,
 source grouping and ambiguity, source separation, weighted statistics and gaps,
 zero-valued speed, resting HR, pending-cursor recovery, unavailable slices and
-the unchanged Num representation.
+the unchanged Num representation. The Amount regression test covers the reported
+7,134-second / 29,562.3-metre bike ride, mapping changes, source selection,
+rounding, missing measures, individual overrides, subsequent retrieval and
+metric/imperial conversions. `Common/src/test/java/tk/glucodata/ActivityDisplayTest.java`
+contains plain JVM checks for the actual dialog formatting functions.
+
+```sh
+javac -d /tmp/activity-format-check \
+  Common/src/main/java/tk/glucodata/ActivityFormat.java \
+  Common/src/test/java/tk/glucodata/ActivityDisplayTest.java
+java -cp /tmp/activity-format-check tk.glucodata.ActivityDisplayTest
+```
 
 During development this passed with Clang 22 in C++26 mode. The native JNI
 translation unit compiled in GNU C++26 mode, including `JUGGLUCO_APP` and the

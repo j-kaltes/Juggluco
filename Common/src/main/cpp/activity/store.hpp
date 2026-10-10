@@ -30,7 +30,8 @@ constexpr uint32_t indexOf(uint32_t value) { return value&~referenceBit; }
 constexpr size_t recordStart=8192;
 constexpr float missing=std::numeric_limits<float>::quiet_NaN();
 enum Metric : int32_t { Duration, Distance, ExcessHR, MeanHR, HRSD, Calories,
-                       Speed, Steps, Elevation, Power, Cadence, MetricCount };
+                       Speed, Steps, Elevation, Power, Cadence,
+                       DistanceMiles, SpeedMiles, MetricCount };
 enum Field : size_t { Seconds, Metres, RestHR, AverageHR, DeviationHR, HRCoverage,
                      Kcal, MetresPerSecond, StepCount, ElevationMetres, Watts, RPM, FieldCount };
 enum : uint32_t { Deleted=1, Linked=2, Generated=4, LabelOverride=8, ValueOverride=16,
@@ -265,6 +266,8 @@ public:
         case HRSD:return v[DeviationHR]; case Calories:return v[Kcal];
         case Speed:return v[MetresPerSecond]*3.6f; case Steps:return v[StepCount];
         case Elevation:return v[ElevationMetres]; case Power:return v[Watts]; case Cadence:return v[RPM];
+        case DistanceMiles:return v[Metres]/1609.344f;
+        case SpeedMiles:return v[MetresPerSecond]*(3600.0f/1609.344f);
         default:return missing;
         }
     }

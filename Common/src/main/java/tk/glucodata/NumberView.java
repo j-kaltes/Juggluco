@@ -506,9 +506,9 @@ public   View addnumberview(MainActivity context,final int bron,final long time,
         if(currentnum!=0L && currentnum!=numio.newhit && Natives.hittype(currentnum)!=Natives.getbloodvar() && (Natives.hitmeal(currentnum)&0x80000000)!=0) {
             try {
                 int activity=ActivityNative.reference(currentnum);
-                if(activity!=0) ActivitySettings.details(context,newnumview,activity);
-                else Toast.makeText(context,R.string.activity_unavailable,Toast.LENGTH_LONG).show();
-            } catch(Exception e) {Toast.makeText(context,e.getMessage(),Toast.LENGTH_LONG).show();}
+                if(activity!=0) ActivitySettings.details(context,newnumview,activity,activityAmountChanged(context));
+                else Applic.argToaster(context,R.string.activity_unavailable,Toast.LENGTH_LONG);
+            } catch(Exception e) {Applic.argToaster(context,e.getMessage(),Toast.LENGTH_LONG);}
         } else menucall.onClick(v);
     });
     lasttime=time;
@@ -724,7 +724,7 @@ int thetime=-1;
 private boolean saveamount(Activity activity,TextView timeview,TextView value,int mealptr,long lasttime) {
     if(currentnum!=0L && currentnum!=numio.newhit && Natives.hittype(currentnum)!=Natives.getbloodvar() &&
         (Natives.hitmeal(currentnum)&0x80000000)!=0 && !ActivityNative.labelAllowed(labelsel)) {
-        Toast.makeText(activity,R.string.activity_choose_label,Toast.LENGTH_LONG).show();
+        Applic.argToaster(activity,R.string.activity_choose_label,Toast.LENGTH_LONG);
         return false;
     }
     final String strval= value.getText().toString();
@@ -1058,6 +1058,33 @@ pick.setCurrentHour(hourin);
 pick.setCurrentMinute(minin);
 }
 LabelAdapter<String> numspinadapt;
+
+private Runnable activityAmountChanged(MainActivity context) {
+    final long hit=currentnum;
+    return new Runnable() {
+        int previousType=Natives.hittype(hit);
+        float previousValue=Natives.hitvalue(hit);
+        public void run() {
+            if(currentnum!=hit||newnumview==null)return;
+            int type=Natives.hittype(hit);
+            float value=Natives.hitvalue(hit);
+            int selected=spinner.getSelectedItemPosition();
+            if(selected==previousType)selected=type;
+            // A newly created label must also appear in the underlying editor.
+            numspinadapt=new LabelAdapter<String>(context,Natives.getLabels(),1);
+            spinner.setAdapter(numspinadapt);
+            spinner.setSelection(selected);
+            labelsel=selected;
+            try {
+                // Preserve edits typed before opening the activity dialog.
+                if(Float.parseFloat(valueedit.getText().toString())==previousValue)
+                    valueedit.setText(Float.toString(value));
+            } catch(NumberFormatException ignored) {}
+            previousType=type;previousValue=value;
+            setmealbutton(selected,hit);
+        }
+    };
+}
 
 void setmealbutton(int labelsel,int bron,int mealptr,boolean exclude) {
         if(labelsel!=Natives.getbloodvar() && (mealptr&0x80000000)!=0) {

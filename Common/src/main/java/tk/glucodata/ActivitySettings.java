@@ -3,6 +3,9 @@ package tk.glucodata;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.icu.util.LocaleData;
+import android.icu.util.ULocale;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
@@ -17,9 +20,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import static tk.glucodata.ActivityFormat.fieldValue;
 import static tk.glucodata.util.getbutton;
 import static tk.glucodata.util.getlabel;
 
@@ -31,12 +36,18 @@ public final class ActivitySettings {
         return DateFormat.getDateTimeInstance(DateFormat.SHORT,DateFormat.SHORT).format(new Date(seconds*1000));
     }
     private static void safely(MainActivity act,Runnable run) {
-        try {run.run();} catch(Exception e){Toast.makeText(act,e.getMessage(),Toast.LENGTH_LONG).show();}
+        try {run.run();} catch(Exception e){Applic.argToaster(act,e.getMessage(),Toast.LENGTH_LONG);}
     }
     private static Spinner spinner(MainActivity act,String[] values) {
         Spinner view=tk.glucodata.settings.Settings.getGenSpin(act);
-        view.setAdapter(new ArrayAdapter<>(act,android.R.layout.simple_spinner_dropdown_item,values));
+        view.setAdapter(new LabelAdapter<String>(act,Arrays.asList(values),0));
         return view;
+    }
+    private static boolean usesMiles() {
+        if(Build.VERSION.SDK_INT<28)return false;
+        // Use the system region, even when Juggluco's language is changed.
+        LocaleData.MeasurementSystem system=LocaleData.getMeasurementSystem(new ULocale("und",util.getCountry()));
+        return system==LocaleData.MeasurementSystem.US||system==LocaleData.MeasurementSystem.UK;
     }
     private static void present(MainActivity act,View parent,Layout layout) {
         if(parent!=null)RingTones.EnableControls(parent,false);
@@ -133,16 +144,16 @@ public final class ActivitySettings {
         Spinner label=spinner(act,names.toArray(new String[0]));
         int selected=ids.indexOf(rule[0]);if(selected>=0)label.setSelection(selected);
         Spinner measure=spinner(act,act.getResources().getStringArray(R.array.activity_measures));measure.setSelection(rule[1]);
-        CheckDirectionBox existing=util.getcheckbox(act,R.string.activity_update_existing,false);
+        CheckDirectionBox existing=util.getcheckbox(act,R.string.activity_update_existing,true);
         Button add=getbutton(act,R.string.activity_new_label),save=getbutton(act,R.string.save),close=getbutton(act,R.string.closename);
         Layout form=new Layout(act,new View[]{getlabel(act,type<0?act.getString(R.string.activity_default):ActivityHealth.typeName(type))},
-            new View[]{label,add},type<0?null:new View[]{measure},type<0?null:new View[]{existing},type<0?null:new View[]{getlabel(act,R.string.activity_measure_future)});
+            new View[]{label,add},type<0?null:new View[]{measure},type<0?null:new View[]{existing},type<0?null:new View[]{getlabel(act,R.string.activity_measure_existing)});
         ScrollView scroll=new ScrollView(act);scroll.addView(form,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT));
         Layout layout=contentLayout(act,scroll,new View[]{save,close});
         add.setOnClickListener(v->{EditText text=new EditText(act);
             new AlertDialog.Builder(act).setTitle(R.string.activity_new_label).setView(text)
                 .setPositiveButton(R.string.save,(dialog,which)->safely(act,()->{int id=ActivityNative.newLabel(text.getText().toString().trim());
-                    names.add(Natives.getLabels().get(id));ids.add(id);label.setAdapter(new ArrayAdapter<>(act,android.R.layout.simple_spinner_dropdown_item,names));label.setSelection(ids.size()-1);
+                    names.add(Natives.getLabels().get(id));ids.add(id);label.setAdapter(new LabelAdapter<String>(act,names,0));label.setSelection(ids.size()-1);
                 })).setNegativeButton(R.string.cancel,null).show();
         });
         save.setOnClickListener(v->safely(act,()->{
@@ -159,16 +170,26 @@ public final class ActivitySettings {
         int[] ids=ActivityNative.indices(false);ArrayList<String> rows=new ArrayList<>();
         for(int id:ids){double[] r=ActivityNative.record(id);String[] t=ActivityNative.texts(id);
             rows.add(date((long)r[3])+" · "+ActivityHealth.typeName((int)r[2])+(t[2].isEmpty()?"":" · "+t[2]));}
-        if(ids.length==0){Toast.makeText(act,R.string.activity_none,Toast.LENGTH_LONG).show();return;}
+        if(ids.length==0){Applic.argToaster(act,R.string.activity_none,Toast.LENGTH_LONG);return;}
         ListView list=new ListView(act);list.setAdapter(new ArrayAdapter<>(act,android.R.layout.simple_list_item_1,rows));
         Button close=getbutton(act,R.string.closename);Layout layout=listLayout(act,list,close);
         list.setOnItemClickListener((a,v,pos,id)->safely(act,()->details(act,layout,ids[pos])));
         close.setOnClickListener(v->MainActivity.doonback());present(act,parent,layout);
     }
     public static void details(MainActivity act,View parent,int group) {
+        details(act,parent,group,null);
+    }
+    static void details(MainActivity act,View parent,int group,Runnable amountsChanged) {
         safely(act,()->{
             double[] root=ActivityNative.record(group);if(root==null)throw new IllegalStateException(act.getString(R.string.activity_unavailable));
             StringBuilder out=new StringBuilder();
+            Locale locale=Locale.getDefault();
+            boolean miles=usesMiles();
+            String[] fields=act.getResources().getStringArray(R.array.activity_fields);
+            if(miles) {
+                fields[1]=act.getString(R.string.activity_distance_miles);
+                fields[7]=act.getString(R.string.activity_speed_miles);
+            }
             for(int source:ActivityNative.sources(group)) {
                 double[] r=ActivityNative.record(source);String[] text=ActivityNative.texts(source);
                 out.append(ActivityHealth.typeName((int)r[2])).append("\n").append(date((long)r[3])).append(" – ").append(date((long)r[4])).append('\n');
@@ -177,16 +198,15 @@ public final class ActivitySettings {
                 if(!text[4].isEmpty())out.append(text[4]).append('\n');
                 if((((int)r[1])&1)!=0)out.append(act.getString(R.string.activity_source_deleted)).append('\n');
                 else if((((int)r[1])&256)!=0)out.append(act.getString(R.string.activity_not_returned)).append('\n');
-                String[] fields=act.getResources().getStringArray(R.array.activity_fields);
-                for(int i=0;i<12;++i)if(Double.isFinite(r[6+i]))out.append(fields[i]).append(": ").append(String.format(Locale.getDefault(),"%.1f",r[6+i])).append('\n');
-                if(Double.isFinite(r[9])&&Double.isFinite(r[8]))out.append(act.getString(R.string.activity_excess)).append(": ").append(String.format(Locale.getDefault(),"%.1f bpm",r[9]-r[8])).append('\n');
+                for(int i=0;i<12;++i)if(Double.isFinite(r[6+i]))out.append(fields[i]).append(": ").append(fieldValue(i,r[6+i],miles,locale)).append('\n');
+                if(Double.isFinite(r[9])&&Double.isFinite(r[8]))out.append(act.getString(R.string.activity_excess)).append(": ").append(String.format(locale,"%.1f bpm",r[9]-r[8])).append('\n');
                 double[] heart=ActivityNative.heartSources(source);
                 for(int i=0;i<heart.length;i+=4) {
                     out.append('\n').append(act.getString(R.string.activity_heart_source)).append(": ").append(ActivityNative.sourceName((int)heart[i])).append('\n');
                     if(heart.length>4) {
-                        out.append(fields[3]).append(": ").append(String.format(Locale.getDefault(),"%.1f",heart[i+1])).append('\n');
-                        out.append(fields[4]).append(": ").append(String.format(Locale.getDefault(),"%.1f",heart[i+2])).append('\n');
-                        out.append(fields[5]).append(": ").append(String.format(Locale.getDefault(),"%.1f",heart[i+3])).append('\n');
+                        out.append(fields[3]).append(": ").append(fieldValue(3,heart[i+1],miles,locale)).append('\n');
+                        out.append(fields[4]).append(": ").append(fieldValue(4,heart[i+2],miles,locale)).append('\n');
+                        out.append(fields[5]).append(": ").append(fieldValue(5,heart[i+3],miles,locale)).append('\n');
                     }
                 }
                 if(!text[3].isEmpty())out.append(text[3]).append('\n');
@@ -196,7 +216,7 @@ public final class ActivitySettings {
             ScrollView scroll=new ScrollView(act);scroll.addView(body);
             Button mapping=getbutton(act,R.string.activity_labels),link=getbutton(act,R.string.activity_link),close=getbutton(act,R.string.closename);
             Layout layout=contentLayout(act,scroll,new View[]{mapping,link,close});
-            mapping.setOnClickListener(v->mapping(act,layout,(int)root[2],null));
+            mapping.setOnClickListener(v->mapping(act,layout,(int)root[2],amountsChanged));
             link.setVisibility((((int)root[1])&2)!=0?View.GONE:View.VISIBLE);
             link.setOnClickListener(v->safely(act,()->chooseAmount(act,group)));
             close.setOnClickListener(v->MainActivity.doonback());present(act,parent,layout);
@@ -206,7 +226,7 @@ public final class ActivitySettings {
         String[] candidates=ActivityNative.candidates(group);String[] display=new String[candidates.length];
         ArrayList<String> labels=Natives.getLabels();
         for(int i=0;i<candidates.length;++i){String[] parts=candidates[i].split(":");display[i]=date(Long.parseLong(parts[2]))+"  "+labels.get(Integer.parseInt(parts[3]))+"  "+parts[4];}
-        if(display.length==0){Toast.makeText(act,R.string.activity_no_match,Toast.LENGTH_LONG).show();return;}
+        if(display.length==0){Applic.argToaster(act,R.string.activity_no_match,Toast.LENGTH_LONG);return;}
         new AlertDialog.Builder(act).setTitle(R.string.activity_link).setItems(display,(dialog,pos)->safely(act,()->{
             String[] p=candidates[pos].split(":");ActivityNative.link(group,Integer.parseInt(p[0]),Integer.parseInt(p[1]),Long.parseLong(p[2]),Integer.parseInt(p[3]),Float.parseFloat(p[4]));MainActivity.doonback();
         })).setNegativeButton(R.string.cancel,null).show();

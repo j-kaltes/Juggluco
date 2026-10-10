@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-#include "store.hpp"
+#include "amount.hpp"
 #include "nums/numdata.hpp"
 #include "curve/numdisplay.hpp"
 #include "curve/numhit.hpp"
@@ -49,47 +49,29 @@ Found findNumber(uint32_t group) {
     }
     return {};
 }
-void noteOverrides(ja::Record &r,const Num &n) {
-    if(!(r.flags&ja::Generated)) return;
-    if(n.type!=uint32_t(r.generatedLabel)) r.flags|=ja::LabelOverride;
-    if(n.value!=r.generatedValue) r.flags|=ja::ValueOverride;
-    if(n.time!=r.generatedTime) r.flags|=ja::TimeOverride;
-}
-void associate(ja::Store &s,uint32_t group,bool relabel=false) {
+void associate(ja::Store &s,uint32_t group,bool applyMapping=false) {
     auto *root=s.get(group); if(!root||!s.valid(*root)) return;
     auto rule=s.rule(root->type);
     if(!allowedLabel(rule.label)) rule.label=defaultLabel(s);
     auto found=findNumber(group);
-    if(relabel&&!found.data) return;
-    const int metric=found.data&&(root->flags&ja::Generated)?root->generatedMetric:rule.metric;
-    const ja::Record *measurement=nullptr;
-    for(uint32_t i=1;i<=s.header().count;++i) {
-        auto *r=s.get(i);
-        if(r->group==group&&!(r->flags&(ja::Deleted|ja::NeedsDetails|ja::NotReturned))&&s.valid(*r)) {
-            if(!measurement||(!std::isfinite(ja::Store::amount(*measurement,metric))&&
-                              std::isfinite(ja::Store::amount(*r,metric)))) measurement=r;
-        }
-    }
+    if(applyMapping&&!found.data) return;
+    const int metric=ja::amountMetric(*root,rule,applyMapping);
+    const auto *measurement=ja::measurementFor(s,group,metric);
     if(!measurement) return; // Source deletion never deletes a user's Amount.
-    const float value=ja::Store::amount(*measurement,rule.metric);
+    const float value=ja::amountValue(*measurement,rule.metric);
     if(found.data) {
         auto n=found.data->at(found.pos);
-        noteOverrides(*root,n);
         root->flags|=ja::Linked;
         if(root->flags&ja::Generated) {
-            int label=n.type; float amount=n.value;uint32_t time=n.time;
-            if(relabel&&!(root->flags&ja::LabelOverride)&&allowedLabel(rule.label)) label=rule.label;
-            // A changed mapping measure affects future entries. Existing amounts
-            // retain their original unit, even when their source is corrected.
-            float updated=ja::Store::amount(*measurement,root->generatedMetric);
-            if(!(root->flags&ja::ValueOverride)&&std::isfinite(updated)) amount=updated;
-            // Relabeling can be opened above an Amount editor, so defer any
-            // change that moves the number array until normal linking resumes.
-            if(!relabel&&!(root->flags&ja::TimeOverride))time=root->start;
-            if(label!=int(n.type)||amount!=n.value||time!=n.time) {
-                found.data->numchange(&found.data->at(found.pos),time,amount,label,n.mealptr);
-                root->generatedLabel=label; root->generatedValue=amount;root->generatedTime=time;
+            const auto update=ja::updateAmount(*root,n,*measurement,rule,applyMapping);
+            const auto &next=update.number;
+            if(next.type!=n.type||next.value!=n.value||next.time!=n.time) {
+                found.data->numchange(&found.data->at(found.pos),next.time,next.value,next.type,next.mealptr);
             }
+            root->generatedLabel=next.type;root->generatedValue=next.value;root->generatedTime=next.time;
+            // Remember the unit even when two different measures happen to
+            // produce the same number, so later source corrections use it.
+            root->generatedMetric=update.metric;
         }
         return;
     }
