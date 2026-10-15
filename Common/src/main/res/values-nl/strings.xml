@@ -34,6 +34,8 @@
     <string name="bluetoothenabled">Bluetooth Aan</string>
     <string name="bluetoothdisabled">Bluetooth Uit</string>
     <string name="amountsname">Hoeveelheden</string>
+    <string name="notesname">Notities</string>
+    <string name="notename">Notitie</string>
     <string name="amountshort">Hoeveel</string>
     <string name="mealsname">Maaltijden</string>
     <string name="closename">Sluiten</string>

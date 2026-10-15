@@ -26,6 +26,8 @@
     <string name="bluetoothenabled">Bluetooth Увімкнено</string>
     <string name="bluetoothdisabled">Bluetooth Вимкнено</string>
     <string name="amountsname">Суми</string>
+    <string name="notesname">Нотатки</string>
+    <string name="notename">Нотатка</string>
     <string name="amountshort">@string/amountsname</string>
     <string name="mealsname">Їжа</string>
     <string name="closename">Закрити</string>

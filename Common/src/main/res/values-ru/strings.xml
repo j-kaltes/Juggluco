@@ -13,6 +13,8 @@
     <string name="allsentnoreceive">Если все отправлено на хост, функция „Получать от" должна быть отключена.</string>
 	<string name="amountshort">@string/amountsname</string>
     <string name="amountsname">Значения</string>
+    <string name="notesname">Заметки</string>
+    <string name="notename">Заметка</string>
 	<string name="android13">Android</string>
     <string name="app_name">Juggluco</string>
     <string name="background">Зад. фон</string>

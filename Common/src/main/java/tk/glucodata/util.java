@@ -39,6 +39,7 @@ import android.widget.RadioButton;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
+import android.text.InputFilter;
 import android.text.method.LinkMovementMethod;
 import android.widget.Button;
 
@@ -69,6 +70,60 @@ static {
 static public String timestring(long tim) {
 		return dformat.format(new Date(tim));
 		}
+static public final int notemaxdisplay=10;
+// Maximum note length in UTF-8 bytes; must match notemaxlen in
+// Notes.hpp on the native side.
+static public final int notemaxlen=128;
+// Shorten to at most notemaxdisplay characters (code points, never
+// splitting a surrogate pair), appending "..." when truncated. The
+// native shortnotetext() shortens the same way, so graph, list and
+// speech show the same prefix.
+static public String shortnote(String text) {
+	if(text==null)
+		return text;
+	int i=0;
+	for(int chars=0;i<text.length()&&chars<notemaxdisplay;chars++) {
+		i+=Character.charCount(Character.codePointAt(text,i));
+		}
+	if(i>=text.length())
+		return text;
+	return text.substring(0,i)+"...";
+	}
+static private int codepointat(CharSequence s,int i,int limit) {
+	final char c1=s.charAt(i);
+	if(i+1<limit&&Character.isHighSurrogate(c1)&&Character.isLowSurrogate(s.charAt(i+1)))
+		return Character.toCodePoint(c1,s.charAt(i+1));
+	return c1;
+	}
+static private int utf8bytes(CharSequence s,int start,int end) {
+	int bytes=0;
+	for(int i=start;i<end;) {
+		final int c=codepointat(s,i,end);
+		bytes+=c<0x80?1:(c<0x800?2:(c<0x10000?3:4));
+		i+=c<0x10000?1:2;
+		}
+	return bytes;
+	}
+// Keeps a note field within notemaxlen UTF-8 bytes, trimming whole
+// code points, so the native store never has to truncate silently.
+static public final InputFilter notelengthfilter=(source,start,end,dest,dstart,dend)->{
+	final int kept=utf8bytes(dest,0,dstart)+utf8bytes(dest,dend,dest.length());
+	final int room=notemaxlen-kept;
+	if(room>=utf8bytes(source,start,end))
+		return null;
+	if(room<=0)
+		return "";
+	int take=0,bytes=0;
+	while(start+take<end) {
+		final int c=codepointat(source,start+take,end);
+		final int w=c<0x80?1:(c<0x800?2:(c<0x10000?3:4));
+		if(bytes+w>room)
+			break;
+		bytes+=w;
+		take+=c<0x10000?1:2;
+		}
+	return source.subSequence(start,start+take);
+	};
 public static CheckDirectionBox getcheckbox(Context context, String label, boolean val) {
 	var check=new CheckDirectionBox(context);
 	check.setText(label);

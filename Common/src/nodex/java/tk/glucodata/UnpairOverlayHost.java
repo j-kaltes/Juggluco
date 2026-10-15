@@ -25,5 +25,7 @@ public final class UnpairOverlayHost {
         }
     public void postCloser() {
         }
+    public void postMessage(final String message) {
+        }
 
 }

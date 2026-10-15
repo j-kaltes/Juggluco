@@ -34,6 +34,8 @@
 <string name="bluetoothenabled">Bluetooth ativado</string>
 <string name="bluetoothdisabled">Bluetooth desativado</string>
 <string name="amountsname">Valores</string>
+<string name="notesname">Notas</string>
+<string name="notename">Nota</string>
 <string name="mealsname">Refeições</string>
 <string name="closename">Fechar</string>
 <string name="exporthelp">Refeições guardadas em html\nDescanso em .tsv (valores separados por tabulações)</string>

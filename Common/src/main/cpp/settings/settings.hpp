@@ -422,7 +422,8 @@ struct Tings {
     bool  showcalibratedscans:1;
     float64_t loadtime;
     uint32_t glucoseMeterNR;
-    uint32_t reserved4;
+    int8_t notevar;
+    int8_t reserved4[3];
     GlucoseMeter  glucosemeters[maxglucosemeters];
     uint8_t gs3id[12];
     bool reserved8b;
@@ -898,6 +899,11 @@ Settings(const char *settingsname,const char *base,const char *country): Mmap(se
 //    if(data()->initVersion<30) 
    { 
     LOGGER("initVersion=%d\n",data()->initVersion);
+    // notevar reused what was reserved4: zero there means "not
+    // configured", not label 0. Runs once per install (Java sets
+    // initVersion to the current version afterwards).
+    if(data()->initVersion<39)
+        data()->notevar=-1;
     if(data()->initVersion<38) {
     if(data()->initVersion<37) {
        if(data()->initVersion<35) { 

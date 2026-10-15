@@ -530,6 +530,7 @@ To modify, change the html files in https://github.com/j-kaltes/Jugglucohelp -->
 <p>NFC ペンをスキャンすることで <a href="https://www.juggluco.nl/Juggluco/index.html#novopens" onclick="location.href=\'https://www.juggluco.nl/Juggluco/index.html?unit=\'+unitstr+\'#novopens\';return false;">NovoPen® 6 や NovoPen Echo® Plus</a> から <b>インスリン</b> 用量データを受信することもできます。スキャン後、Juggluco でどのラベルに用量を保存するかを変更でき、特定の日時 <b>以降</b> の用量に制限することもできます。ペンのメモリに数百件の用量がある場合、Juggluco が NFC でそれらをすべて受信するまでに 30 秒以上かかることがあります。</p>
 <p>一部の血糖測定器は指先穿刺の血糖測定値を Bluetooth 経由で Juggluco に送信できます。左メニュー → 設定 → データ交換 → <b><a href="https://www.juggluco.nl/Jugglucohelp/GlucoseMeterList.html">血糖測定器</a></b>を参照してください。</p>
 <p>左メニュー → 設定 → <a href="https://www.juggluco.nl/Jugglucohelp/labelhelp.html">記録のラベル</a>では、食事の炭水化物量をどのラベルで入力するかも指定されています。<i>新規記録</i> では、このラベルに対して <b>食事</b> ボタンが表示されます。この <a href="https://www.juggluco.nl/Jugglucohelp/mealhelp.html"><i>食事</i></a> ボタンをタップすると、食事を構成要素から指定できる画面に進みます。炭水化物量が計算されるか、または炭水化物量を指定して必要な食材の分量が計算されます。</p>
+<p>左メニュー → 設定 → <a href="https://www.juggluco.nl/Jugglucohelp/labelhelp.html">記録のラベル</a>では、自由テキストをどのラベルで <b>メモ</b> として入力するかも指定されています。<i>新規記録</i> でこのラベルを選択すると、<b>食事</b> ボタンと同じように <b>メモ</b> ボタンが表示されます。このボタンをタップするとテキストエディタが開き、短いメモを入力できます。メモは（短縮して）グラフと記録の一覧に表示され、LibreView にメモとしてアップロードされます。ミラー接続の設定では、<b>メモ</b> チェックボックスによってメモを相手のデバイスに転送するかどうかを決めます。</p>
 <p><b>除外</b>: 血糖値が上昇または低下している、もしくはセンサーがまだウォームアップ中であるため、血糖測定値を<a href="https://www.juggluco.nl/Jugglucohelp/calibrationhelp.html">校正</a>から除外します。
 
 </p>

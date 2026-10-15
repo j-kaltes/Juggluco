@@ -957,7 +957,8 @@ Microsoft Excel、Mathematica或R等程序中。这是一种.csv格式，使用�
 <p>您可以通过长按标签来更改值。您还可以从左侧中间菜单→列表中输入的量列表中选择它。</p>
 <p>也可以通过扫描 NFC 笔从<a href="https://www.juggluco.nl/Juggluco/index.html#novopens" onclick="location.href=\'https://www.juggluco.nl/Juggluco/index.html?unit=\'+unitstr+\'#novopens\';return false;">NovoPen® 6 或 NovoPen Echo® Plus</a>接收<b>胰岛素</b>剂量数据。扫描后，您可以更改在 Juggluco 中保存剂量的标签，并且可以设置只接收某个特定日期和时间之后的剂量数据。当笔的内存中存在数百个剂量时，Juggluco 通过 NFC 接收所有剂量可能需要超过 30 秒。</p>
 <p>在左侧菜单→设置→<a href="https://www.juggluco.nl/Jugglucohelp/zh/labelhelp.html">编辑标签</a>下还指定了您在哪个标签下输入餐饮的碳水化合物。在<i>新标签</i>中，此标签将显示一个<b>餐饮</b>按钮。点击这个<a href="https://www.juggluco.nl/Jugglucohelp/zh/mealhelp.html"><i>餐饮</i></a>按钮将带您进入一个显示屏，您可以在其中指定餐饮的组成部分。然后会计算出碳水化合物含量，或者您可以指定碳水化合物含量，然后计算出所需成分的数量。</p>
-	
+<p>在左侧菜单→设置→<a href="https://www.juggluco.nl/Jugglucohelp/zh/labelhelp.html">编辑标签</a>下还指定了在哪个标签下输入自由文本<b>笔记</b>。在<i>新标签</i>中选择该标签时，会显示一个<b>笔记</b>按钮，就像<b>餐饮</b>按钮一样。点击此按钮会打开一个文本编辑器，可在其中输入简短笔记。笔记会（截短）显示在图表和量的列表中，并作为笔记上传到 LibreView。在镜像连接的设置中，<b>笔记</b>复选框决定是否将笔记传输到另一台设备。</p>
+
 	<p><br/>
 	<br/>
 	</p>

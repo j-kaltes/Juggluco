@@ -288,7 +288,7 @@ public static native String getbackuphostport(int pos);
 public static native String getbackuppassword(int pos);
 public static native boolean isWearOS(int pos);
 
-public static native int changebackuphost(int pos,String[] names,int nr,boolean detect,String port,boolean nums,boolean stream,boolean scans,boolean recover,boolean receive,boolean activeonly,boolean passiveonly,String pass,long starttime,String label,boolean testip,boolean hasname,String ICElabel,boolean side,int transport,boolean bleclient);
+public static native int changebackuphost(int pos,String[] names,int nr,boolean detect,String port,boolean nums,boolean stream,boolean scans,boolean recover,boolean receive,boolean activeonly,boolean passiveonly,String pass,long starttime,String label,boolean testip,boolean hasname,String ICElabel,boolean side,boolean notes,int transport,boolean bleclient);
 public static native int getbackuptransport(int pos);
 public static native boolean getbackupside(int pos);
 public static native boolean getbackupbleclient(int pos);
@@ -320,6 +320,7 @@ public static native long lastuptodate(int pos);
 public static native boolean getbackuphostnums(int pos);
 public static native boolean getbackuphoststream(int pos);
 public static native boolean getbackuphostscans(int pos);
+public static native boolean getbackuphostnotes(int pos);
 public static native int getbackuphostreceive(int pos);
 public static native boolean getbackuphostactive(int pos);
 public static native boolean getbackuphostpassive(int pos);
@@ -1150,5 +1151,11 @@ public static native String setmynetinfo(String name,byte[] jar,boolean galaxy,b
 public static native void retryMessageConnections(String skipName);
 public static native void resetMessageConnection(String name);
 
+public static native byte getnotevar();
+public static native void setnotevar(byte val);
+public static native String getNoteText(int offset);
+public static native int updateNote(int offset, int time, String text);
+public static native int addNote(int time, String text);
+public static native void deleteNote(int offset);
 
 }

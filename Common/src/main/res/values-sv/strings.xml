@@ -26,6 +26,8 @@
   <string name="bluetoothenabled">Bluetooth aktiverat</string>
   <string name="bluetoothdisabled">Bluetooth avstängt</string>
   <string name="amountsname">Värden</string>
+  <string name="notesname">Anteckningar</string>
+  <string name="notename">Anteckning</string>
   <string name="amountshort">@string/amountsname</string>
   <string name="mealsname">Måltider</string>
   <string name="closename">Stäng</string>

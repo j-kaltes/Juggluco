@@ -32,6 +32,8 @@
     <string name="bluetoothenabled">ब्लूटूथ सक्षम</string>
     <string name="bluetoothdisabled">ब्लूटूथ अक्षम</string>
     <string name="amountsname">मात्राएं</string>
+    <string name="notesname">नोट्स</string>
+    <string name="notename">नोट</string>
     <string name="amountshort">@string/amountsname</string>
     <string name="mealsname">भोजन</string>
     <string name="closename">बंद</string>

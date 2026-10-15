@@ -29,7 +29,9 @@ extern bool selshown;
 extern float tapx,tapy;
 #include "meal/Meal.hpp"
 #include "searchgegs.hpp"
+#include "../notes/Notes.hpp"
 extern Meal *meals;
+extern Notes *notes;
 extern int carbotype;
 extern int *numheights;
 extern int shownumbers;
@@ -149,7 +151,18 @@ template <class TX,class TY> void NumDisplay::showNums(JCurve&jcurve, const TX &
 				ypos=jcurve.numtypeheight(it->type);
 				constexpr int maxbuf=20;
 				char buf[maxbuf];	
-				jcurve.drawText(vg, xpos,ypos, buf, buf+ snprintf(buf,maxbuf,"%g",it->value));
+				if(isNote(it->type) && notes) {
+					const char* text = notes->gettext(it->mealptr);
+					if(*text) {
+						char notebuf[noteshortbuf];
+						shortnotetext(text, notebuf);
+						nvgText(vg, xpos, ypos, notebuf, notebuf+strlen(notebuf));
+					} else {
+						nvgText(vg, xpos,ypos, buf, buf+ snprintf(buf,maxbuf,"%g",it->value));
+					}
+				}
+				else
+					nvgText(vg, xpos,ypos, buf, buf+ snprintf(buf,maxbuf,"%g",it->value));
 				if(jcurve.showmeals&&it->type==carbotype) {
 					mealdisplay(jcurve,xpos,ypos,it);	
 					}
@@ -218,7 +231,17 @@ template <class TX,class TY> void NumDisplay::showNums(JCurve&jcurve, const TX &
                         const int maxbuf= label.size()+5;
                         char rtllabel[maxbuf];
                         rtl_to_logical_utf8(label.data(), rtllabel,maxbuf) ;
-					sprintf(buf2,"\n%s\n%g",rtllabel,it->value);
+ 					char valbuf[noteshortbuf];
+ 					if(isNote(it->type)&&notes) {
+ 						const char *text=notes->gettext(it->mealptr);
+ 						if(*text)
+ 							shortnotetext(text,valbuf);
+ 						else
+ 							snprintf(valbuf,sizeof(valbuf),"%g",it->value);
+ 						}
+ 					else
+ 						snprintf(valbuf,sizeof(valbuf),"%g",it->value);
+ 					sprintf(buf2,"\n%s\n%s",rtllabel,valbuf);
 					speak(buf);
 					}
 #endif

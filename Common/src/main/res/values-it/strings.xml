@@ -32,6 +32,8 @@
     <string name="bluetoothenabled">Bluetooth Abilitato</string>
     <string name="bluetoothdisabled">Bluetooth Disabilitato</string>
     <string name="amountsname">Valori</string>
+    <string name="notesname">Note</string>
+    <string name="notename">Nota</string>
     <string name="amountshort">@string/amountsname</string>
     <string name="mealsname">Pasti</string>
     <string name="closename">Chiudi</string>

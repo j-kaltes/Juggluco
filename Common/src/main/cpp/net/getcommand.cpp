@@ -814,6 +814,8 @@ static bool savefileonce(const struct fileonce_t *gegs) {
             }
         start+=gegs->gegs[i].len;
         }
+    extern void notesreceived(const char *name);
+    notesreceived(name);
     }
     if(const auto dowith=gegs->dowith) {
         if((dowith&startcalibratedupdate)==startcalibratedupdate) {

@@ -33,6 +33,8 @@
     <string name="bluetoothenabled">Bluetoothを有効化しました</string>
     <string name="bluetoothdisabled">Bluetoothを無効化しました</string>
     <string name="amountsname">記録</string>
+    <string name="notesname">メモ</string>
+    <string name="notename">メモ</string>
     <string name="amountshort">@string/amountsname</string>
     <string name="mealsname">食事</string>
     <string name="closename">閉じる</string>

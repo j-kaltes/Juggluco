@@ -1439,6 +1439,15 @@ appare una schermata in cui costruisci il pasto a partire dai suoi
 ingredienti. Il contenuto totale di carboidrati viene quindi calcolato
 per te. In alternativa, puoi fornire la quantità di carboidrati
 desiderata e Juggluco calcolerà quanto di un ingrediente ti serve.</p>
+<p>In Menu sinistro-&gt;Impostazione-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/labelhelp.html">Etichette
+numeriche</a> è specificato anche sotto quale etichetta inserisci testo libero
+come <b>Nota</b>. Quando questa etichetta è selezionata in <i>Nuovo valore</i>,
+viene mostrato un pulsante <b>Note</b>, proprio come il pulsante <i>Pasto</i>.
+Toccando questo pulsante si apre un editor di testo in cui puoi inserire una
+breve nota. La nota viene visualizzata (abbreviata) nel grafico e nell\'elenco
+dei valori, e viene caricata su LibreView come nota. Nelle impostazioni di una
+connessione mirror, la casella <b>Note</b> determina se le note vengono
+trasferite all\'altro dispositivo.</p>
 <p><b>Escludi</b>: Esclude una misurazione della glicemia dalle
 <a href="https://www.juggluco.nl/Jugglucohelp/calibrationhelp.html">calibrazioni</a>,
 perché il livello di glucosio è in aumento o in diminuzione oppure
