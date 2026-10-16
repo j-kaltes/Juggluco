@@ -24,6 +24,9 @@
 #include "SensorGlucoseData.hpp"
 #include "sensoren.hpp"
 #include "curve/numiter.hpp"
+#include "activity/global.hpp"
+#include "activity/export.hpp"
+#include <memory>
 
 extern Sensoren *sensors;
 #define LOGGERTAG(...) LOGGER("export: " __VA_ARGS__)
@@ -419,6 +422,54 @@ bool savemeals(FILE * handle,uint32_t starttime,uint32_t endtime) {
 	}
 #endif
 
+// Own the document descriptor, like the other file exporters. Always include
+// headings; the web endpoint below passes its explicit header option instead.
+bool exportactivities(int fd,uint32_t start,uint32_t end,bool extended) {
+    FILE *file=fdopen(fd,"w");
+    if(!file) {lerror("Activity export fdopen");close(fd);return false;}
+    bool success=false;
+    try {
+        success=juggluco::activity::tsv::write(juggluco::activity::globalStore(),start,end,true,INT_MAX,
+            [&](std::string_view line){return fwrite(line.data(),1,line.size(),file)==line.size();},extended);
+    } catch(const std::exception &error) {LOGGERTAG("activities: %s\n",error.what());}
+    if(fclose(file)) {lerror("Activity export fclose");success=false;}
+    if(!success)LOGGERTAG("activities: file export failed\n");
+    return success;
+}
+
+static std::span<char> activitydata(int startpos,uint32_t start,uint32_t end,bool header,int maxcount,bool extended) {
+    std::unique_ptr<char[]> buffer;
+    try {
+        if(startpos<0)throw std::invalid_argument("Invalid activity export prefix");
+        size_t used=startpos,capacity=used+4096;
+        buffer=std::make_unique<char[]>(capacity);
+        juggluco::activity::tsv::write(juggluco::activity::globalStore(),start,end,header,maxcount,
+            [&](std::string_view line) {
+                if(line.size()>SIZE_MAX-used)throw std::length_error("Activity export too large");
+                const size_t wanted=used+line.size();
+                if(wanted>capacity) {
+                    capacity=std::max(wanted,capacity<=SIZE_MAX/2?capacity*2:SIZE_MAX);
+                    auto next=std::make_unique<char[]>(capacity);
+                    memcpy(next.get(),buffer.get(),used);buffer=std::move(next);
+                }
+                memcpy(buffer.get()+used,line.data(),line.size());used=wanted;return true;
+            },extended);
+        return {buffer.release(),used};
+    } catch(const std::bad_alloc &) {LOGGERTAG("activities: out of memory\n");return {};}
+    catch(const std::exception &error) {
+        LOGGERTAG("activities: %s\n",error.what());
+        if(!buffer)buffer.reset(new(std::nothrow) char[1]);
+        return {buffer.release(),SIZE_MAX};
+    }
+}
+
+std::span<char> getactivities(int startpos,int,uint32_t start,uint32_t end,bool header,int,bool,int maxcount,bool,bool) {
+    return activitydata(startpos,start,end,header,maxcount,false);
+}
+std::span<char> getextendedactivities(int startpos,int,uint32_t start,uint32_t end,bool header,int,bool,int maxcount,bool,bool) {
+    return activitydata(startpos,start,end,header,maxcount,true);
+}
+
 #ifdef JUGGLUCO_APP
 extern bool libreviewexport(int handle,uint32_t starttime,uint32_t endtime,const bool calibrate,bool calibratePast)  ;
 bool  exportdata(uint32_t starttimein, uint32_t duration,int intype,int fd,float days) {
@@ -435,6 +486,8 @@ bool  exportdata(uint32_t starttimein, uint32_t duration,int intype,int fd,float
 		case 4: return allsavemeals(fd,starttime,endtime);
 #endif
 		case 5: return libreviewexport(fd,starttime,endtime,calibrated,settings->data()->CalibratePast);
+		case 6: return exportactivities(fd,starttime,endtime,false);
+		case 7: return exportactivities(fd,starttime,endtime,true);
 		};
 	return false;
 	}

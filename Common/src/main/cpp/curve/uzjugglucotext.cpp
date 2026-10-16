@@ -94,7 +94,7 @@ const jugglucotext uztext {
 	.duration="Davomiyligi: %.1f kun",
 	.timeactive="Vaqtning %.1f%% qismida faol",
 	.nrmeasurement="O'lchovlar soni: %d",
-	.EstimatedA1C="Taxminiy A1C: %.1f%% (%d mmol/mol)",
+	.EstimatedA1C="uGMI ≈ Taxminiy A1C: %.1f%% (%d mmol/mol)",
 	.GMI="Glyukozani boshqarish indikatori: %.1f%% (%d mmol/mol)",
 	.SD="SD: %.2f",
 	.glucose_variability="Glyukoza o'zgaruvchanligi: %.1f%%",

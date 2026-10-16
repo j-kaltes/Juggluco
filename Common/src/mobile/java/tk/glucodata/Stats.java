@@ -59,9 +59,9 @@ static private void askdays(MainActivity act,boolean history) {
    days.setMinEms(4);
    days.setText(""+Natives.getAnalysedays());
    Layout layout = new Layout(act, (l, w, h) -> {
-      int wid = GlucoseCurve.getwidth(act);
+      int wid = GlucoseCurve.getwidth();
       if(!smallScreen) {
-         int hei = GlucoseCurve.getheight(act);
+         int hei = GlucoseCurve.getheight();
          if(hei>h&&wid>w) {
              if(GlucoseCurve.isLandscape(act)) {
                 int half=wid/2;

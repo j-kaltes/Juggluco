@@ -983,4 +983,29 @@ Dotknij katalogu, aby do niego wejść.
 <p>Jeśli używasz wersji serwera Juggluco działającej z wiersza poleceń, umieść pliki w katalogu additions pod jugglucodata.</p>
 ]]>
 </string>
+<string name="activities" >
+<![CDATA[
+<p><a href="https://www.juggluco.nl/Jugglucohelp/pl/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/activities.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/activities.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/activities.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/activities.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/activities.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/activities.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/activities.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/activities.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ko/activities.html">ko</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/activities.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/activities.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/activities.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/activities.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/activities.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/activities.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/activities.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/activities.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/activities.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/activities.html?lang=en">en</a>&emsp;&emsp;</p>
+<h1>Aktywności</h1>
+<p>Pozwól Juggluco pobierać zarejestrowane aktywności z <b>Health Connect</b>. Aby korzystać z tej funkcji, skonfiguruj inne aplikacje, np. Samsung Health, Strava lub Garmin Connect, tak aby wysyłały aktywności do Health Connect.</p>
+<p><b>Twórz wartości na podstawie aktywności</b>: Użyj ustawień w <i>Etykiety</i>, aby dla każdej aktywności tworzyć wartość przypisaną do etykiety.</p>
+<p><b>Etykiety</b>: Dla każdego rodzaju aktywności rozpoznawanego przez Health Connect możesz wybrać etykietę Juggluco i miarę zapisywaną pod tą etykietą. Bez wyboru zostaną użyte etykieta <i>Aktywność</i> i czas trwania.</p>
+<p><b>Pobieraj od</b>: Określ datę i godzinę, od których mają być pobierane aktywności z Health Connect. Na starszych telefonach dostęp może być ograniczony do aktywności z okresu najwyżej 30 dni przed przyznaniem Juggluco uprawnień Health Connect.</p>
+<p><b>Zapisz</b>: Zapisz zmiany ustawień.</p>
+<p><b>Pobierz</b>: Pobierz teraz dane z Health Connect.</p>
+<p><b>Automatyczne pobieranie</b>: Zaplanuj regularne pobieranie danych z Health Connect.</p>
+<p><b>Zapisane aktywności</b>: Lista zapisanych aktywności. Jeśli <i>Twórz wartości na podstawie aktywności</i> jest włączone, możesz też wyświetlić aktywność, przytrzymując odpowiadającą jej wartość, a następnie wybierając <i>Aktywność</i>.</p>
+]]>
+</string>
+<string name="assignActivity" >
+<![CDATA[
+<p><a href="https://www.juggluco.nl/Jugglucohelp/pl/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/assignActivity.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/assignActivity.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/assignActivity.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/assignActivity.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/assignActivity.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/assignActivity.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/assignActivity.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/assignActivity.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ko/assignActivity.html">ko</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/assignActivity.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/assignActivity.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/assignActivity.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/assignActivity.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/assignActivity.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/assignActivity.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/assignActivity.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/assignActivity.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/assignActivity.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/assignActivity.html?lang=en">en</a>&emsp;&emsp;</p>
+<h1>Tworzenie wartości z aktywności</h1>
+<p>Ustaw, w jaki sposób z aktywności odebranej z Health Connect utworzyć wartość pod określoną etykietą.</p>
+<p>Na początku widoczny jest rodzaj aktywności Health Connect. Wybierz etykietę dla wartości w Juggluco albo utwórz <i>Nowa etykieta</i>.</p>
+<p>Wybierz, która miara aktywności ma być zapisywana pod tą etykietą.</p>
+<p><b>Zaokrąglij do:</b> Ustal krok zaokrąglania: 1 oznacza tylko liczby całkowite, a 0.1 — jedną cyfrę po przecinku.</p>
+<p><b>Zmieniaj też wcześniej automatycznie utworzone wartości</b>: Po włączeniu tej opcji wszystkie wcześniejsze automatycznie utworzone wartości zostaną dostosowane do nowych ustawień. Po wyłączeniu ustawienia będą dotyczyć tylko wartości dla aktywności dodanych później.</p>
+]]>
+</string>
 </resources>

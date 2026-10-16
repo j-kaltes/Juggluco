@@ -48,7 +48,7 @@ jugglucotext zhtext {
     .duration = "持续时间: %.1f 天",
     .timeactive = "%.1f%% 的时间处于活动状态",
     .nrmeasurement = "测量次数: %d",
-    .EstimatedA1C = "估算 A1C: %.1f%% (%d mmol/mol)",
+    .EstimatedA1C = "uGMI ≈ 估算 A1C: %.1f%% (%d mmol/mol)",
     .GMI = "葡萄糖管理指标: %.1f%% (%d mmol/mol)",
     .SD = "SD: %.2f",
     .glucose_variability = "葡萄糖变异性: %.1f%%",

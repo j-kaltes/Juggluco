@@ -1290,4 +1290,29 @@ readingNearTimeStamp(startTime, margin);<br/>
 <p>Juggluco サーバーのコマンドライン版を使用する場合は、代わりに jugglucodata の下にある additions ディレクトリにファイルを置いてください。</p>
 ]]>
 </string>
+<string name="activities" >
+<![CDATA[
+<p><a href="https://www.juggluco.nl/Jugglucohelp/ja/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/activities.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/activities.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/activities.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/activities.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/activities.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/activities.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/activities.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/activities.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ko/activities.html">ko</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/activities.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/activities.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/activities.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/activities.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/activities.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/activities.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/activities.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/activities.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/activities.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/activities.html?lang=en">en</a>&emsp;&emsp;</p>
+<h1>アクティビティ</h1>
+<p>Juggluco で <b>Health Connect</b> に記録されたアクティビティを取得できます。この機能を使うには、Samsung Health、Strava、Garmin Connect などのアプリから Health Connect にアクティビティを送信するように設定してください。</p>
+<p><b>アクティビティから記録を作成</b>: <i>ラベル</i> の設定を使うと、各アクティビティについて指定したラベルの記録を作成できます。</p>
+<p><b>ラベル</b>: Health Connect が区別する各アクティビティの種類について、Juggluco のラベルと、そのラベルで保存する指標を選択できます。何も選択しなければ、ラベル <i>アクティビティ</i> と継続時間が使用されます。</p>
+<p><b>取得開始日時</b>: Health Connect からアクティビティを取得し始める日時を指定します。古いスマートフォンでは、Juggluco に Health Connect の権限を付与した時点からさかのぼって 30 日以内のアクティビティに制限される場合があります。</p>
+<p><b>保存</b>: 設定の変更を保存します。</p>
+<p><b>取得</b>: 今すぐ Health Connect からデータを取得します。</p>
+<p><b>自動取得</b>: Health Connect から定期的にデータを取得するよう設定します。</p>
+<p><b>保存済みアクティビティ</b>: 保存されたアクティビティの一覧です。<i>アクティビティから記録を作成</i> が有効なら、対応する記録を長押しして <i>アクティビティ</i> を選択しても詳細を表示できます。</p>
+]]>
+</string>
+<string name="assignActivity" >
+<![CDATA[
+<p><a href="https://www.juggluco.nl/Jugglucohelp/ja/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/assignActivity.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/assignActivity.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/assignActivity.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/assignActivity.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/assignActivity.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/assignActivity.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/assignActivity.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/assignActivity.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ko/assignActivity.html">ko</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/assignActivity.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/assignActivity.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/assignActivity.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/assignActivity.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/assignActivity.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/assignActivity.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/assignActivity.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/assignActivity.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/assignActivity.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/assignActivity.html?lang=en">en</a>&emsp;&emsp;</p>
+<h1>アクティビティの記録の作成</h1>
+<p>Health Connect から受信したアクティビティを元に、特定のラベルで記録を作成する方法を設定します。</p>
+<p>画面の先頭に対象となる Health Connect のアクティビティの種類が表示されます。Juggluco で記録を追加するラベルを選ぶか、<i>新しいラベル</i> を作成してください。</p>
+<p>そのラベルで保存するアクティビティの指標を選択します。</p>
+<p><b>丸め単位:</b> 丸め幅を指定します。1 なら整数だけが表示され、0.1 なら小数点以下 1 桁まで表示されます。</p>
+<p><b>以前に自動作成した記録も更新</b>: 有効にすると、以前に自動生成された記録も新しい設定に合わせて更新されます。無効にすると、新たに追加されるアクティビティの記録にのみ設定が適用されます。</p>
+]]>
+</string>
 </resources>

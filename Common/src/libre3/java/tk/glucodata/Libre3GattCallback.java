@@ -101,7 +101,6 @@ synchronized void free() {
     // Garmin handoff now uses only saved sensor data. Normal destruction must
     // cancel pending recovery before releasing this callback's handles.
     stop=true;
-    connected=false;
     mActiveBluetoothDevice=null;
     super.free();
     {if(doLog) {Log.i(LOG_ID, SerialNumber + ": "+"free");};};
@@ -140,12 +139,16 @@ private boolean checkBluetoothGatt(BluetoothGatt gatt) {
     }
 
 private static final long CONNECT_TIMEOUT_MS=75000L;
+private static final long CONNECT_RETRY_WAIT_MS=5000L;
+private static final long SENSOR_MINUTE_MS=60000L;
+private static final long CONNECT_ADVANCE_MS=5000L;
 private static final long SETUP_TIMEOUT_MS=90000L;
 private static final long SETUP_WAKELOCK_MS=SETUP_TIMEOUT_MS+15000L;
 private final GattRecoveryAlarm recoveryAlarm=new GattRecoveryAlarm(SerialNumber);
 private volatile long recoveryGeneration=0L;
 private long session=0L;
 private long attemptStarted=0L;
+private long lastConnectedElapsed=-1L;
 private long pendingSince=0L;
 private int failedAttempts=0;
 private String phase="idle";
@@ -238,6 +241,12 @@ private void resetSession() {
 
 @Override
 public synchronized void close() {
+    // close() detaches the GATT before its DISCONNECTED callback can update
+    // Sensors. Record a local connection end here, once, in the Connection row.
+    if(mBluetoothGatt!=null && connected) {
+        constatchange[1]=System.currentTimeMillis();
+        setConStatus(GATT_SUCCESS);
+        }
     cancelRecovery();
     releaseSetupWakeLock("close");
     resetSession();
@@ -311,11 +320,23 @@ private void setupDeadline() {
 
 private void recover(BluetoothGatt gatt,String reason,boolean wasWorking,long minimumDelay) {
     if(gatt==null || gatt!=mBluetoothGatt) return;
+    if(connected)
+        setfailure(reason);
+    else {
+        constatchange[1]=System.currentTimeMillis();
+        constatstatusstr=reason;
+        }
+    recoverConnection(gatt,reason,wasWorking,minimumDelay);
+    }
+
+// Connection events and routine disconnects must not replace Handshake details.
+private void recoverConnection(BluetoothGatt gatt,String reason,boolean wasWorking,long minimumDelay) {
+    if(gatt==null || gatt!=mBluetoothGatt) return;
     final long elapsed=SystemClock.elapsedRealtime()-attemptStarted;
+    final boolean waitedForConnection=phase.equals("connecting") && elapsed>=CONNECT_RETRY_WAIT_MS;
     Log.e(LOG_ID,SerialNumber+": recovery session="+session+" phase="+phase+
             " pending="+pendingOperation+" age="+(SystemClock.elapsedRealtime()-pendingSince)+
             "ms reason="+reason);
-    setfailure(reason);
     close(); // Detach now: do not wait for DISCONNECTED to schedule recovery.
     if(!receptionEnabled()) return;
     final long spacing;
@@ -327,10 +348,18 @@ private void recover(BluetoothGatt gatt,String reason,boolean wasWorking,long mi
         failedAttempts=Math.min(failedAttempts+1,3);
         spacing=5000L << (failedAttempts-1); // 5, 10, then 20 seconds.
         }
-    // Space attempt starts, crediting time already spent in a slow failure.
-    // Do not grow this to a full sensor minute: a 30-second connection timeout
-    // plus 30 seconds waiting can repeatedly miss the same advertising window.
+    // A timed-out connection attempt must be replaced immediately. In particular,
+    // a 10-second timeout plus a 10-second gap can miss the same part of every
+    // sensor minute forever. Keep backoff for rapid failures and setup errors.
     long delay=Math.max(minimumDelay,Math.max(0L,spacing-elapsed));
+    if(waitedForConnection) delay=minimumDelay;
+    if(wasWorking && isWearable && Natives.getDisconnectSensor() && lastConnectedElapsed>=0L) {
+        final long sinceConnected=SystemClock.elapsedRealtime()-lastConnectedElapsed;
+        // Only predict the next minute of a recent working connection. If that
+        // deadline has passed, try now and use continuous timeout recovery.
+        if(sinceConnected>=0L && sinceConnected<SENSOR_MINUTE_MS-CONNECT_ADVANCE_MS)
+            delay=Math.max(delay,SENSOR_MINUTE_MS-CONNECT_ADVANCE_MS-sinceConnected);
+        }
     info("session="+session+" failures="+failedAttempts+" retry in "+delay+"ms");
     phase="retry";
     scheduleRecoveryEvent(delay,this::startConnection);
@@ -383,6 +412,7 @@ private void startConnection() {
             mBluetoothGatt=device.connectGatt(app,autoconnect,this,BluetoothDevice.TRANSPORT_LE);
         else
             mBluetoothGatt=device.connectGatt(app,autoconnect,this);
+        if(doLog) Log.i("SuperGattCallback",SerialNumber+" after connectGatt ="+mBluetoothGatt);
         if(mBluetoothGatt==null) {
             connectionStartFailed("connectGatt returned null");
             return;
@@ -400,7 +430,8 @@ private void startConnection() {
 
 private void connectionStartFailed(String reason) {
     close();
-    setfailure(reason);
+    constatchange[1]=System.currentTimeMillis();
+    constatstatusstr=reason;
     if(!receptionEnabled()) return;
     failedAttempts=Math.min(failedAttempts+1,3);
     long delay=5000L << (failedAttempts-1);
@@ -510,11 +541,14 @@ private boolean connected=false;
     public synchronized void onConnectionStateChange(BluetoothGatt bluetoothGatt, int status, int newState) {
         if(!checkBluetoothGatt(bluetoothGatt)) return;
         long tim=System.currentTimeMillis();
-        info("session="+session+" connection status="+status+" state="+newState);
+        info(" onConnectionStateChange, status:"+status+", state: "+
+                (newState==STATE_CONNECTED?"CONNECTED":newState==STATE_DISCONNECTED?"DISCONNECTED":Integer.toString(newState)));
+        info("session="+session+" onConnectionStateChange status="+status+" state="+newState);
         if(!receptionEnabled()) { close(); return; }
         if(newState==STATE_CONNECTED && status==GATT_SUCCESS) {
             if(connected) return;
             connected=true;
+            lastConnectedElapsed=SystemClock.elapsedRealtime();
             phase="setup";
             constatchange[0]=tim;
             acquireSetupWakeLock();
@@ -529,6 +563,7 @@ private boolean connected=false;
                 }
             }
         else if(newState==STATE_DISCONNECTED || status!=GATT_SUCCESS) {
+            connected=false; // Preserve the reported status when close() runs.
             constatchange[1]=tim;
             setConStatus(status);
             if(lastphase5 && status==19 && tim-datatime>=59000L) {
@@ -536,7 +571,7 @@ private boolean connected=false;
                 Natives.setLibre3kAuth(sensorptr,null);
                 }
             long delay=isWearable && Natives.getDisconnectSensor() ? Math.max(0L,5000L-(tim-datatime)) : 0L;
-            recover(bluetoothGatt,"connection status="+status+" state="+newState,sessionSucceeded,delay);
+            recoverConnection(bluetoothGatt,"onConnectionStateChange status="+status+" state="+newState,sessionSucceeded,delay);
             }
         }
 
@@ -801,7 +836,6 @@ if(!isWearable) {
 public synchronized void stopForGarmin() {
     if(!isWearable) {
         stop=true;
-        connected=false;
         // Also defeats a connectDevice Runnable that may already have been queued.
         mActiveBluetoothDevice=null;
         close();
@@ -814,8 +848,12 @@ public synchronized boolean reconnect(long now,long delay) {
     if(!phase.equals("idle") && !phase.equals("receiving")) return true;
     final long old=now-showtime+20;
     if(charcha[1]<old && connectTime<(now-60000L)) {
-        if(mBluetoothGatt!=null)
-            recover(mBluetoothGatt,"loss of signal",sessionSucceeded,delay);
+        if(mBluetoothGatt!=null) {
+            connected=false;
+            constatchange[1]=now;
+            constatstatusstr="Loss of signal";
+            recoverConnection(mBluetoothGatt,"loss of signal",sessionSucceeded,delay);
+            }
         else
             return connectDevice(delay);
         }
@@ -844,7 +882,7 @@ public synchronized void disconnect() {
     if(mBluetoothGatt!=null) {
         long delay=isWearable && Natives.getDisconnectSensor() ?
                 Math.max(0L,5000L-(System.currentTimeMillis()-datatime)) : 0L;
-        recover(mBluetoothGatt,"disconnect requested",sessionSucceeded,delay);
+        recoverConnection(mBluetoothGatt,"disconnect requested",sessionSucceeded,delay);
         }
     else close();
     }

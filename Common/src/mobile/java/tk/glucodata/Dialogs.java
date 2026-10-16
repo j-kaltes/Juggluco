@@ -67,6 +67,7 @@ private float density;
 private ViewGroup exportscreen=null;
  TextView exportlabel=null;
  private boolean isCalibrated=Natives.getDoCalibrate();
+ private boolean activitiesExtended=false;
 Dialogs(float density) {
     this.density=density;
     }
@@ -86,6 +87,7 @@ private Button exportbutton(MainActivity activity,String label, int type) {
             switch(type) {
                 case 4: algexporter(activity,   type,label,".html",daynr);break;
                 case 5: algexporter(activity,type|(isCalibrated?8:0),label,".csv",daynr);break;
+                case 6: exporter(activity,activitiesExtended?7:6,label+(activitiesExtended?"-extended":""),daynr);break;
                 default: exporter( activity,  type|(isCalibrated?8:0),label,daynr);
                 };
             });
@@ -112,6 +114,9 @@ public void showexport(MainActivity activity,int width,int height,View parent) {
         Button hist=exportbutton(activity,activity.getString(R.string.historyname),3);
         Button meals=exportbutton(activity,activity.getString(R.string.mealsname),4);
         Button libreview=exportbutton(activity,activity.getString(R.string.libreviewname),5);
+        Button activities=exportbutton(activity,activity.getString(R.string.activity_import),6);
+        var extended=getcheckbox(activity,R.string.activity_export_extended,activitiesExtended);
+        extended.setOnCheckedChangeListener((buttonView,isChecked)->activitiesExtended=isChecked);
         days= smallScreen?geteditwearos(activity):geteditview(activity,new editfocus()) ;
         days.setMinEms(3);
         long hour24=1000*60*60*24;
@@ -151,9 +156,9 @@ public void showexport(MainActivity activity,int width,int height,View parent) {
             isCalibrated=isChecked; 
             });
         exportscreen=new Layout(activity, (l, w, h) -> {
-            int wid = GlucoseCurve.getwidth(activity);
+            int wid = GlucoseCurve.getwidth();
             if(!smallScreen) {
-                int hei = GlucoseCurve.getheight(activity);
+                int hei = GlucoseCurve.getheight();
                 if(hei>h&&wid>w) {
                     if(GlucoseCurve.isLandscape(activity)) {
                         int half=wid/2;
@@ -186,6 +191,7 @@ public void showexport(MainActivity activity,int width,int height,View parent) {
             new View[] {calibrated,daylabel,days},
              new View[] {scan,hist,stream},
              new View[] {num,meals,libreview},
+             new View[] {activities,extended},
             new View[]{exportlabel},
              new View[] {help,close}
             );

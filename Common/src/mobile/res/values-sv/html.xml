@@ -897,4 +897,29 @@ Tryck på en katalog för att öppna den.
 <p>När du använder kommandoradsversionen av Juggluco-servern ska du i stället lägga filerna i katalogen additions under jugglucodata.</p>
 ]]>
 </string>
+<string name="activities" >
+<![CDATA[
+<p><a href="https://www.juggluco.nl/Jugglucohelp/sv/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/activities.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/activities.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/activities.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/activities.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/activities.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/activities.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/activities.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/activities.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ko/activities.html">ko</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/activities.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/activities.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/activities.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/activities.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/activities.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/activities.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/activities.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/activities.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/activities.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/activities.html?lang=en">en</a>&emsp;&emsp;</p>
+<h1>Aktiviteter</h1>
+<p>Låt Juggluco hämta registrerade aktiviteter från <b>Health Connect</b>. För att använda funktionen behöver du ställa in andra appar, till exempel Samsung Health, Strava eller Garmin Connect, så att de skickar aktiviteter till Health Connect.</p>
+<p><b>Skapa värden från aktiviteter</b>: Använd inställningarna under <i>Etiketter</i> för att skapa ett värde med en viss etikett för varje aktivitet.</p>
+<p><b>Etiketter</b>: För varje aktivitetstyp som Health Connect känner igen kan du välja en etikett i Juggluco och vilket mått som ska sparas under etiketten. Om du inte väljer något används etiketten <i>Aktivitet</i> och varaktighet.</p>
+<p><b>Hämta från</b>: Ange från vilket datum och klockslag aktiviteter ska hämtas från Health Connect. På äldre telefoner kan åtkomsten begränsas till aktiviteter från högst 30 dagar innan Juggluco fick behörighet till Health Connect.</p>
+<p><b>Spara</b>: Spara ändringarna i inställningarna.</p>
+<p><b>Hämta</b>: Hämta data från Health Connect nu.</p>
+<p><b>Automatisk hämtning</b>: Schemalägg regelbunden hämtning av data från Health Connect.</p>
+<p><b>Sparade aktiviteter</b>: Lista över sparade aktiviteter. Om <i>Skapa värden från aktiviteter</i> är aktiverat kan du också visa en aktivitet genom att hålla fingret på motsvarande värde och sedan välja <i>Aktivitet</i>.</p>
+]]>
+</string>
+<string name="assignActivity" >
+<![CDATA[
+<p><a href="https://www.juggluco.nl/Jugglucohelp/sv/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/assignActivity.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/assignActivity.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/assignActivity.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/assignActivity.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/assignActivity.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/assignActivity.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/assignActivity.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/assignActivity.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ko/assignActivity.html">ko</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/assignActivity.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/assignActivity.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/assignActivity.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/assignActivity.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/assignActivity.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/assignActivity.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/assignActivity.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/assignActivity.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/assignActivity.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/assignActivity.html?lang=en">en</a>&emsp;&emsp;</p>
+<h1>Skapa värden från aktiviteter</h1>
+<p>Ställ in hur ett värde med en viss etikett ska skapas från en aktivitet som hämtats från Health Connect.</p>
+<p>Vyn börjar med den aktuella aktivitetstypen i Health Connect. Välj en etikett för värdet i Juggluco eller skapa en <i>Ny etikett</i>.</p>
+<p>Välj vilket mått från aktiviteten som ska sparas under etiketten.</p>
+<p><b>Avrunda till:</b> Ange avrundningssteget: 1 visar bara heltal, medan 0.1 visar en decimal och så vidare.</p>
+<p><b>Ändra även tidigare automatiskt skapade värden</b>: När alternativet är aktiverat uppdateras alla tidigare automatiskt skapade värden enligt de nya inställningarna. Annars gäller inställningarna bara värden från aktiviteter som läggs till senare.</p>
+]]>
+</string>
 </resources>

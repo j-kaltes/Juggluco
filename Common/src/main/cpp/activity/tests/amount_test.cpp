@@ -27,7 +27,7 @@ int main() {
         const Num original{.time=root.start,.mealptr=Num::sportbit|group,.value=root.generatedValue,.type=3};
         const a::Rule distance{8,4,a::Distance,0};
         auto measurement=a::measurementFor(store,group,a::amountMetric(root,distance,true));
-        assert(measurement==&root);
+        assert(measurement==&root); // Garmin takes precedence over a slightly longer Fit interval.
         auto updated=a::updateAmount(root,original,*measurement,distance,true);
         assert(updated.number.type==4&&near(updated.number.value,29.6f)&&updated.metric==a::Distance);
         assert(updated.number.time==original.time&&updated.number.mealptr==original.mealptr);

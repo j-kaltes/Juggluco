@@ -1,30 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="activity_import">Activities</string>
+    <string name="activity_export_extended">Extended</string>
     <string name="activity_details">Activity</string>
     <string name="activity_retrieve">Retrieve</string>
     <string name="activity_permissions">Permissions</string>
-    <string name="activity_access">Retrieval while the app is closed requires background access. Older records require history access.</string>
-    <string name="activity_measure_existing">Existing imported amounts use the selected label and measure when available. Individual edits are preserved.</string>
+    <string name="activity_history_granted">History access granted.</string>
+    <string name="activity_history_missing">History access not granted.</string>
+    <string name="activity_history_unavailable">History access unavailable.</string>
+    <string name="activity_measure_existing">Existing imported amounts use the selected label, measure and rounding when available. Individual edits are preserved.</string>
+    <string name="activity_round_to">Round to:</string>
+    <string name="activity_round_to_invalid">Enter a positive rounding increment, such as 1 or 0.1</string>
     <string name="activity_from">Retrieve from</string>
     <string name="activity_interval">Automatic retrieval</string>
+    <string name="activity_create_amounts">Create Amounts from activities</string>
+    <string name="activity_units">Distance and speed units</string>
+    <string-array name="activity_units">
+        <item>km and km/h</item><item>mi and mi/h</item>
+    </string-array>
     <string name="activity_last">Last retrieval:</string>
     <string name="activity_never">Never</string>
     <string name="activity_retrieving">Retrieving activities…</string>
+    <string name="activity_retrieving_details">Retrieving activity details: %1$d of %2$d</string>
+    <string name="activity_quota_wait">Health Connect request limit reached. Waiting to retry…</string>
     <string name="activity_retrieved">Activities retrieved</string>
     <string name="activity_labels">Labels</string>
     <string name="activity_saved">Saved activities</string>
     <string name="activity_default">General activity label</string>
-    <string name="activity_update_existing">Update label and measure of existing imported amounts</string>
+    <string name="activity_update_existing">Also change existing automatically created amounts</string>
     <string name="activity_new_label">New label</string>
     <string name="activity_choose_label">Choose or create an activity label</string>
     <string name="activity_none">No saved activities</string>
     <string name="activity_unavailable">Activity details are unavailable on this device</string>
+    <string name="activity_delete_confirm">Delete this activity from Juggluco and prevent it from being imported again? Its generated amounts will be deleted. Manually entered or edited amounts will be kept without the activity link. Health Connect data will stay unchanged.</string>
+    <string name="activity_remove_source">Remove source</string>
+    <string name="activity_remove_source_confirm">Remove %1$s from this activity in Juggluco? Its activity and heart-rate data will be excluded from future retrievals. The other sources and Health Connect data will be kept.</string>
+    <string name="activity_mirrored">Health Connect retrieval is disabled, because amounts are received via mirror.</string>
     <string name="activity_source">Source</string>
     <string name="activity_heart_source">Heart rate source</string>
+    <string name="activity_heart_used">Heart rate source used for the summary</string>
     <string name="activity_source_deleted">This source was deleted in Health Connect</string>
     <string name="activity_not_returned">Not in the current Health Connect retrieval</string>
     <string name="activity_excess">Mean HR − resting HR</string>
+    <string name="activity_period_duration">%1$s – %2$s (duration: %3$s)</string>
     <string name="activity_link">Link to amount</string>
     <string name="activity_no_match">No unlinked activity amounts in this time interval</string>
     <string name="activity_distance_miles">Distance (mi)</string>
@@ -39,11 +57,13 @@
         <item>Mean speed (km/h)</item><item>Steps</item><item>Elevation gained (m)</item>
         <item>Mean power (W)</item><item>Mean cycling cadence (rpm)</item>
         <item>@string/activity_distance_miles</item><item>@string/activity_speed_miles</item>
+        <item>Maximum heart rate (bpm)</item>
     </string-array>
     <string-array name="activity_fields">
-        <item>Elapsed duration</item><item>Distance (km)</item><item>Resting HR (bpm)</item>
-        <item>Mean HR (bpm)</item><item>HR SD (bpm)</item><item>HR coverage</item>
-        <item>Active energy (kcal)</item><item>Mean speed (km/h)</item><item>Steps</item>
-        <item>Elevation gained (m)</item><item>Mean power (W)</item><item>Cycling cadence (rpm)</item>
+        <item>Duration</item><item>Distance</item><item>Resting HR</item>
+        <item>Mean HR</item><item>HR SD</item><item>HR coverage</item>
+        <item>Active energy</item><item>Mean speed</item><item>Steps</item>
+        <item>Elevation gained</item><item>Mean power</item><item>Cycling cadence</item>
+        <item>Max HR</item><item>Max speed</item>
     </string-array>
 </resources>

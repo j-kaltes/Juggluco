@@ -121,7 +121,7 @@ void ICE_data::setRTO(int rtt) {
 void ICE_data::ackeddata(juice_agent_t *agent,udp_header  *head) {
       int index=head->index;
       if(head->trans_id==send_trans_id) {
-          if(index<0||index>=acknowledged.size()) {
+          if(index<0||index>=acknowledged.size()||index>lastpacket) {
             LOGGERICE("ackeddata (%d ERROR received ack for index %d\n",side,index);
              return;
              }
@@ -143,7 +143,7 @@ void ICE_data::ackeddata(juice_agent_t *agent,udp_header  *head) {
             }
             }
           else {
-              while(acknowledged[nextAck])
+              while(nextAck<lastpacket&&acknowledged[nextAck])
                 ++nextAck;
               if(nextAck==lastpacket) {
                      std::lock_guard<std::mutex> lck(sendMutex);
@@ -168,6 +168,7 @@ void ICE_data::ackeddata(juice_agent_t *agent,udp_header  *head) {
           }
     }
 void ICE_data::on_recv(juice_agent_t *agent, const char *data, size_t size,int allindex) {
+   if(size<sizeof(udp_header))return;
    udp_header  *head=const_cast<udp_header *>(reinterpret_cast<const udp_header *>(data));
    switch(head->com) {
         case START: {
@@ -280,6 +281,11 @@ void ICE_data::on_recv(juice_agent_t *agent, const char *data, size_t size,int a
                 return ;
                 }
            if(!head->ack) {
+              if(index>=sendwindow||size>packetsize||size<=sizeof(udp_header)||
+                    (!head->fin&&size!=packetsize)) {
+                  LOGGERICE("side=%d invalid DATA packet index=%d size=%zu\n",side,index,size);
+                  return;
+              }
               if(idSmallerOrEqual( head->trans_id,receive_trans_id)) {
                   head->ack=true;
                   if(!sendWithError(agent, data,sizeof(udp_header))) {
@@ -288,7 +294,7 @@ void ICE_data::on_recv(juice_agent_t *agent, const char *data, size_t size,int a
                   if(head->trans_id==receive_trans_id) {
                     askedData=true;
                     LOGGERICE("trans_id=%d side=%d received packet %d\n",head->trans_id,side,index);
-                    if(index>=0||index<acknowledged.size()) {
+                    if(index>=0&&index<acknowledged.size()) {
                         const char *input=data+sizeof(udp_header);
                         int  inputlen=size-sizeof(udp_header);
                         int pos= index*dataunit;
@@ -379,6 +385,10 @@ uint32_t ICE_data::sendpacket(juice_agent_t *agent,uint16_t trans_id,const char 
             return rel_msec;
             }
 int ICE_data::senddata(juice_agent_t *agent, const char *data,int len) {
+        if(len<=0||len>maxrelay) {
+           LOGGERICE("side=%d ICE block outside packet window: %d bytes\n",side,len);
+           return -1;
+        }
         if(shutdown) {
            LOGGERICE("allindex=%d side=%d: senddata  shutdown 1\n",allindex,side);
            return -1;

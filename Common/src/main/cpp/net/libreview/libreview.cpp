@@ -20,6 +20,7 @@
 
 
 #ifndef WEAROS
+#define LOGLIBRE 1
 #include <memory>
 #include <string_view>
 #include <array>
@@ -1350,6 +1351,9 @@ extern "C" JNIEXPORT void  JNICALL   fromjava(setuselibreview)(JNIEnv *env, jcla
         }
 //    else endlibrethread();
     }
+void setAskForAccount() {
+       askforaccount=true;
+       }
 
 extern "C" JNIEXPORT void  JNICALL   fromjava(askServerforAccountID)(JNIEnv *env, jclass cl) {
     alwaysnewstatus=true;

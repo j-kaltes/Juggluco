@@ -1,3 +1,25 @@
+/*      This file is part of Juggluco, an Android app to receive and display         */
+/*      glucose values from Freestyle Libre 2(+), Libre 3(+), Dexcom G7/ONE+,        */
+/*      Sibionics GS1Sb and GS3, Accu-Chek SmartGuide, CareSens Air and              */
+/*      Aidex X sensors.                                                             */
+/*                                                                                   */
+/*      Copyright (C) 2021 Jaap Korthals Altes <jaapkorthalsaltes@gmail.com>         */
+/*                                                                                   */
+/*      Juggluco is free software: you can redistribute it and/or modify             */
+/*      it under the terms of the GNU General Public License as published            */
+/*      by the Free Software Foundation, either version 3 of the License, or         */
+/*      (at your option) any later version.                                          */
+/*                                                                                   */
+/*      Juggluco is distributed in the hope that it will be useful, but              */
+/*      WITHOUT ANY WARRANTY; without even the implied warranty of                   */
+/*      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                         */
+/*      See the GNU General Public License for more details.                         */
+/*                                                                                   */
+/*      You should have received a copy of the GNU General Public License            */
+/*      along with Juggluco. If not, see <https://www.gnu.org/licenses/>.            */
+/*                                                                                   */
+/*      Thu Oct 15 12:51:11 CEST 2026                                                */
+
 package tk.glucodata;
 
 import static tk.glucodata.Natives.gs3nfc;
@@ -37,7 +59,7 @@ static  void readNdef(MainActivity act,Tag tag) {
     if(hasTech(techs, "android.nfc.tech.NfcA")) {
         readNdefFromNfcA(act,tag);
     } else {
-        Log.d(LOG_ID, "No supported tech for manual NDEF: " + Arrays.toString(techs));
+        Log.d(LOG_ID, "readNdef: No supported tech for manual NDEF: " + Arrays.toString(techs));
     }
 }
 
@@ -47,7 +69,7 @@ private static void readViaNdef(MainActivity act,Ndef ndef) {
     try {
         ndef.connect();
         NdefMessage msg = ndef.getNdefMessage();   // fresh read
-        Log.d(LOG_ID, "type=" + ndef.getType() + " maxSize=" + ndef.getMaxSize() + " writable=" + ndef.isWritable());
+        Log.d(LOG_ID, "readViaNdef type=" + ndef.getType() + " maxSize=" + ndef.getMaxSize() + " writable=" + ndef.isWritable());
         if(msg != null) {
             for(NdefRecord r : msg.getRecords()) 
                 dumpRecord(act,r);
@@ -63,12 +85,17 @@ private static void readViaNdef(MainActivity act,Ndef ndef) {
             failure(vib);
             }
     } catch (Throwable e) {
-        Log.stack(LOG_ID, "readNdef", e);
+        Log.stack(LOG_ID, "1: readViaNdef", e);
         vib.cancel();
         failure(vib);
         }
      finally {
-        try { ndef.close(); } catch (IOException ignored) {}
+        try { 
+            ndef.close(); 
+            } 
+        catch(Throwable e) {
+             Log.stack(LOG_ID, "2: readViaNdef", e);
+             }
     }
 }
 
@@ -81,15 +108,14 @@ private static void dumpRecord(MainActivity act,NdefRecord r) {
         int status = payload[0] & 0xFF;
         int langLen = status & 0x3F;
         Charset cs = StandardCharsets.UTF_8;
-        Log.i(LOG_ID,"status="+status+ " langLen="+langLen+ " length="+payload.length);
-        Log.d(LOG_ID, "Text: " + new String(payload, 1 + langLen, payload.length - 1 - langLen, cs));
+        Log.i(LOG_ID,"dumpRecord status="+status+ " langLen="+langLen+ " length="+payload.length+" Text: " + new String(payload, 1 + langLen, payload.length - 1 - langLen, cs));
         var name=gs3nfc(payload); 
         if(name!=null&& !name.isEmpty())  {
             act.runOnUiThread(() -> GetGS3ID.gs3Number(name,act));
             }
         }
     else {
-        Log.d(LOG_ID, "TNF=" + tnf + " type=" + new String(type, StandardCharsets.US_ASCII) + " payload=" + payload.length + " bytes");
+        Log.d(LOG_ID, "dumpRecord TNF=" + tnf + " type=" + new String(type, StandardCharsets.US_ASCII) + " payload=" + payload.length + " bytes");
         }
    }
 /*
@@ -162,7 +188,7 @@ static private void readNdefFromNfcA(MainActivity act,Tag tag) {
         nfca.connect();
         byte[] cc = nfca.transceive(new byte[]{(byte) 0x30, 0x03});
         if ((cc[0] & 0xFF) != 0xE1) {
-            Log.d(LOG_ID, String.format("Not NDEF formatted (CC magic=0x%02X)", cc[0]));
+            Log.d(LOG_ID, String.format("readNdefFromNfcA: Not NDEF formatted (CC magic=0x%02X)", cc[0]));
             vib.cancel();
             failure(vib);
             return;
@@ -180,7 +206,7 @@ static private void readNdefFromNfcA(MainActivity act,Tag tag) {
         }
         NdefMessage msg = parseNdefTlv(buf.toByteArray());
         if(msg == null) {
-            Log.i(LOG_ID,"parseNdefTlv()==null");
+            Log.i(LOG_ID,"readNdefFromNfcA parseNdefTlv()==null");
             vib.cancel();
             failure(vib);
             return;
@@ -206,7 +232,7 @@ static private void readNdefFromNfcA(MainActivity act,Tag tag) {
         try { nfca.close(); 
             } 
         catch(Throwable th) {
-             Log.stack(LOG_ID,"close",th);
+             Log.stack(LOG_ID,"readNdefFromNfcA close",th);
             }
         }
     }

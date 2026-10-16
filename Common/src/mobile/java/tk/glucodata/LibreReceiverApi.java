@@ -1,3 +1,25 @@
+/*      This file is part of Juggluco, an Android app to receive and display         */
+/*      glucose values from Freestyle Libre 2(+), Libre 3(+), Dexcom G7/ONE+,        */
+/*      Sibionics GS1Sb and GS3, Accu-Chek SmartGuide, CareSens Air and              */
+/*      Aidex X sensors.                                                             */
+/*                                                                                   */
+/*      Copyright (C) 2021 Jaap Korthals Altes <jaapkorthalsaltes@gmail.com>         */
+/*                                                                                   */
+/*      Juggluco is free software: you can redistribute it and/or modify             */
+/*      it under the terms of the GNU General Public License as published            */
+/*      by the Free Software Foundation, either version 3 of the License, or         */
+/*      (at your option) any later version.                                          */
+/*                                                                                   */
+/*      Juggluco is distributed in the hope that it will be useful, but              */
+/*      WITHOUT ANY WARRANTY; without even the implied warranty of                   */
+/*      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                         */
+/*      See the GNU General Public License for more details.                         */
+/*                                                                                   */
+/*      You should have received a copy of the GNU General Public License            */
+/*      along with Juggluco. If not, see <https://www.gnu.org/licenses/>.            */
+/*                                                                                   */
+/*      Thu Oct 15 12:44:39 CEST 2026                                                */
+
 package tk.glucodata;
 
 import android.content.Context;
@@ -28,6 +50,7 @@ import java.security.spec.PSSParameterSpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -35,9 +58,11 @@ import javax.net.ssl.HttpsURLConnection;
 import java.net.URL;
 
 /** The application-key migration protocol tested with Libre NL 1.4.0 (2058).
- * Not the normal-login/device-key protocol; no automatic retries or redirects.
+ * Not the normal-login/device-key protocol. A signed API-region response can move
+ * validation/conversion to the LibreView region belonging to the account.
  */
 final class LibreReceiverApi {
+    private static final String LOG_ID = "Libreview";
     static final String BASE = "https://libreapi-c-nl.libreview.io";
     static final String VERSION = "1.4.0.2058";
     private static final int MAX_BODY = 1024 * 1024;
@@ -50,6 +75,7 @@ final class LibreReceiverApi {
         byte[] decrypt(byte[] record) throws IOException;
     }
     interface Transport {
+        default void setBase(String base) {}
         Response post(String endpoint, Map<String,String> headers, byte[] body)
                 throws IOException;
     }
@@ -62,6 +88,7 @@ final class LibreReceiverApi {
     private final PublicKey serverKey;
     private final Transport transport;
     private final String release;
+    private String apiBase=BASE;
 
     LibreReceiverApi(Context context) throws IOException, GeneralSecurityException {
         this(NativeCrypto.open(context), publicKey(), new HttpTransport(), Build.VERSION.RELEASE);
@@ -71,43 +98,100 @@ final class LibreReceiverApi {
         this.crypto=crypto; this.serverKey=serverKey; this.transport=transport; this.release=release;
     }
 
+    private static void log(String text) {
+        if (Log.doLog) Log.i(LOG_ID,text);
+    }
+    private static String headerText(Map<String,? extends List<String>> headers) {
+        StringBuilder out=new StringBuilder();
+        for (Map.Entry<String,? extends List<String>> h:headers.entrySet()) {
+            if (out.length()!=0) out.append("\n");
+            if (h.getKey()==null) out.append(h.getValue());
+            else out.append(h.getKey()).append(": ").append(h.getValue());
+        }
+        return out.toString();
+    }
+
+    private static String normalizeApiBase(String apiUrl) throws IOException {
+        try {
+            URL url=new URL(apiUrl);
+            String path=url.getPath();
+            if (!"https".equalsIgnoreCase(url.getProtocol()) || url.getUserInfo()!=null ||
+                    url.getPort()!=-1 || url.getQuery()!=null || url.getRef()!=null ||
+                    url.getHost()==null || url.getHost().isEmpty() ||
+                    !(path==null || path.isEmpty() || path.equals("/")))
+                throw new IOException("Invalid Libre receiver API region URL: "+apiUrl);
+            return "https://"+url.getHost();
+        } catch (java.net.MalformedURLException ex) {
+            throw new IOException("Invalid Libre receiver API region URL: "+apiUrl,ex);
+        }
+    }
+
     String validate(String legacyToken, String expectedEmail) throws Exception {
         requireToken(legacyToken);
+        log("Libre receiver validate legacyToken="+legacyToken+" expectedEmail="+expectedEmail);
         JSONObject body = new JSONObject().put("tokens", new JSONObject().put("fsl3",legacyToken));
-        JSONObject result = post("validate-legacy-product-tokens",body,null);
-        final String email, token;
-        try {
-            JSONObject fsl3 = result.getJSONObject("tokens").getJSONObject("fsl3");
-            email = text(fsl3,"email");
-            token = text(fsl3,"token");
-        } catch (JSONException ex) { throw new IOException("Validation returned no usable fsl3 token"); }
-        // A token left over from a previously configured account must not be converted.
-        if (!email.trim().equalsIgnoreCase(expectedEmail.trim()))
-            throw new IOException("Validated token belongs to another email; authenticate the configured account first");
-        requireToken(token);
-        return token;
+        for (int regionChanges=0;;++regionChanges) {
+            JSONObject result = post("validate-legacy-product-tokens",body,null);
+            log("Libre receiver validate result="+result.toString());
+            final JSONObject fsl3;
+            try { fsl3=result.getJSONObject("tokens").getJSONObject("fsl3"); }
+            catch (JSONException ex) { throw new IOException("Validation returned no usable fsl3 token"); }
+
+            JSONObject error=fsl3.optJSONObject("error");
+            if (error!=null && "UnsupportedCountryInAPIRegionError".equals(error.optString("error"))) {
+                final String nextBase;
+                try { nextBase=normalizeApiBase(text(error,"apiUrl")); }
+                catch (JSONException ex) { throw new IOException("Validation region error has no usable apiUrl"); }
+                String country=error.optString("unsupportedCountry","");
+                if (nextBase.equals(apiBase) || regionChanges>=2)
+                    throw new IOException("Libre receiver API region redirect did not resolve"+
+                            (country.isEmpty()?"":" country "+country));
+                log("Libre receiver API region redirect country="+country+
+                        " from="+apiBase+" to="+nextBase);
+                apiBase=nextBase;
+                transport.setBase(apiBase);
+                continue;
+            }
+
+            final String email, token;
+            try {
+                email = text(fsl3,"email");
+                token = text(fsl3,"token");
+            } catch (JSONException ex) { throw new IOException("Validation returned no usable fsl3 token"); }
+            // A token left over from a previously configured account must not be converted.
+            if (!email.trim().equalsIgnoreCase(expectedEmail.trim()))
+                throw new IOException("Validated token belongs to another email; authenticate the configured account first");
+            requireToken(token);
+            log("Libre receiver validate email="+email+" validatedToken="+token);
+            return token;
+        }
     }
 
     String convert(String validatedToken, String applicationId) throws Exception {
         requireToken(validatedToken);
+        log("Libre receiver convert validatedToken="+validatedToken+" applicationId="+applicationId);
         if (applicationId == null || !applicationId.matches(
                 "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"))
             throw new IOException("The Libre 3 device ID does not have the expected UUID text format");
         JSONObject body = new JSONObject().put("product","fsl3").put("token",validatedToken);
         JSONObject result = post("convert-legacy-product-token",body,applicationId);
+        log("Libre receiver convert result="+result.toString());
         try {
             String receiver = text(result,"receiverID");
-            receiverNumber(receiver); // Validate before allowing anything to be saved.
+            long receiverNumber=receiverNumber(receiver); // Validate before allowing anything to be saved.
+            log("Libre receiver receiverID="+receiver+" numeric="+receiverNumber);
             return receiver;
         } catch (JSONException ex) { throw new IOException("Conversion returned no receiverID; configs fallback is not implemented"); }
-        // Do not copy access_token into Juggluco's legacy UserToken, or log the response.
+        // Do not copy access_token into Juggluco's legacy UserToken.
     }
 
     JSONObject post(String endpoint, JSONObject body, String applicationId) throws Exception {
         if (!endpoint.equals("validate-legacy-product-tokens") && !endpoint.equals("convert-legacy-product-token"))
             throw new IOException("Unsupported receiver-ID endpoint");
         String stamp = Long.toString(System.currentTimeMillis()/1000L);
-        byte[] plain = body.toString().getBytes(StandardCharsets.UTF_8);
+        String plainText=body.toString();
+        log("Libre receiver request endpoint="+endpoint+" plaintext="+plainText);
+        byte[] plain = plainText.getBytes(StandardCharsets.UTF_8);
         byte[] prefix = (stamp+VERSION).getBytes(StandardCharsets.UTF_8);
         byte[] signed = concat(prefix,plain);
         byte[] signature, record;
@@ -126,8 +210,17 @@ final class LibreReceiverApi {
         headers.put("X-LAPI-V",VERSION);
         headers.put("X-LAPI-SV","1");
         if (applicationId!=null) headers.put("X-Device-ID",applicationId);
-        Response response = transport.post(endpoint,headers,envelope.toString().getBytes(StandardCharsets.UTF_8));
+        byte[] wireBody=envelope.toString().getBytes(StandardCharsets.UTF_8);
+        transport.setBase(apiBase);
+        log("Libre receiver request URL="+apiBase+"/v1/"+endpoint);
+        for (Map.Entry<String,String> h:headers.entrySet())
+            log("Libre receiver request header "+h.getKey()+": "+h.getValue());
+        log("Libre receiver request header Content-Length: "+wireBody.length);
+        log("Libre receiver request body len="+wireBody.length+" "+new String(wireBody,StandardCharsets.UTF_8));
+        Response response = transport.post(endpoint,headers,wireBody);
         if (response.body.length>MAX_BODY) throw new IOException("Response too large");
+        log("Libre receiver response status="+response.status);
+        log("Libre receiver response body len="+response.body.length+" "+new String(response.body,StandardCharsets.UTF_8));
         JSONObject outer;
         try { outer=new JSONObject(utf8(response.body)); }
         catch (JSONException | CharacterCodingException ex) {
@@ -138,7 +231,9 @@ final class LibreReceiverApi {
         catch (JSONException ex) { throw new IOException("HTTP "+response.status+": response has no signed envelope"); }
         byte[] decoded=crypto.decrypt(encrypted);
         try {
+            log("Libre receiver decrypted response len="+decoded.length+" "+new String(decoded,StandardCharsets.UTF_8));
             verify(serverKey,prefix,decoded,serverSignature);
+            log("Libre receiver server RSA-PSS signature verified");
             final JSONObject result;
             try { result=new JSONObject(utf8(decoded)); }
             catch (JSONException | CharacterCodingException ex) { throw new IOException("Verified response is not UTF-8 JSON"); }
@@ -254,16 +349,24 @@ final class LibreReceiverApi {
         return out.toByteArray();
     }
     private static final class HttpTransport implements Transport {
+        private String base=BASE;
+        @Override public void setBase(String base) { this.base=base; }
         public Response post(String endpoint,Map<String,String> headers,byte[] body) throws IOException {
-            HttpsURLConnection c=(HttpsURLConnection)new URL(BASE+"/v1/"+endpoint).openConnection();
+            HttpsURLConnection c=(HttpsURLConnection)new URL(base+"/v1/"+endpoint).openConnection();
             try {
                 c.setInstanceFollowRedirects(false);
                 c.setConnectTimeout(15000); c.setReadTimeout(30000);
                 c.setUseCaches(false); c.setRequestMethod("POST"); c.setDoOutput(true);
                 for (Map.Entry<String,String> h:headers.entrySet()) c.setRequestProperty(h.getKey(),h.getValue());
                 c.setFixedLengthStreamingMode(body.length);
+                if (Log.doLog) {
+                    Map<String,List<String>> actualHeaders=c.getRequestProperties();
+                    Log.i(LOG_ID,"Libre receiver HttpsURLConnection request headers:\n"+headerText(actualHeaders));
+                }
                 try (OutputStream out=c.getOutputStream()) { out.write(body); }
                 int status=c.getResponseCode();
+                if (Log.doLog)
+                    Log.i(LOG_ID,"Libre receiver response headers:\n"+headerText(c.getHeaderFields()));
                 InputStream response=status>=400?c.getErrorStream():c.getInputStream();
                 if (response==null) return new Response(status,new byte[0]);
                 try (InputStream in=response) { return new Response(status,readBounded(in,MAX_BODY)); }

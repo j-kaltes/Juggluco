@@ -3373,4 +3373,73 @@ naar Dexcom Clarity worden verzonden.</p>
 </p>
 ]]>
 </string>
+<string name="activities" >
+<![CDATA[
+<p><a href="https://www.juggluco.nl/Jugglucohelp/nl/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/activities.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/activities.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/activities.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/activities.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/activities.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/activities.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/activities.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/activities.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ko/activities.html">ko</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/activities.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/activities.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/activities.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/activities.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/activities.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/activities.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/activities.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/activities.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/activities.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/activities.html?lang=en">en</a>&emsp;&emsp;</p><h1>Activiteiten</h1>
+<p>Laat Juggluco geregistreerde activiteiten ophalen uit <b>Health
+Connect</b>. Om hiervan gebruik te maken, moet je andere apps zo
+configureren dat ze activiteiten naar Health Connect verzenden,
+bijvoorbeeld Samsung Health, Strava of Garmin Connect.</p>
+<p><b>Hoeveelheden</b><b> genereren </b><b>uit</b><b> activiteiten:
+</b><span style="font-weight: normal">Gebruik de configuratie onder
+</span><i><span style="font-weight: normal">Labels</span></i> <span style="font-weight: normal">om
+voor elke activiteit een </span><span style="font-weight: normal">hoeveelheiod</span><span style="font-weight: normal">
+onder een label te creëren.</span></p>
+<p><b>Labels</b>: In een lijst met alle activiteitstypen die Health
+Connect onderscheidt, kun je voor elke activiteit instellen met welk
+Juggluco-label deze moet worden geassocieerd en welke
+activiteitsmeting onder dat label moet worden weergegeven. Als je
+niets selecteert, wordt \'Activiteit\' als label gebruikt en
+\'Tijdsduur\' als meting.</p>
+<p><b>Ophalen vanaf</b>: Vanaf welke datum en tijd moeten
+activiteiten worden opgehaald uit Health Connect? Op oudere telefoons
+is dit beperkt tot activiteiten die niet ouder zijn dan 30 dagen
+voordat Juggluco toestemming kreeg om Health Connect te gebruiken.</p>
+<p><b>Opslaan</b>: Sla de wijzigingen in de instellingen op.</p>
+<p><b>Gegevens ophalen</b>: Haal nu gegevens op van Health Connect.</p>
+<p><b>Automatische gegevensopvraging</b>: Plan Juggluco zo in dat het
+regelmatig gegevens ophaalt uit Health Connect.</p>
+<p><b>Opgeslagen activiteiten</b>: Lijst met opgeslagen activiteiten.
+Als de optie \'<i>Hoeveelheden</i><i> genereren uit activiteiten</i>\'
+is ingeschakeld, kun je deze activiteiten ook bekijken door de
+hoeveelheid lang ingedrukt te houden en vervolgens op \'<i>Activiteit</i>\'
+te klikken.</p>
+<p><br/>
+<br/>
+
+</p>
+<p><br/>
+<br/>
+
+</p>
+]]>
+</string>
+<string name="assignActivity" >
+<![CDATA[
+<p><a href="https://www.juggluco.nl/Jugglucohelp/nl/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/assignActivity.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/assignActivity.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/assignActivity.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/assignActivity.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/assignActivity.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/assignActivity.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/assignActivity.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/assignActivity.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ko/assignActivity.html">ko</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/assignActivity.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/assignActivity.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/assignActivity.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/assignActivity.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/assignActivity.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/assignActivity.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/assignActivity.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/assignActivity.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/assignActivity.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/assignActivity.html?lang=en">en</a>&emsp;&emsp;</p><h1>Aanmaak van activiteitshoeveelheid</h1>
+<p>Configureer hoe een hoeveelheid onder een bepaald label wordt
+aangemaakt op basis van een activiteit die is ontvangen van Health
+Connect.</p>
+<p>Deze weergave begint met het betreffende activiteitstype van
+Health Connect. Je kunt selecteren onder welk label een hoeveelheid
+aan Juggluco moet worden toegevoegd, of je kunt een <b>nieuw label</b><span style="font-weight: normal">
+aanmaken</span><span style="font-weight: normal">.</span></p>
+<p style="font-weight: normal">Je kunt selecteren welke
+activiteitsindicator onder dit label moet worden toegevoegd.</p>
+<p style="font-weight: normal"><b>Afronden op</b>: Geef aan op welke
+waarde de hoeveelheid moet worden afgerond. Afronden op 1 betekent
+dat alleen hele getallen worden weergegeven. Afronden op 0.1 betekent
+dat er één cijfer achter de punt wordt weergegeven, enzovoort.</p>
+<p style="font-weight: normal"><b>Wijzig ook bestaande automatisch
+gegenereerde </b><b>hoeveelheden:</b> Als deze optie is ingeschakeld,
+worden alle eerder automatisch gegenereerde hoeveelheden aangepast
+aan de nieuwe specificatie. Als je deze optie niet instelt, heeft de
+specificatie alleen invloed op de hoeveelheden die worden gegenereerd
+voor nieuw toegevoegde activiteiten.</p>
+<p><br/>
+<br/>
+
+</p>
+]]>
+</string>
 </resources>

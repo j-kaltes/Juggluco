@@ -96,7 +96,7 @@ const jugglucotext engtext {
 	.duration="Duration: %.1f days",
 	.timeactive="%.1f%% of the time active",
 	.nrmeasurement="Number of measurements: %d",
-	.EstimatedA1C="Estimated A1C: %.1f%% (%d mmol/mol)",
+	.EstimatedA1C="uGMI ≈ Estimated A1C: %.1f%% (%d mmol/mol)",
 	.GMI="Glucose Management Indicator: %.1f%% (%d mmol/mol)",
 	.SD="SD: %.2f",
 	.glucose_variability="Glucose variability: %.1f%%",

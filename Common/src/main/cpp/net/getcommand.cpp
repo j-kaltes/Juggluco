@@ -32,6 +32,7 @@
 #include "datbackup.hpp"
 #include "aligner.hpp"
 #include "mirrorerror.h"
+#include "activity/mirror.hpp"
 
 #define lerrortag(...) lerror("getcommands: " __VA_ARGS__)
 #define LOGGERTAG(...) LOGGER("getcommands: " __VA_ARGS__)
@@ -800,6 +801,14 @@ static bool savefileonce(const struct fileonce_t *gegs) {
     const int nr=gegs->nr;
     const uint8_t *start=reinterpret_cast<const uint8_t*>(&gegs->gegs[nr]);
     const char *name=reinterpret_cast<const char *>(start);
+    if(gegs->namelen==sizeof(juggluco::activity::mirror::filename)&&
+          uint64_t(sizeof(fileonce_t))+uint64_t(nr)*sizeof(datel)+gegs->namelen<=uint64_t(gegs->totlen)&&
+          !memcmp(name,juggluco::activity::mirror::filename,sizeof(juggluco::activity::mirror::filename))) {
+        if(nr!=1||gegs->gegs[0].off!=0||gegs->gegs[0].len<0||
+              uint64_t(sizeof(fileonce_t))+sizeof(datel)+gegs->namelen+uint64_t(gegs->gegs[0].len)>uint64_t(gegs->totlen))return false;
+        extern bool receiveActivityMirror(const uint8_t*,size_t);
+        return receiveActivityMirror(start+gegs->namelen,gegs->gegs[0].len);
+    }
     int fp=filedata.open(name);
     LOGGERTAG("savefileonce %s %d show=%d\n",name,nr, (gegs->dowith&startcalibratedupdate));
     if(fp<0)

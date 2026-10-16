@@ -2906,4 +2906,29 @@ Bir dizine girmek için dizine dokunun.
 <p>Juggluco sunucusunun komut satırı sürümünü kullanırken dosyaları bunun yerine jugglucodata altındaki additions dizinine koyun.</p>
 ]]>
 </string>
+<string name="activities" >
+<![CDATA[
+<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/activities.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/activities.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/activities.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/activities.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/activities.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/activities.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/activities.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/activities.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ko/activities.html">ko</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/activities.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/activities.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/activities.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/activities.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/activities.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/activities.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/activities.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/activities.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/activities.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/activities.html?lang=en">en</a>&emsp;&emsp;</p>
+<h1>Etkinlikler</h1>
+<p>Juggluco\'nun <b>Health Connect</b> üzerinden kaydedilmiş etkinlikleri almasını sağlayın. Bu özelliği kullanmak için Samsung Health, Strava veya Garmin Connect gibi diğer uygulamaları etkinlikleri Health Connect\'e gönderecek şekilde ayarlayın.</p>
+<p><b>Etkinliklerden miktar oluştur</b>: Her etkinlik için belirli bir etiket altında miktar oluşturmak üzere <i>Etiketler</i> ayarlarını kullanın.</p>
+<p><b>Etiketler</b>: Health Connect\'in tanıdığı her etkinlik türü için bir Juggluco etiketi ve bu etikete kaydedilecek ölçümü seçebilirsiniz. Hiçbir şey seçmezseniz <i>Etkinlik</i> etiketi ve süre kullanılır.</p>
+<p><b>Şu tarihten itibaren getir</b>: Health Connect\'ten etkinliklerin alınmaya başlayacağı tarih ve saati belirleyin. Eski telefonlarda erişim, Juggluco\'ya Health Connect izni verilmesinden önceki en fazla 30 günlük etkinliklerle sınırlı olabilir.</p>
+<p><b>Kaydet</b>: Ayar değişikliklerini kaydedin.</p>
+<p><b>Getir</b>: Health Connect\'ten verileri hemen alın.</p>
+<p><b>Otomatik veri alma</b>: Health Connect\'ten düzenli veri almayı programlayın.</p>
+<p><b>Kaydedilmiş etkinlikler</b>: Kaydedilmiş etkinliklerin listesi. <i>Etkinliklerden miktar oluştur</i> açıksa ilgili miktara uzun basıp <i>Etkinlik</i> seçerek etkinliği de görüntüleyebilirsiniz.</p>
+]]>
+</string>
+<string name="assignActivity" >
+<![CDATA[
+<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/assignActivity.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/assignActivity.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/assignActivity.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/assignActivity.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/assignActivity.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/assignActivity.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/assignActivity.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/assignActivity.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ko/assignActivity.html">ko</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/assignActivity.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/assignActivity.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/assignActivity.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/assignActivity.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/assignActivity.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/assignActivity.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/assignActivity.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/assignActivity.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/assignActivity.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/assignActivity.html?lang=en">en</a>&emsp;&emsp;</p>
+<h1>Etkinlik miktarı oluşturma</h1>
+<p>Health Connect\'ten alınan bir etkinlikten belirli bir etiket altında nasıl miktar oluşturulacağını ayarlayın.</p>
+<p>Ekranın başında ilgili Health Connect etkinlik türü gösterilir. Juggluco\'ya eklenecek miktar için bir etiket seçin veya <i>Yeni etiket</i> oluşturun.</p>
+<p>Bu etiket altında saklanacak etkinlik ölçümünü seçin.</p>
+<p><b>Şuna yuvarla:</b> Yuvarlama adımını belirtin: 1 yalnızca tam sayıları, 0.1 ise virgülden sonra bir basamağı gösterir.</p>
+<p><b>Önceden otomatik oluşturulan miktarları da değiştir</b>: Bu seçenek açıksa önceden otomatik oluşturulan tüm miktarlar yeni ayarlara göre güncellenir. Kapalıysa ayarlar yalnızca daha sonra eklenen etkinliklerin miktarlarına uygulanır.</p>
+]]>
+</string>
 </resources>

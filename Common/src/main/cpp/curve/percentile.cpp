@@ -963,13 +963,19 @@ int stats::otherstats(NVGcontext* vg,JCurve &jcurve,const jugglucotext *usedtext
 
     nvgText(vg, xpos,ypos,meanstr,meanstr+len);
     ypos+=rowheight;
+    /*
     len=snprintf(buf,maxbuf,usedtext->EstimatedA1C, EA1Cper, EA1Cmmol);
     nvgText(vg, xpos,ypos,buf,buf+len);
     ypos+=rowheight;
+    */
     len=snprintf(buf,maxbuf,portrait?"GMI: %.1f%% (%d mmol/mol)":usedtext->GMI,GMIper, GMImmol);
     nvgText(vg, xpos,ypos,buf,buf+len);
     ypos+=rowheight;
+    /*
     len=snprintf(buf,maxbuf,"uGMI: %.1f%% (%d mmol/mol)",uGMIper, uGMImmol);
+    nvgText(vg, xpos,ypos,buf,buf+len);
+    */
+    len=snprintf(buf,maxbuf,usedtext->EstimatedA1C, uGMIper, uGMImmol);
     nvgText(vg, xpos,ypos,buf,buf+len);
     ypos+=rowheight;
     len=snprintf(buf,maxbuf,usedtext->SD,jcurve.gconvert(sd*10));
@@ -1551,10 +1557,10 @@ static bool writeStatisticsTextJson(StatisticsWriter &writer,const stats &stat,i
        !appendBrowserStatisticsFormat(writer,visualrtl,text->nrmeasurement,stat.count)||
        !writer.append(",\"meanLabel\":"sv)||
        !appendBrowserStatisticsText(writer,text->averageglucose,visualrtl)||
-       !writer.append(",\"estimatedA1c\":"sv)||
-       !appendBrowserStatisticsFormat(writer,visualrtl,text->EstimatedA1C,stat.EA1Cper,stat.EA1Cmmol)||
        !writer.append(",\"gmi\":"sv)||
        !appendBrowserStatisticsFormat(writer,visualrtl,text->GMI,stat.GMIper,stat.GMImmol)||
+       !writer.append(",\"estimatedA1c\":"sv)||
+       !appendBrowserStatisticsFormat(writer,visualrtl,text->EstimatedA1C,stat.uGMIper,stat.uGMImmol)||
        !writer.append(",\"standardDeviation\":"sv)||
        !appendBrowserStatisticsFormat(writer,visualrtl,text->SD,statisticsGlucose(stat.sd,unit))||
        !writer.append(",\"variability\":"sv)||
@@ -1623,8 +1629,8 @@ const values=[
   text.timeActive,
   text.measurements,
   `${text.meanLabel}${glucose(data.meanGlucose)} ${text.glucoseUnit}`,
-  text.estimatedA1c,
   text.gmi,
+  text.estimatedA1c,
   text.standardDeviation,
   text.variability
 ];

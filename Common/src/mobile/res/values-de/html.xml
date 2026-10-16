@@ -35,8 +35,7 @@ scannen, anstatt sie aus dieser Liste auszuwählen.</p>
 Glukosewerte hinzu, deren Zeitstempel nach dem angegebenen Datum und
 der angegebenen Uhrzeit liegt. Ändern Sie das Datum und die Uhrzeit,
 wenn bereits frühere Glukosewerte in Juggluco vorhanden sind.</p>
-<p style="line-height: 100%; margin-bottom: 0cm">Wählen Sie die
-Etikette für Blutzucker.</p>
+<p style="line-height: 100%; margin-bottom: 0cm">Wählen Sie das Etikett für Blutzucker.</p>
 <p style="line-height: 100%; margin-bottom: 0cm">Beim ersten Mal
 müssen Sie das Blutzuckermessgerät in den PAIRING-Modus bringen,
 indem Sie beispielsweise die Taste des ausgeschalteten Messgeräts
@@ -2428,63 +2427,62 @@ spezifisch für das aktive Profil.</p>
 </string>
 <string name="searchhelp" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/de/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/searchhelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/searchhelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/searchhelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/searchhelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/searchhelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/searchhelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/searchhelp.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/searchhelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ko/searchhelp.html">ko</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/searchhelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/searchhelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/searchhelp.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/searchhelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/searchhelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/searchhelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/searchhelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/searchhelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/searchhelp.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
+<p><a href="https://www.juggluco.nl/Jugglucohelp/de/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/searchhelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/searchhelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/searchhelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/searchhelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/searchhelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/searchhelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/searchhelp.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/searchhelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ko/searchhelp.html">ko</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/searchhelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/searchhelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/searchhelp.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/searchhelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/searchhelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/searchhelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/searchhelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/searchhelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/searchhelp.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western" style="font-variant: normal; font-style: normal; widows: 2; font-weight: normal; letter-spacing: normal; orphans: 2">
 <font face="Times New Roman">Suche</font></h1>
-<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<p style="font-variant: normal; widows: 2; font-style: normal; margin-bottom: 0cm; letter-spacing: normal; orphans: 2; font-weight: normal; background: transparent">
 <font face="Times New Roman"><font size="4" style="font-size: 14pt">Die
 Suche kann verwendet werden, um Glukosewerte und eingegebene Mengen
 zu finden.</font></font></p>
-<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<p style="font-variant: normal; widows: 2; font-style: normal; margin-bottom: 0cm; letter-spacing: normal; orphans: 2; font-weight: normal; background: transparent">
 <font face="Times New Roman"><font size="4" style="font-size: 14pt"><span lang="de-DE">Sie
 suchen nach Werten&nbsp;</span><font face="Cambria, serif"><font size="3" style="font-size: 13pt"><span lang="de-DE"><b>zwischen
 den angegebenen Zahlen</b></span></font></font>&nbsp;<span lang="de-DE">.&nbsp;Beispiel:
 10 – 999, um nach Werten zwischen 10 und 999 zu suchen.</span></font></font></p>
-<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<p style="font-variant: normal; widows: 2; font-style: normal; margin-bottom: 0cm; letter-spacing: normal; orphans: 2; font-weight: normal; background: transparent">
 <font face="Times New Roman"><font size="4" style="font-size: 14pt">Glukosewerte
 werden in Scan, History und Stream getrennt.</font></font></p>
-<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
-<font face="Times New Roman"><font size="4" style="font-size: 14pt"><font face="Cambria, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: 0.8pt"><span lang="de-DE"><i>Scan</i></span></span></font></font><font face="Cambria, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: 0.8pt"><span lang="de-DE"><i>s</i></span></span></font></font>&nbsp;<span lang="de-DE">:
+<p style="font-variant: normal; widows: 2; font-style: normal; margin-bottom: 0cm; letter-spacing: normal; orphans: 2; font-weight: normal; background: transparent">
+<font face="Times New Roman"><font size="4" style="font-size: 14pt"><font face="Cambria, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: 0.8pt"><span lang="de-DE"><i>Scans</i></span></span></font></font>&nbsp;<span lang="de-DE">:
 Wert, der unmittelbar nach dem Scannen angezeigt wird.</span></font></font></p>
-<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
-<font face="Times New Roman"><font size="4" style="font-size: 14pt"><font face="Cambria, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: 0.8pt"><span lang="de-DE"><i>Hi</i></span></span></font></font><font face="Cambria, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: 0.8pt"><span lang="de-DE"><i>story</i></span></span></font></font>&nbsp;<span lang="de-DE">:&nbsp;Periodische</span><span lang="de-DE">
-</span><span lang="de-DE">Messungen, die auf dem Sensor gespeichert
-und an diese App übertragen werden.&nbsp;Freestyle Libre 2 Sensoren
+<p style="font-variant: normal; widows: 2; font-style: normal; margin-bottom: 0cm; letter-spacing: normal; orphans: 2; font-weight: normal; background: transparent">
+<font face="Times New Roman"><font size="4" style="font-size: 14pt"><font face="Cambria, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: 0.8pt"><span lang="de-DE"><i>History</i></span></span></font></font>&nbsp;<span lang="de-DE">:&nbsp;Periodische</span>
+<span lang="de-DE">Messungen, die auf dem Sensor gespeichert und an
+diese App übertragen werden.&nbsp;Freestyle Libre 2 Sensoren
 speichern alle 15 Minuten einen Wert und übertragen diesen per NFC
 an diese App.&nbsp;Freestyle Libre 3 Sensoren speichern alle 5
 Minuten einen Wert und übertragen diesen per Bluetooth.</span></font></font></p>
-<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<p style="font-variant: normal; widows: 2; font-style: normal; margin-bottom: 0cm; letter-spacing: normal; orphans: 2; font-weight: normal; background: transparent">
 <font face="Times New Roman"><font size="4" style="font-size: 14pt"><font face="Cambria, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: 0.8pt"><span lang="de-DE"><i>Stream</i></span></span></font></font>&nbsp;<span lang="de-DE">:
 1 Minute periodische Messungen, die per Bluetooth vom Freestyle libre
-2 </span><span lang="de-DE">oder 3 </span><span lang="de-DE">Sensor
-an diese App gesendet werden.</span></font></font></p>
-<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+2 oder 3 Sensor an diese App gesendet werden.</span></font></font></p>
+<p style="font-variant: normal; widows: 2; font-style: normal; margin-bottom: 0cm; letter-spacing: normal; orphans: 2; font-weight: normal; background: transparent">
 <font face="Times New Roman"><font size="4" style="font-size: 14pt"><span lang="de-DE">Wenn
 Sie Insulin-, Verbrauchs-&nbsp;oder Aktivitätsdaten eingegeben
 haben, können Sie danach suchen, indem Sie das
-entsprechende&nbsp;</span><font face="Cambria, serif"><font size="3" style="font-size: 13pt"><span lang="de-DE"><b>Etikette</b></span></font></font>&nbsp;<span lang="de-DE">im
+entsprechende&nbsp;</span><font face="Cambria, serif"><font size="3" style="font-size: 13pt"><span lang="de-DE"><b>Etikett</b></span></font></font>&nbsp;<span lang="de-DE">im
 Spinner auswählen und den interessierenden Zahlenbereich angeben:
 zum Beispiel Radfahren zwischen 50 und 100.</span></font></font></p>
-<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<p style="font-variant: normal; widows: 2; font-style: normal; margin-bottom: 0cm; letter-spacing: normal; orphans: 2; font-weight: normal; background: transparent">
 <font face="Times New Roman"><font size="4" style="font-size: 14pt"><span lang="de-DE">Sie
-können auch die </span><span lang="de-DE"><b>Tageszeit</b></span><span lang="de-DE">
-angeben, die Sie interessiert. Wenn Sie an Hypos zwischen 22:00 Uhr
-abends und 07:00 Uhr morgens interessiert sind, drücken Sie auf die
-erste Zeitanzeige (Anzeige 00:00 Uhr beim Start) und ändern Sie es
-auf 22:00 und ändern Sie die zweite Zeitanzeige auf 07:00 (Sie
-müssen auch Stream und/oder History auswählen und einen
-Wertebereich von 0 bis 3,9 mmol/L (70 mg/dL) angeben).</span></font></font></p>
-<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+können auch die </span><span lang="de-DE"><b>Tageszeit</b></span>
+<span lang="de-DE">angeben, die Sie interessiert. Wenn Sie an Hypos
+zwischen 22:00 Uhr abends und 07:00 Uhr morgens interessiert sind,
+drücken Sie auf die erste Zeitanzeige (Anzeige 00:00 Uhr beim Start)
+und ändern Sie es auf 22:00 und ändern Sie die zweite Zeitanzeige
+auf 07:00 (Sie müssen auch Stream und/oder History auswählen und
+einen Wertebereich von 0 bis 3,9 mmol/L (70 mg/dL) angeben).</span></font></font></p>
+<p style="font-variant: normal; widows: 2; font-style: normal; margin-bottom: 0cm; letter-spacing: normal; orphans: 2; font-weight: normal; background: transparent">
 <font face="Times New Roman"><font size="4" style="font-size: 14pt"><span lang="de-DE">Durch
 Berühren eines&nbsp;</span><font face="Cambria, serif"><span lang="de-DE"><b>Pfeils</b></span></font>&nbsp;<span lang="de-DE">wird
 die Suche in der angegebenen Richtung gestartet.</span></font></font></p>
-<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<p style="font-variant: normal; widows: 2; font-style: normal; margin-bottom: 0cm; letter-spacing: normal; orphans: 2; font-weight: normal; background: transparent">
 <font face="Times New Roman"><font size="4" style="font-size: 14pt"><font face="Cambria, serif"><font size="3" style="font-size: 13pt"><span lang="de-DE"><b>Reset</b></span></font></font>&nbsp;<span lang="de-DE">setzt
 alle Suchwerte auf den Anfangszustand zurück.</span></font></font></p>
-<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<p style="font-variant: normal; widows: 2; font-style: normal; margin-bottom: 0cm; letter-spacing: normal; orphans: 2; font-weight: normal; background: transparent">
 <font face="Times New Roman"><font size="4" style="font-size: 14pt"><span lang="de-DE">In
 den&nbsp;</span><span lang="de-DE"><i>Einstellungen</i></span>&nbsp;<span lang="de-DE">unter&nbsp;</span><span lang="de-DE"><i>Zahlenetiketten</i></span>&nbsp;können
-Sie auswählen, welche Etikette (z. B.&nbsp;<i>Kohlenhydra</i>) den
-Mahlzeiten zugeordnet ist.&nbsp;Wenn Sie dieses Etikette in&nbsp;<i>&quot;Neue
+Sie auswählen, welches Etikett (z. B.&nbsp;<i>Kohlenhydra</i>) den
+Mahlzeiten zugeordnet ist.&nbsp;Wenn Sie dieses Etikett in&nbsp;<i>&quot;Neue
 Menge&quot;</i>&nbsp;auswählen, erscheint
 eine&nbsp;Schaltfläche&nbsp;<i>&quot;Mahlzeit&quot; .&nbsp;</i>Nach
 dem Berühren können Sie eine Mahlzeit aus ihren Zutaten
@@ -2492,7 +2490,7 @@ eingeben.&nbsp;Wenn Sie dieses Etikett hier im Spinner auswählen,
 erscheint oben auf dem Bildschirm ein Feld, in dem Sie eine Zutat
 angeben können, nach der gesucht werden soll, und optional die
 Mindestmenge dieser Zutat.</font></font></p>
-<p style="line-height: 100%; margin-bottom: 0in"><br/>
+<p style="line-height: 100%; margin-bottom: 0cm"><br/>
 
 </p>
 ]]>
@@ -3202,7 +3200,7 @@ können in Kerfstok</font>&nbsp;verwendet werden.</font></font></p>
 <font face="Times New Roman"><font size="4" style="font-size: 14pt">In
 der Zahleneingabemaske auf der Uhr gelangt man zum Shortcuts-Screen
 (auf meiner Vivoactive 3 Uhr durch Wischen nach links).&nbsp;Hier
-sehen Sie eine Liste von Etikette;&nbsp;Durch Drücken auf einen von
+sehen Sie eine Liste von Etiketten;&nbsp;Durch Drücken auf einen von
 ihnen wird ein entsprechender Wert in den Zahlenbildschirm
 eingefügt.&nbsp;Die Werte können Zahlen oder arithmetische
 Operatoren in Kombination mit Zahlen sein, zB *0.5 um mit 0.5 zu
@@ -4254,6 +4252,75 @@ Dexcom Clarity gesendet werden.</p>
 <br/>
 
 </p>
+<p><br/>
+<br/>
+
+</p>
+]]>
+</string>
+<string name="activities" >
+<![CDATA[
+<p><a href="https://www.juggluco.nl/Jugglucohelp/de/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/activities.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/activities.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/activities.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/activities.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/activities.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/activities.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/activities.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/activities.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ko/activities.html">ko</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/activities.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/activities.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/activities.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/activities.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/activities.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/activities.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/activities.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/activities.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/activities.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/activities.html?lang=en">en</a>&emsp;&emsp;</p><h1>Aktivitäten</h1>
+<p>Lassen Sie Juggluco aufgezeichnete Aktivitäten von <b>Health
+Connect</b> abrufen. Um diese Funktion zu nutzen, müssen Sie andere
+Apps so konfigurieren, dass sie Aktivitäten an Health Connect
+senden, beispielsweise Samsung Health, Strava oder Garmin Connect.</p>
+<p><b>Mengen</b><b> aus Aktivitäten erstellen: </b><span style="font-weight: normal">Verwenden
+Sie die Konfiguration unter </span><i><span style="font-weight: normal">Etiketten</span></i><span style="font-weight: normal">,
+um für jede Aktivität eine </span><span style="font-weight: normal">Menge</span><span style="font-weight: normal">
+unter ein Etikett zu erstellen.</span></p>
+<p><b>Etiketten</b>: In einer Liste aller von Health Connect
+unterschiedenen Aktivitätstypen können Sie für jede Aktivität
+festlegen, welches Juggluco-Etikett sie zugeordnet werden soll und
+welche Kennzahl der Aktivität unter diese<span style="font-weight: normal">s
+</span><span style="font-weight: normal">E</span><span style="font-weight: normal">tikett</span>
+angezeigt werden soll. Wenn Sie nichts auswählen, wird „<i>Aktivität</i>“
+als Etikett und die Dauer als Kennzahl verwendet.</p>
+<p><b>Abrufen von</b>: Ab welchem ​​Datum und welcher Uhrzeit
+sollen Aktivitäten aus Health Connect abgerufen werden? Bei älteren
+Telefonen ist dies auf Aktivitäten beschränkt, die nicht älter als
+30 Tage vor der Erteilung der Health Connect-Berechtigung an Juggluco
+sind.</p>
+<p><b>Speichern</b>: Die Einstellungsänderungen werden gespeichert.</p>
+<p><b>Abrufen</b>: Daten jetzt von Health Connect abrufen.</p>
+<p><b>Automatischer Abruf</b>: Planen Sie Juggluco so, dass
+regelmäßig Daten von Health Connect abgerufen werden.</p>
+<p><b>Gespeicherte Aktivitäten</b>: Liste der gespeicherten
+Aktivitäten. Wenn „<i>Mengen aus Aktivitäten erstellen</i>“
+aktiviert war, können diese Aktivitäten auch durch langes Drücken
+auf der Menge und anschließendes Auswählen von „<i>Aktivität</i>“
+angezeigt werden.</p>
+<p><br/>
+<br/>
+
+</p>
+<p><br/>
+<br/>
+
+</p>
+]]>
+</string>
+<string name="assignActivity" >
+<![CDATA[
+<p><a href="https://www.juggluco.nl/Jugglucohelp/de/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/assignActivity.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/assignActivity.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/assignActivity.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/assignActivity.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/assignActivity.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/assignActivity.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/assignActivity.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/assignActivity.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ko/assignActivity.html">ko</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/assignActivity.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/assignActivity.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/assignActivity.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/assignActivity.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/assignActivity.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/assignActivity.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/assignActivity.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/assignActivity.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/assignActivity.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/assignActivity.html?lang=en">en</a>&emsp;&emsp;</p><h1>Erstellung der Aktivitätsmenge</h1>
+<p>Konfigurieren Sie, wie eine Menge unter ein bestimmtes Etikett aus
+einer von Health Connect empfangenen Aktivität erstellt wird.</p>
+<p>Diese Ansicht beginnt mit dem entsprechenden Health
+Connect-Aktivitätstyp. Sie können auswählen, unter welches Etikett
+eine Menge zu Juggluco hinzugefügt werden soll, oder Sie können ein
+<b>neues Etikett</b> <span style="font-weight: normal">erstellen.</span></p>
+<p style="font-weight: normal">Sie können auswählen, welche
+Aktivitätskennzahl unter dieses Etikett hinzugefügt werden soll.</p>
+<p style="font-weight: normal"><b>Runden auf</b>: Geben Sie an, auf
+welchen Wert der Menge gerundet werden soll. Auf 1 gerundet bedeutet,
+dass nur ganze Zahlen angezeigt werden. Auf 0.1 gerundet bedeutet,
+dass eine Nachpunktstelle angezeigt wird usw.</p>
+<p style="font-weight: normal"><b>Ändern Sie auch bereits
+vorhandene, automatisch erstellte Mengen</b>: Wenn diese Option
+aktiviert ist, werden alle zuvor generierten Menge so angepasst, dass
+sie der neuen Spezifikation entsprechen. Wenn Sie diese Option nicht
+aktivieren, wirkt sich die Spezifikation nur auf die Menge aus, die
+für neu hinzugefügte Aktivitäten generiert werden.</p>
 <p><br/>
 <br/>
 

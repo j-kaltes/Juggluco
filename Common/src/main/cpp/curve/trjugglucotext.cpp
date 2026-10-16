@@ -94,7 +94,7 @@ jugglucotext trtext {
         .duration="Duration: %.1f gün",
         .timeactive="%.1f%% etkin zaman",
         .nrmeasurement="Ölçüm Sayısı: %d",
-        .EstimatedA1C="Tahmini A1C: %.1f%% (%d mmol/mol)",
+        .EstimatedA1C="uGMI ≈ Tahmini A1C: %.1f%% (%d mmol/mol)",
         .GMI="Glucose Management Indicator: %.1f%% (%d mmol/mol)",
         .SD="SD: %.2f",
         .glucose_variability="Glikoz Değişkenliği: %.1f%%",

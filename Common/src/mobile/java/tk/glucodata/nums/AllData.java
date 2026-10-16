@@ -50,7 +50,6 @@ import static consts.consts.GOTSTOPALARM;
 import static consts.consts.LIBRE3DIRECT;
 import static consts.consts.NUMBERROLE;
 import static consts.consts.STOPALARM;
-import static tk.glucodata.Applic.isRelease;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -115,11 +114,6 @@ public class AllData  {
 //    DeviceActivity activity=null;
 public    List<IQDevice> devices=null;
    public int devused=0;
-//    public static final String IQDEVICE = "IQDevice";
-//   static public boolean isReleaseID= BuildConfig.isReleaseID==1;
-   // public static final String MY_APP =  isReleaseID?"96cd3c6949334484a2ff571981c41566":"7212fbfb1f574bdc8459c04efd90a604";
-//       public static final String MY_APP =  isReleaseID?"fd298af3f2df4ef092593db875bbf5c9":"7212fbfb1f574bdc8459c04efd90a604";
-   // public static final String MY_APP = "699c0800c0454f9d8038f671e9ed9332"; //Widget
 
     private static final String LOG_ID = "Alldata";
 
@@ -136,7 +130,10 @@ public    List<IQDevice> devices=null;
 
     // Kerfstok and the larger Libre3/Kerfstok superset use the same application
     // protocol but have distinct Connect IQ application ids. Selection is per watch.
-    public static final String LIBRE3_GARMIN_APP_ID = "d3d41e50b9d44e24a63b4158e8b84bb4";
+    private static final String LIBRE3_GARMIN_RELEASE_APP_ID = "d3d41e50b9d44e24a63b4158e8b84bb4";
+    private static final String LIBRE3_GARMIN_DEBUG_APP_ID = "524467d21c0645d0a81ca3ef2a8d172a";
+    public static final String LIBRE3_GARMIN_APP_ID = BuildConfig.isReleaseID==1 ?
+          LIBRE3_GARMIN_RELEASE_APP_ID : LIBRE3_GARMIN_DEBUG_APP_ID;
     private static final String GARMIN_APP_PREFIX = "app:";
     private IQApp mMyApp;       // ordinary/small Kerfstok
     private IQApp mLibre3App;   // Kerfstok + direct Libre3
@@ -388,7 +385,10 @@ private static String kerfstokAppId() {
    // Early Libre3 setup used the old global app-ID setting. Libre3 now has
    // its own per-watch endpoint: that legacy setting must not replace ordinary
    // Kerfstok as well, or neither transport can reach the store app.
-   return LIBRE3_GARMIN_APP_ID.equals(configured)?normalizeAppId(Natives.getdefaultid()):configured;
+   // Recognize both legacy Libre3 ids here, so a saved release id cannot
+   // become the ordinary Kerfstok endpoint in a debug-id build (or vice versa).
+   return (LIBRE3_GARMIN_RELEASE_APP_ID.equals(configured) || LIBRE3_GARMIN_DEBUG_APP_ID.equals(configured))?
+         normalizeAppId(Natives.getdefaultid()):configured;
    }
 private static boolean supportedGarminAppId(String id) {
    String n=normalizeAppId(id);
@@ -482,7 +482,7 @@ private void persistGarminApp(Context context,GarminPeer gp) {
    }
 
 private void registerBothAppEvents(ConnectIQ sdk,GarminPeer gp) {
-   if(sdk==null || gp==null || gp.device==null) return;
+   if(!Natives.getusegarmin() || sdk==null || gp==null || gp.device==null) return;
    if(mMyApp!=null) try { sdk.registerForAppEvents(gp.device,mMyApp,IQlistener); }
       catch(Throwable th) { Log.stack(LOG_ID,"register Kerfstok app "+gp.name,th); }
    if(mLibre3App!=null) try { sdk.registerForAppEvents(gp.device,mLibre3App,IQlistener); }
@@ -1116,7 +1116,9 @@ private boolean directReady(GarminPeer gp) {
    }
 
 private boolean sendPeerObject(GarminPeer gp,Object message,boolean expectReply,boolean numberTransaction) {
-   if(gp==null || !gp.active || gp.watchStopped) return false;
+   // Per-watch Active preferences survive the main Kerfstok switch being off.
+   // Sending an alarm dismissal must not recreate a stopped Garmin transport.
+   if(!Natives.getusegarmin() || gp==null || !gp.active || gp.watchStopped) return false;
    int mode=currentTransportMode();
    DirectGarminIQ direct=directGarmins.get(gp.id);
    if(mode==GARMIN_TRANSPORT_DIRECT || (mode==GARMIN_TRANSPORT_AUTOMATIC && direct!=null && direct.isActive())) {
@@ -1187,6 +1189,7 @@ private static boolean isGlucoseMessage(Object message) { return messageKind(mes
 int numbersGeneration() { return numbersGeneration; }
 
 boolean acceptsQueuedGarminMessage(long peerId,Object message,int generation) {
+   if(!Natives.getusegarmin()) return false;
    switch(messageKind(message)) {
       case GarminAlarmConfig.SET:
          GarminPeer alarmPeer=garminPeers.get(peerId);
@@ -1704,7 +1707,7 @@ public synchronized boolean setGarminActive(Context context,long peerId,boolean 
 
 public synchronized boolean isGarminActive(long peerId) {
    GarminPeer gp=garminPeers.get(peerId);
-   return gp!=null && gp.active;
+   return Natives.getusegarmin() && gp!=null && gp.active;
    }
 
 private String kerfstokDarkKey(long peerId) {
@@ -1977,7 +1980,7 @@ private boolean libre3ReturnIsProgressing(GarminPeer gp) {
  * silence deadline or wait for a heartbeat before repairing this connection.
  * This is transport recovery, not a user request to launch Kerfstok. */
 public synchronized void reconnectLibre3Watch() {
-   if(transportContext==null || transportRestarting) return;
+   if(!Natives.getusegarmin() || transportContext==null || transportRestarting) return;
    for(GarminPeer gp:new ArrayList<>(garminPeers.values())) flushGarminAlarms(gp);
    // Direct Libre3 ownership is exclusive, but use a snapshot because the
    // existing recovery can refresh the peer table while resolving an address.
@@ -2195,7 +2198,7 @@ public void onMessageReceived(IQDevice device, IQApp app, List<Object> message, 
 
 void onPeerMessage(long peerId,IQDevice device,IQApp sourceApp,List<Object> message,IQMessageStatus status) {
    synchronized(AllData.this) {
-   if(status!=IQMessageStatus.SUCCESS || message==null || message.isEmpty()) return;
+   if(!Natives.getusegarmin() || status!=IQMessageStatus.SUCCESS || message==null || message.isEmpty()) return;
    GarminPeer gp=garminPeers.get(peerId);
    if(gp==null && device!=null) {
       gp=new GarminPeer(peerId,peerName(device));
@@ -2942,6 +2945,7 @@ void realgetnums(int base) {
 
 */
 public void stopalarm() {
+   if(!Natives.getusegarmin()) return;
    {if(doLog) {Log.i(LOG_ID,"send stopalarm to all Garmin peers");};};
    Object message=Arrays.asList(STOPALARM);
    for(GarminPeer gp:garminPeers.values()) if(gp.active) sendPeerObject(gp,message,true,false);
@@ -2952,6 +2956,7 @@ void      testapppresent() {
     private IQDeviceEventListener mDeviceEventListener = new IQDeviceEventListener() {
        @Override
        public void onDeviceStatusChanged(IQDevice device, IQDeviceStatus status) {
+          if(!Natives.getusegarmin()) return;
           {if(doLog) {Log.i(LOG_ID,"onDeviceStatusChanged("+device.toString()+","+status.toString()+")");};};
           GarminPeer gp=peer(device);
           if(gp==null && transportContext!=null) {
@@ -3332,20 +3337,20 @@ public boolean sdkready() {
 MyConnectIQListener mListener=null; 
 
 boolean isCurrentGarminListener(MyConnectIQListener listener) {
-   return mListener==listener && mConnectIQ!=null && !transportRestarting &&
+   return Natives.getusegarmin() && mListener==listener && mConnectIQ!=null && !transportRestarting &&
          currentTransportMode()!=GARMIN_TRANSPORT_DIRECT;
    }
 
 synchronized boolean acceptsGarminConnectPeer(long peerId) {
    GarminPeer gp=garminPeers.get(peerId);
-   return gp!=null && gp.active && !transportRestarting &&
+   return Natives.getusegarmin() && gp!=null && gp.active && !transportRestarting &&
          currentTransportMode()!=GARMIN_TRANSPORT_DIRECT && !directActive(gp);
    }
 
 /** Keep Libre3 record reception available in Automatic, including Direct's
  * reconnect backoff. This grants no ownership of command replies to the SDK. */
 private boolean acceptsGarminConnectReturn(GarminPeer gp) {
-   return gp!=null && gp.active && !transportRestarting &&
+   return Natives.getusegarmin() && gp!=null && gp.active && !transportRestarting &&
          currentTransportMode()==GARMIN_TRANSPORT_AUTOMATIC &&
          directActive(gp) && isLibre3App(gp);
    }
@@ -3355,7 +3360,7 @@ private boolean acceptsGarminConnectReturn(GarminPeer gp) {
  * onGarminConnectMessage() filters records from command replies after decoding. */
 synchronized boolean acceptsGarminConnectIncoming(long peerId) {
    GarminPeer gp=garminPeers.get(peerId);
-   if(gp==null || !gp.active || transportRestarting || currentTransportMode()==GARMIN_TRANSPORT_DIRECT) return false;
+   if(!Natives.getusegarmin() || gp==null || !gp.active || transportRestarting || currentTransportMode()==GARMIN_TRANSPORT_DIRECT) return false;
    if(!directActive(gp)) return true;
    return acceptsGarminConnectReturn(gp) ||
          (currentTransportMode()==GARMIN_TRANSPORT_AUTOMATIC && gp.sdkProbePending);
@@ -3372,7 +3377,7 @@ synchronized boolean acceptsGarminConnectIncoming(long peerId) {
  * trigger a one-shot Garmin Connect START probe, but Direct is kept as the
  * fallback until the probe receives its matching START reply. */
 boolean prepareGarminConnectIncoming(IQDevice device) {
-   if(device==null) return false;
+   if(!Natives.getusegarmin() || device==null) return false;
    final long peerId=device.getDeviceIdentifier();
    GarminPeer gp;
    synchronized(this) {
@@ -3929,6 +3934,7 @@ boolean onGarminConnectInitializationError(ConnectIQ.IQSdkErrorStatus status) {
 
 /** Start the transport selected in Garmin Status. */
 public void initIQ(Context context) {
+   if(!Natives.getusegarmin()) return;
    transportContext=context.getApplicationContext();
    GarminLibre3Lifecycle.install(this,transportHandler);
    loadNumbersPreference(context);
@@ -3944,6 +3950,7 @@ public void initIQ(Context context) {
    }
 
 private void initGarminConnect(Context context) {
+   if(!Natives.getusegarmin()) return;
    try {
       mMyApp=new IQApp(kerfstokAppId());
       mLibre3App=new IQApp(LIBRE3_GARMIN_APP_ID);
@@ -3978,6 +3985,7 @@ public boolean startDirectGarmin(Context context) { return startDirectGarmin(con
 
 /** Start Direct BLE to an explicit already-bonded Garmin address. */
 public boolean startDirectGarmin(Context context,String address) {
+   if(!Natives.getusegarmin() || context==null) return false;
    try {
       transportContext=context.getApplicationContext();
       if(currentTransportMode()==GARMIN_TRANSPORT_DIRECT) {
@@ -4014,7 +4022,7 @@ private boolean startDirectPeer(Context context,GarminPeer gp) {
    }
 
 private synchronized boolean startDirectPeer(Context context,GarminPeer gp,boolean forceConnectedSdk) {
-   if(context==null || gp==null || !gp.active || gp.watchStopped || transportRestarting) return false;
+   if(!Natives.getusegarmin() || context==null || gp==null || !gp.active || gp.watchStopped || transportRestarting) return false;
    DirectGarminIQ old=directGarmins.get(gp.id);
    if(old!=null && old.isActive()) {
       // An active Direct GATT link may survive a Garmin-Connect SDK shutdown.
@@ -4097,7 +4105,7 @@ private synchronized boolean startDirectPeer(Context context,GarminPeer gp,boole
 // of directGarmins: Garmin Connect remains the application owner, incoming SDK
 // messages remain accepted, and the status UI does not claim Direct BLE.
 private synchronized boolean startGarminLinkProbe(GarminPeer gp) {
-   if(gp==null || !gp.active || gp.watchStopped || transportRestarting || transportContext==null ||
+   if(!Natives.getusegarmin() || gp==null || !gp.active || gp.watchStopped || transportRestarting || transportContext==null ||
          currentTransportMode()==GARMIN_TRANSPORT_DIRECT || directGarmins.containsKey(gp.id) ||
          gp.directAddress==null) return false;
    DirectGarminIQ old=garminLinkProbes.get(gp.id);
@@ -4211,7 +4219,7 @@ void onDirectGarminAppInfo(long peerId,String appId,int version) {
 
 void onDirectGarminReady(long peerId) {
    GarminPeer gp=garminPeers.get(peerId);
-   if(gp==null || !gp.active || gp.watchStopped) return;
+   if(!Natives.getusegarmin() || gp==null || !gp.active || gp.watchStopped) return;
    usewatch=true;
    if(doLog) Log.i(LOG_ID,"Direct Garmin ready "+gp.name);
    // A slow GATT setup must finish under its own deadline, not be torn down
@@ -4552,6 +4560,13 @@ synchronized boolean recoverGarminConnectAfterDirectSetupFailure(long peerId,Dir
    }
 
 public void stop() {
+     // Invalidate a pending graceful restart before Direct.stop() runs its
+     // completion callback. Cancel this owner's queued recovery work as well.
+     ++reinitGeneration;
+     transportContext=null;
+     transportRestarting=false;
+     garminSdkRestartPending=false;
+     transportHandler.removeCallbacksAndMessages(null);
      cancelAutomaticFallback();
      cancelAutomaticApplicationReply();
      synchronized(this) {
@@ -4861,6 +4876,7 @@ public void restartGarmin(Context context) {
    }
 
 private void restartGarmin(Context context,boolean launchKerfstok) {
+   if(!Natives.getusegarmin()) return;
    final Context app=context.getApplicationContext();
    transportRestarting=true;
    // This is the only place that arms openApplication. It is reached with true

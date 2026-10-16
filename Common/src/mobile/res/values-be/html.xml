@@ -2846,4 +2846,29 @@ Juggluco меню злева -&gt; Налады -&gt; Плаваючая
 <p>Калі вы карыстаецеся версіяй сервера Juggluco для каманднага радка, замест гэтага змяшчайце файлы ў каталог additions у jugglucodata.</p>
 ]]>
 </string>
+<string name="activities" >
+<![CDATA[
+<p><a href="https://www.juggluco.nl/Jugglucohelp/be/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/activities.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/activities.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/activities.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/activities.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/activities.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/activities.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/activities.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/activities.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ko/activities.html">ko</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/activities.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/activities.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/activities.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/activities.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/activities.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/activities.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/activities.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/activities.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/activities.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/activities.html?lang=en">en</a>&emsp;&emsp;</p>
+<h1>Актыўнасці</h1>
+<p>Дазвольце Juggluco атрымліваць запісаныя актыўнасці з <b>Health Connect</b>. Для гэтага наладзьце іншыя праграмы, напрыклад Samsung Health, Strava або Garmin Connect, каб яны перадавалі актыўнасці ў Health Connect.</p>
+<p><b>Ствараць значэнні з актыўнасцей</b>: У наладах <i>Пазнакі</i> вызначце, пад якой пазнакай трэба ствараць значэнне для кожнай актыўнасці.</p>
+<p><b>Пазнакі</b>: Для кожнага тыпу актыўнасці, які распазнае Health Connect, можна выбраць пазнаку Juggluco і паказчык, які будзе пад ёй запісвацца. Калі нічога не выбрана, выкарыстоўваюцца пазнака <i>Актыўнасць</i> і працягласць.</p>
+<p><b>Атрымліваць з</b>: Выберыце дату і час, пачынаючы з якіх атрымліваць актыўнасці з Health Connect. На старых тэлефонах могуць быць даступныя толькі актыўнасці не старэйшыя за 30 дзён да выдачы Juggluco дазволу на Health Connect.</p>
+<p><b>Захаваць</b>: Захавайце змены налад.</p>
+<p><b>Атрымаць</b>: Неадкладна атрымайце дадзеныя з Health Connect.</p>
+<p><b>Аўтаматычнае атрыманне</b>: Наладзьце рэгулярнае атрыманне дадзеных з Health Connect.</p>
+<p><b>Захаваныя актыўнасці</b>: Спіс захаваных актыўнасцей. Калі ўключана <i>Ствараць значэнні з актыўнасцей</i>, актыўнасць можна таксама адкрыць, доўга націснуўшы адпаведнае значэнне і выбраўшы <i>Актыўнасць</i>.</p>
+]]>
+</string>
+<string name="assignActivity" >
+<![CDATA[
+<p><a href="https://www.juggluco.nl/Jugglucohelp/be/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/assignActivity.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/assignActivity.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/assignActivity.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/assignActivity.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/assignActivity.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/assignActivity.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/assignActivity.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/assignActivity.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ko/assignActivity.html">ko</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/assignActivity.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/assignActivity.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/assignActivity.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/assignActivity.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/assignActivity.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/assignActivity.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/assignActivity.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/assignActivity.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/assignActivity.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/assignActivity.html?lang=en">en</a>&emsp;&emsp;</p>
+<h1>Стварэнне значэнняў з актыўнасцей</h1>
+<p>Вызначце, як ствараць значэнне пад пэўнай пазнакай на аснове актыўнасці з Health Connect.</p>
+<p>Спачатку паказваецца тып актыўнасці Health Connect. Выберыце пазнаку для значэння ў Juggluco або стварыце <i>Новая пазнака</i>.</p>
+<p>Выберыце паказчык актыўнасці, які трэба запісаць пад гэтай пазнакай.</p>
+<p><b>Акругляць да:</b> Задайце крок акруглення: 1 азначае толькі цэлыя лікі, 0.1 — адзін знак пасля коскі і гэтак далей.</p>
+<p><b>Таксама змяняць раней аўтаматычна створаныя значэнні</b>: Калі параметр уключаны, усе раней аўтаматычна створаныя значэнні абнаўляюцца паводле новых налад. Калі ён выключаны, новыя налады дзейнічаюць толькі для значэнняў новых актыўнасцей.</p>
+]]>
+</string>
 </resources>

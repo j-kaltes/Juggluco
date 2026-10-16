@@ -999,4 +999,29 @@ Microsoft Excel、Mathematica或R等程序中。这是一种.csv格式，使用�
 <p>使用 Juggluco 服务器的命令行版本时，请改为将文件放在 jugglucodata 下的 additions 目录中。</p>
 ]]>
 </string>
+<string name="activities" >
+<![CDATA[
+<p><a href="https://www.juggluco.nl/Jugglucohelp/zh/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/activities.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/activities.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/activities.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/activities.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/activities.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/activities.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/activities.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/activities.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ko/activities.html">ko</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/activities.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/activities.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/activities.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/activities.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/activities.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/activities.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/activities.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/activities.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/activities.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/activities.html?lang=en">en</a>&emsp;&emsp;</p>
+<h1>活动</h1>
+<p>让 Juggluco 从 <b>Health Connect</b> 获取已记录的活动。要使用此功能，请在 Samsung Health、Strava 或 Garmin Connect 等其他应用中设置向 Health Connect 发送活动数据。</p>
+<p><b>根据活动创建数值</b>: 在 <i>标签</i> 中设置如何为每项活动创建带标签的数值。</p>
+<p><b>标签</b>: 对于 Health Connect 所区分的每种活动类型，你可以选择 Juggluco 标签以及存入该标签的活动指标。如果没有选择，将默认使用 <i>活动</i> 标签和时长指标。</p>
+<p><b>获取起始时间</b>: 指定从哪一天、哪个时间开始从 Health Connect 获取活动。对于较旧的手机，可能只能获取 Juggluco 获得 Health Connect 授权之前最多 30 天内的活动。</p>
+<p><b>保存</b>: 保存设置更改。</p>
+<p><b>获取</b>: 立即从 Health Connect 获取数据。</p>
+<p><b>自动获取</b>: 设置 Juggluco 定期从 Health Connect 获取数据。</p>
+<p><b>已保存的活动</b>: 已保存活动的列表。如果启用了 <i>根据活动创建数值</i>，还可以长按相应数值，然后选择 <i>活动</i> 查看活动。</p>
+]]>
+</string>
+<string name="assignActivity" >
+<![CDATA[
+<p><a href="https://www.juggluco.nl/Jugglucohelp/zh/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/assignActivity.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/assignActivity.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/assignActivity.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/assignActivity.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/assignActivity.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/assignActivity.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/assignActivity.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/assignActivity.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ko/assignActivity.html">ko</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/assignActivity.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/assignActivity.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/assignActivity.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/assignActivity.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/assignActivity.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/assignActivity.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/assignActivity.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/assignActivity.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/assignActivity.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/assignActivity.html?lang=en">en</a>&emsp;&emsp;</p>
+<h1>根据活动创建数值</h1>
+<p>设置如何根据从 Health Connect 收到的活动，在特定标签下创建数值。</p>
+<p>此页面首先显示相应的 Health Connect 活动类型。选择在 Juggluco 中用于保存数值的标签，或者创建一个 <i>新建标签</i>。</p>
+<p>选择要在该标签下保存的活动指标。</p>
+<p><b>舍入到：</b> 指定舍入步长：设为 1 时只显示整数；设为 0.1 时显示一位小数，依此类推。</p>
+<p><b>同时修改以前自动创建的数值</b>: 启用此选项后，以前自动生成的所有数值都会按新设置更新。如果未启用，新设置仅适用于之后新增活动生成的数值。</p>
+]]>
+</string>
 </resources>

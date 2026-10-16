@@ -1198,4 +1198,29 @@ Katalogga kirish uchun unga teging.
 <p>Juggluco serverining buyruq qatori versiyasidan foydalansangiz, fayllarni buning o‘rniga jugglucodata ichidagi additions katalogiga joylashtiring.</p>
 ]]>
 </string>
+<string name="activities" >
+<![CDATA[
+<p><a href="https://www.juggluco.nl/Jugglucohelp/uz/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/activities.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/activities.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/activities.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/activities.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/activities.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/activities.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/activities.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/activities.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ko/activities.html">ko</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/activities.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/activities.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/activities.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/activities.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/activities.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/activities.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/activities.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/activities.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/activities.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/activities.html?lang=en">en</a>&emsp;&emsp;</p>
+<h1>Faoliyatlar</h1>
+<p>Juggluco <b>Health Connect</b> xizmatidan qayd etilgan faoliyatlarni olishi mumkin. Buning uchun Samsung Health, Strava yoki Garmin Connect kabi boshqa ilovalarda faoliyatlarni Health Connect’ga yuborishni sozlang.</p>
+<p><b>Faoliyatlardan miqdorlar yaratish</b>: Har bir faoliyat uchun ma’lum yorliq ostida miqdor yaratish uchun <i>Yorliqlar</i> sozlamalaridan foydalaning.</p>
+<p><b>Yorliqlar</b>: Health Connect ajratib ko‘rsatadigan har bir faoliyat turi uchun Juggluco yorlig‘ini va shu yorliq ostida saqlanadigan o‘lchovni tanlashingiz mumkin. Hech narsa tanlanmasa, <i>Faoliyat</i> yorlig‘i va davomiylik ishlatiladi.</p>
+<p><b>Shu vaqtdan olish</b>: Health Connect’dan faoliyatlar olinadigan boshlang‘ich sana va vaqtni belgilang. Eski telefonlarda Juggluco’ga Health Connect ruxsati berilishidan oldingi 30 kungacha bo‘lgan faoliyatlargagina kirish mumkin bo‘lishi mumkin.</p>
+<p><b>Saqlash</b>: Sozlamalardagi o‘zgarishlarni saqlang.</p>
+<p><b>Olish</b>: Health Connect’dan ma’lumotlarni hozir oling.</p>
+<p><b>Avtomatik olish</b>: Health Connect’dan ma’lumotlarni muntazam olishni rejalashtiring.</p>
+<p><b>Saqlangan faoliyatlar</b>: Saqlangan faoliyatlar ro‘yxati. Agar <i>Faoliyatlardan miqdorlar yaratish</i> yoqilgan bo‘lsa, tegishli miqdorni bosib turib, so‘ng <i>Faoliyat</i> ni tanlash orqali ham faoliyatni ko‘rish mumkin.</p>
+]]>
+</string>
+<string name="assignActivity" >
+<![CDATA[
+<p><a href="https://www.juggluco.nl/Jugglucohelp/uz/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/assignActivity.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/assignActivity.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/assignActivity.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/assignActivity.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/assignActivity.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/assignActivity.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/assignActivity.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/assignActivity.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ko/assignActivity.html">ko</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/assignActivity.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/assignActivity.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/assignActivity.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/assignActivity.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/assignActivity.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/assignActivity.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/assignActivity.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/assignActivity.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/assignActivity.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/assignActivity.html?lang=en">en</a>&emsp;&emsp;</p>
+<h1>Faoliyatlardan miqdor yaratish</h1>
+<p>Health Connect’dan olingan faoliyat asosida muayyan yorliq ostida miqdor yaratish usulini sozlang.</p>
+<p>Oynaning boshida Health Connect faoliyat turi ko‘rsatiladi. Juggluco’da miqdor qo‘shiladigan yorliqni tanlang yoki <i>Yangi yorliq</i> yarating.</p>
+<p>Shu yorliq ostida qaysi faoliyat o‘lchovi saqlanishini tanlang.</p>
+<p><b>Yaxlitlash qadami:</b> Yaxlitlash qadamini belgilang: 1 faqat butun sonlarni, 0.1 esa verguldan keyingi bitta raqamni ko‘rsatadi.</p>
+<p><b>Avval avtomatik yaratilgan miqdorlarni ham o‘zgartirish</b>: Bu parametr yoqilsa, avval avtomatik yaratilgan barcha miqdorlar yangi sozlamalarga mos ravishda yangilanadi. O‘chirilsa, sozlamalar faqat keyin qo‘shiladigan faoliyatlar miqdorlariga ta’sir qiladi.</p>
+]]>
+</string>
 </resources>

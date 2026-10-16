@@ -77,7 +77,7 @@ Typeface     normaltype;
 
 //   canvas.drawColor(Color.WHITE);
    }
-float  drawcenter(String value) {
+private float  drawcenter(String value) {
    	canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
         var bounds=new Rect();
         iconPaint.setTextSize(fontsize);
@@ -100,11 +100,10 @@ float  drawcenter(String value) {
        canvas.drawText(value,0,value.length(),half-0.005f*fsize,y,iconPaint);
        return fsize;
    }
-
-Icon getIcon(String value) {
+synchronized Icon getIcon(String value) {
        fontsize=drawcenter(value);
-        return Icon.createWithBitmap(iconBitmap);
-}
+       return Icon.createWithBitmap(iconBitmap);
+       }
         /*
 Icon getIcon(float fl) {
    

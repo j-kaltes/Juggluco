@@ -1334,4 +1334,29 @@ Libre 2 من Abbott. ويُعد GMI بديلًا أحدث لهذا المؤشر 
 <p>عند استخدام إصدار سطر الأوامر من خادم Juggluco، ضع الملفات بدلًا من ذلك في مجلد additions الموجود ضمن jugglucodata.</p>
 ]]>
 </string>
+<string name="activities" >
+<![CDATA[
+<p><a href="https://www.juggluco.nl/Jugglucohelp/ar/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/activities.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/activities.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/activities.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/activities.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/activities.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/activities.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/activities.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/activities.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ko/activities.html">ko</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/activities.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/activities.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/activities.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/activities.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/activities.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/activities.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/activities.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/activities.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/activities.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/activities.html?lang=en">en</a>&emsp;&emsp;</p>
+<h1>الأنشطة</h1>
+<p>اسمح لتطبيق Juggluco باسترداد الأنشطة المسجلة من <b>Health Connect</b>. للاستفادة من ذلك، اضبط التطبيقات الأخرى، مثل Samsung Health وStrava وGarmin Connect، لإرسال الأنشطة إلى Health Connect.</p>
+<p><b>إنشاء كميات من الأنشطة</b>: استخدم إعدادات <i>التسميات</i> لإنشاء كمية مرتبطة بتسمية لكل نشاط.</p>
+<p><b>التسميات</b>: تظهر جميع أنواع الأنشطة التي يميزها Health Connect. يمكنك اختيار تسمية في Juggluco والمقياس الذي يُحفظ تحتها لكل نوع. إذا لم تحدد شيئًا، فستُستخدم تسمية <i>النشاط</i> ومقياس المدة.</p>
+<p><b>الاسترداد بدءًا من</b>: حدد التاريخ والوقت اللذين يبدأ منهما استرداد الأنشطة من Health Connect. على الهواتف القديمة قد يقتصر ذلك على الأنشطة التي لا يزيد عمرها على 30 يومًا قبل منح Juggluco إذن Health Connect.</p>
+<p><b>حفظ</b>: احفظ تغييرات الإعدادات.</p>
+<p><b>استرداد</b>: استرد البيانات الآن من Health Connect.</p>
+<p><b>الاسترداد التلقائي</b>: اضبط Juggluco ليسترد البيانات من Health Connect بانتظام.</p>
+<p><b>الأنشطة المحفوظة</b>: قائمة الأنشطة المحفوظة. إذا كان خيار <i>إنشاء كميات من الأنشطة</i> مفعّلًا، فيمكن عرض النشاط أيضًا بالضغط مطولًا على كمياتته ثم اختيار <i>النشاط</i>.</p>
+]]>
+</string>
+<string name="assignActivity" >
+<![CDATA[
+<p><a href="https://www.juggluco.nl/Jugglucohelp/ar/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/assignActivity.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/assignActivity.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/assignActivity.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/assignActivity.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/assignActivity.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/assignActivity.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/assignActivity.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/assignActivity.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ko/assignActivity.html">ko</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/assignActivity.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/assignActivity.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/assignActivity.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/assignActivity.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/assignActivity.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/assignActivity.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/assignActivity.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/assignActivity.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/assignActivity.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/assignActivity.html?lang=en">en</a>&emsp;&emsp;</p>
+<h1>إنشاء كميات من الأنشطة</h1>
+<p>اضبط كيفية إنشاء كمية بتسمية محددة من نشاط تم استلامه من Health Connect.</p>
+<p>يُعرض أولًا نوع النشاط الخاص بـ Health Connect. اختر التسمية التي ستُضاف إليها الكمية في Juggluco، أو أنشئ <i>تسمية جديدة</i>.</p>
+<p>اختر مقياس النشاط الذي سيُحفظ تحت هذه التسمية.</p>
+<p><b>التقريب إلى:</b> حدد خطوة التقريب: 1 يعرض الأعداد الصحيحة فقط، و0.1 يعرض منزلة عشرية واحدة، وهكذا.</p>
+<p><b>تغيير الكميات التي أُنشئت تلقائيًا من قبل أيضًا</b>: عند تفعيل هذا الخيار، تُحدّث كل الكميات التي أُنشئت تلقائيًا سابقًا لتتوافق مع الإعدادات الجديدة. وعند إيقافه، تُطبق الإعدادات فقط على كميات الأنشطة المضافة لاحقًا.</p>
+]]>
+</string>
 </resources>

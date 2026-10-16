@@ -165,8 +165,8 @@ private static int menuViewWidth(final MainActivity act) {
         height=metrics.heightPixels;
         }
     if(width<=0||height<=0) {
-        width=GlucoseCurve.getwidth(act);
-        height=GlucoseCurve.getheight(act)+MainActivity.systembarTop+MainActivity.systembarBottom;
+        width=GlucoseCurve.getwidth();
+        height=GlucoseCurve.getheight()+MainActivity.systembarTop+MainActivity.systembarBottom;
         }
 
     // Use stable system-bar insets rather than only the currently visible bars.
@@ -204,7 +204,7 @@ private static FrameLayout.LayoutParams menuViewParams(final Layout lay,final Nu
         final int gap=GlucoseCurve.dpToPx(8);
         final int top=Math.max(MainActivity.systembarTop,bottomOf(numb.newnumview)+gap);
         params=new FrameLayout.LayoutParams(viewWidth,MATCH_PARENT,Gravity.TOP|Gravity.LEFT);
-        params.leftMargin=centeredSafeX(GlucoseCurve.getwidth(act),viewWidth);
+        params.leftMargin=centeredSafeX(GlucoseCurve.getwidth(),viewWidth);
         params.topMargin=top;
         params.bottomMargin=MainActivity.systembarBottom;
         }
@@ -212,7 +212,7 @@ private static FrameLayout.LayoutParams menuViewParams(final Layout lay,final Nu
     }
 
 private static FrameLayout.LayoutParams selectIngredientParams(final RecyclerView recycle,final MainActivity act) {
-    final int width=GlucoseCurve.getwidth(act);
+    final int width=GlucoseCurve.getwidth();
     final boolean landscape=GlucoseCurve.isLandscape(act);
     recycle.setMinimumWidth((int)(safeWidth(width)*.56f));
     final FrameLayout.LayoutParams params=new FrameLayout.LayoutParams(
@@ -526,8 +526,8 @@ static void menuitem(MainActivity act, NumberView numb, int mealptr, int pos, In
     Layout lay=new Layout(act,(l,w,h)-> {
         final boolean landscape=!smallScreen&&GlucoseCurve.isLandscape(act);
         if(!placed[0]||placedLandscape[0]!=landscape) {
-            int width=GlucoseCurve.getwidth(act);
-            int hei=GlucoseCurve.getheight(act);
+            int width=GlucoseCurve.getwidth();
+            int hei=GlucoseCurve.getheight();
             Log.i(LOG_ID,"addcomponent width="+width+" height="+hei+" w="+w+" h="+h);
             if(landscape) {
                 int leftHalf=MainActivity.systembarLeft+safeWidth(width)/2;

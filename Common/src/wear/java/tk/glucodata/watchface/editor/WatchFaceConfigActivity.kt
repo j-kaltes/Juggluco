@@ -18,8 +18,8 @@ package tk.glucodata.watchface.editor
 
 import android.Manifest
 import android.app.Activity
-//import androidx.appcompat.app.AlertDialog
-import android.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
+//import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.os.Bundle

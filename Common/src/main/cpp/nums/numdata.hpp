@@ -41,6 +41,8 @@
 #include "datbackup.hpp"
 #include "meal/Meal.hpp"
 #include "num.h"
+#include "activity/global.hpp"
+#include "activity/amount_binding.hpp"
 //extern void wakeaftermin(const int waitmin) ;
 //extern void wakeuploader();
 
@@ -644,6 +646,7 @@ void numsave( const uint32_t time, const float32_t value, const uint32_t type,co
 
 
 void numsavepos(int pos, uint32_t time, float32_t value, uint32_t type,uint32_t mealptr) {
+    Num previous{},saved{};bool replaced=false;
     if(pos>0&&time<at(pos-1).time)  {
         LOGGERTAG("numsavepos earlier than previous %u<%u\n",time,at(pos-1).time);
 //        at(pos).time=at(pos-1).time;
@@ -655,11 +658,13 @@ void numsavepos(int pos, uint32_t time, float32_t value, uint32_t type,uint32_t 
             mealptr=0;
             }
         Num &num=at(pos);
+        previous=num;
 //        removeCalibration(&num);
         uint32_t oldtime=num.time;
         uint32_t oldexclude=num.exclude;
         addlibrenumsdeleted(&num,pos);
         num={.time=time,.mealptr=mealptr,.value=value,.type=type};
+        saved=num;replaced=true;
         if(pos>=getlibreSolid()) {
             addlibrechange(pos);
             }
@@ -672,6 +677,7 @@ void numsavepos(int pos, uint32_t time, float32_t value, uint32_t type,uint32_t 
         setchangetimes(pos,pos+1);
         changeCalibration(oldtime, oldexclude,time, type,&num,this);
         }
+    if(replaced)changeActivityReference(previous,saved);
     setnumchanged();
      }
 //static constexpr uint32_t removedtype=0xFFFFFFFF;
@@ -681,7 +687,29 @@ static constexpr uint32_t otherbits=~removedbit;
 void changeDevice() {
     getlibreSolid()=getlibresend();
     }
-void numremove(int pos) {
+void changeActivityReference(const Num &before,const Num &after) {
+    if(before.type==settings->data()->bloodvar||!Num::issportref(before.mealptr))return;
+    try {
+        auto &s=juggluco::activity::globalStore();
+        std::lock_guard guard(s.mutex);
+        // A blood-glucose exclusion bit is not an activity reference.
+        Num next=after;if(next.type==settings->data()->bloodvar)next.mealptr=0;
+        juggluco::activity::changedAmount(s,getindex(),getnewident(),before,next);
+    } catch(const std::exception &e) {LOGGER("Activity: update Amount binding failed: %s\n",e.what());}
+    }
+void removeActivityReference(const Num &num) {
+    if(num.type==settings->data()->bloodvar||!Num::issportref(num.mealptr)||!valid(&num))return;
+    try {
+        auto &s=juggluco::activity::globalStore();
+        std::lock_guard guard(s.mutex);
+        if(!juggluco::activity::ownsAmount(s,getindex(),getnewident(),num))return;
+        const auto group=s.removeGroup(juggluco::activity::indexOf(num.mealptr));
+        LOGGER("Activity: Amount deletion removes group=%u reference=%u\n",group,juggluco::activity::indexOf(num.mealptr));
+    } catch(const std::exception &e) {LOGGER("Activity: remove Amount reference failed: %s\n",e.what());}
+    }
+void numremove(int pos,bool removeActivity=true) {
+    // Acquire the activity lock before nummutex, matching activity import.
+    if(removeActivity)removeActivityReference(at(pos));
     std::lock_guard<std::mutex> lck(nummutex);
     Num &num=at(pos);
     removeCalibration(&num);
@@ -722,6 +750,7 @@ int getdeclastpos() {
     }
     
 int numremove(Num *num) {
+    removeActivityReference(*num);
     removeCalibration(num);
     std::lock_guard<std::mutex> lck(nummutex);
     const int ver=end()-num;
@@ -926,6 +955,7 @@ void    libremovelarger(int from,int to,int movelen) { //to>from
 
 public:
 void numchange(const Num *hit, uint32_t time, float32_t value, uint32_t type,uint32_t mealptr) {
+    const Num previous=*hit;
 //    removeCalibration(hit);
     uint32_t oldtime=hit->time;
     uint32_t oldexclude=hit->exclude;
@@ -993,6 +1023,7 @@ void numchange(const Num *hit, uint32_t time, float32_t value, uint32_t type,uin
         *num={.time=time,.mealptr=mealptr,.value=value,.type=type};
         }
 
+    changeActivityReference(previous,*num);
     if(newpos>=getlibreSolid()) {
         addlibrechange(newpos);
         }
@@ -1075,7 +1106,7 @@ const bool needsync() const {
     return ident!=0LL;
     }
 const int getindex() const { //index in Java niet numdatas
-    LOGGERTAG("%p, ident=%lld\n",this,ident);
+//    LOGGERTAG("numdata %p->getident()=%lld\n",this,ident);
     if(ident==0LL)
         return 1;
     return 0;

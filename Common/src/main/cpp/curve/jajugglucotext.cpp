@@ -103,7 +103,7 @@ const jugglucotext jatext {
 	.duration="期間: %.1f 日",
 	.timeactive="稼働時間の割合: %.1f%%",
 	.nrmeasurement="測定数: %d",
-	.EstimatedA1C="推定A1C: %.1f%% (%d mmol/mol)",
+	.EstimatedA1C="uGMI ≈ 推定A1C: %.1f%% (%d mmol/mol)",
 	.GMI="血糖管理指標: %.1f%% (%d mmol/mol)",
 	.SD="標準偏差: %.2f",
 	.glucose_variability="血糖変動: %.1f%%",

@@ -74,7 +74,7 @@ jugglucotext betext {
 	.duration="Працягласць: %.1f дзён",
 	.timeactive="%.1f%% часу актыўны",
 	.nrmeasurement="Колькасць вымярэнняў: %d",
-	.EstimatedA1C="Ацэначна A1C: %.1f%% (%d mmol/mol)",
+	.EstimatedA1C="uGMI ≈ Ацэначна A1C: %.1f%% (%d mmol/mol)",
 	.GMI="Індыкатар кантролю ўзроўню глюкозы (GMI): %.1f%% (%d mmol/mol)",
 	.SD="SD: %.2f",
 	.glucose_variability="Варыябельнасць глюкозы: %.1f%%",

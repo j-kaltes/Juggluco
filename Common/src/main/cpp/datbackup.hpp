@@ -88,6 +88,7 @@ inline std::string_view getDefaultPort() {
 
 #include "mirrorstatus.hpp"
 #include "mirrorerror.h"
+#include "activity/cursor.hpp"
 #ifdef WEAROS_MESSAGES
 extern std::atomic_bool wearmessages[];
 inline bool usemessagecarrier(int index,const passhost_t &host) {
@@ -115,15 +116,21 @@ struct changednums {
     int len;
     struct numspan changed[maxchanged];
     uint32_t lastmeal;
-    senddata_t reserved[28];
+    juggluco::activity::mirror::Cursor activityState;
+    senddata_t reserved[8];
     uint32_t lastlastpos;
     void clear() {
         len=1;
         changed[0]={};
         lastmeal=0;
         lastlastpos=0;
+        activityState={};
+        std::fill(std::begin(reserved),std::end(reserved),0);
         }
     };
+static_assert(offsetof(changednums,changed)==4&&offsetof(changednums,lastmeal)==804);
+static_assert(offsetof(changednums,activityState)==808&&offsetof(changednums,reserved)==828);
+static_assert(offsetof(changednums,lastlastpos)==836&&sizeof(changednums)==840&&alignof(changednums)==4);
 int  updatenums(crypt_t *,Connect *connect,struct changednums *nums);
 inline static constexpr const char backupdat[]="backup.dat";
 inline static constexpr const char orbackup[] ="orbackup.dat";

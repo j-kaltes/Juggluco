@@ -913,7 +913,7 @@ std::pair<int,SensorGlucoseData *> makePhotoScanSensorIndex(std::string_view geg
                      std::array<char,5> si3zh;
                      };
             const auto skustr=std::string_view(sku.data(), sku.size()) ;
-            if(si3zh==sku || skustr == "64287" || skustr== "64286")   {
+            if(si3zh==sku || skustr == "64287" || skustr== "64286"|| skustr=="64328")   {
                 //Sibioni3GS18AAFZ
                 const auto pin=barcode.PIN;
                 if(pin.size()<6) {

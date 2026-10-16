@@ -76,7 +76,7 @@ jugglucotext uktext {
 	.duration="Тривалість: %.1f днів",
 	.timeactive="%.1f%% активного часу",
 	.nrmeasurement="Кількість вимірювань: %d",
-	.EstimatedA1C="Оцінно A1C: %.1f%% (%d mmol/mol)",
+	.EstimatedA1C="uGMI ≈ Оцінно A1C: %.1f%% (%d mmol/mol)",
 	.GMI="Індикатор контролю рівня глюкози (GMI): %.1f%% (%d mmol/mol)",
 	.SD="SD: %.2f",
 	.glucose_variability="Варіабельність глюкози: %.1f%%",

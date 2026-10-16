@@ -100,7 +100,7 @@ static jugglucotext ittext {
 	.duration="Durata: %.1f giorni",
 	.timeactive="%.1f%% del tempo attivo",
 	.nrmeasurement="Numero di misure: %d",
-	.EstimatedA1C="A1C stimata: %.1f%% (%d mmol/mol)",
+	.EstimatedA1C="uGMI ≈ A1C stimata: %.1f%% (%d mmol/mol)",
 	.GMI="Glucose Management Indicator: %.1f%% (%d mmol/mol)",
 	.SD="SD: %.2f",
 	.glucose_variability="Variabilità glicemica: %.1f%%",

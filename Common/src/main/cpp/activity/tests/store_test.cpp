@@ -20,6 +20,7 @@ int main() {
     uint32_t first;
     {
         a::Store s(directory);
+        assert(s.header().options==0); // No Amount creation and metric units until explicitly changed.
         first=s.upsert("session-1","watch.one","Biking","Original",session(start,start+1200));
         assert(first==1 && s.header().count==1 && s.valid(*s.get(first)));
         assert(near(a::Store::amount(*s.get(first),a::Duration),20));
@@ -37,13 +38,13 @@ int main() {
         assert(s.text(s.get(first)->title)=="Corrected" && s.get(first)->revision==2);
 
         // Two devices describing the same session share one Amount, but retain
-        // separate raw HR and metrics. Same-source overlapping sessions do not.
+        // separate raw HR and metrics. Same-source duplicates merge too.
         auto second=s.upsert("session-2","watch.two","","",session(start+30,start+1230));
         assert(second==2 && s.get(second)->group==first);
         auto third=s.upsert("session-3","watch.one","","",session(start,start+1260));
-        assert(third==3 && s.get(third)->group==third);
+        assert(third==3 && s.get(third)->group==first);
         auto ambiguous=s.upsert("ambiguous","watch.three","","",session(start,start+1260));
-        assert(s.get(ambiguous)->group==ambiguous);
+        assert(s.get(ambiguous)->group==first);
         auto unrelated=s.upsert("other","watch.three","","",session(start+7200,start+8400));
         assert(s.get(unrelated)->group==unrelated);
 
@@ -81,9 +82,11 @@ int main() {
         assert(near(s.get(unrelated)->values[a::AverageHR],140));
 
         s.header().defaultLabel=3;s.header().from=start;s.header().interval=900;
+        s.header().options=a::CreateAmounts|a::UseMiles;
         s.setRule({8,4,a::Distance,0});s.token(0,"cursor-after-completed-records");
         s.token(1,"completed-before-work");s.checkpoint(1,"pending-after-changes",true);
         assert(s.token(1)=="pending-after-changes" && s.text(s.header().tokens[1])=="completed-before-work");
+        assert(s.pendingToken(1)=="pending-after-changes" && s.pendingToken(0).empty());
         s.get(first)->flags&=~a::NeedsDetails; // This activity finished before an interruption.
         s.upsert("session-1","watch.one","Corrected","Notes",update);
         assert(!(s.get(first)->flags&a::NeedsDetails)); // Replaying metadata keeps that progress.
@@ -105,13 +108,15 @@ int main() {
     {
         // Direct reuse after remapping: no save/load serialization step.
         a::Store s(directory);
+        assert(s.header().options==(a::CreateAmounts|a::UseMiles));
         assert(s.header().count==405 && s.header().from==start && s.header().interval==900);
         assert(s.rule(8).label==4 && s.rule(8).metric==a::Distance);
         assert(s.rule(999).label==3 && s.rule(999).metric==a::Duration);
         assert(s.text(s.header().tokens[0])=="cursor-after-completed-records");
         assert(s.token(1)=="pending-after-changes" && !(s.get(first)->flags&a::NeedsDetails));
+        assert(s.pendingToken(1)=="pending-after-changes"); // Resume this batch after restarting.
         assert(s.get(2)->flags&a::NeedsDetails);
-        s.token(1,"fully-completed");assert(s.text(s.header().pendingTokens[1]).empty());
+        s.token(1,"fully-completed");assert(s.pendingToken(1).empty());
         s.beginSessionSnapshot();
         assert(s.get(first)->flags&a::NotReturned);
         s.upsert("session-1","watch.one","Corrected","Notes",*s.get(first));
@@ -125,6 +130,15 @@ int main() {
         // A published record with an unavailable payload cannot be followed.
         auto damaged=*s.get(first);damaged.id={UINT32_MAX-1,64};
         assert(!s.valid(damaged));
+        // An older file has zeroes in the unused options slot, but its former
+        // tail padding need not be zero. Upgrading it must not imply consent.
+        s.header().options=0;
+        std::memset(reinterpret_cast<char*>(&s.header())+4404,0xff,4);
+    }
+    {
+        a::Store s(directory);
+        assert(s.header().options==0&&s.header().count==405);
+        assert(s.rule(8).label==4&&s.rule(8).metric==a::Distance);
     }
     std::filesystem::remove_all(directory);
     std::puts("Activity storage, replay, sources, statistics, remapping and Num layout: passed");

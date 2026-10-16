@@ -1924,4 +1924,29 @@ Libreview.</font></p>
 <p>При использовании версии сервера Juggluco для командной строки вместо этого поместите файлы в каталог additions внутри jugglucodata.</p>
 ]]>
 </string>
+<string name="activities" >
+<![CDATA[
+<p><a href="https://www.juggluco.nl/Jugglucohelp/ru/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/activities.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/activities.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/activities.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/activities.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/activities.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/activities.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/activities.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/activities.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ko/activities.html">ko</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/activities.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/activities.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/activities.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/activities.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/activities.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/activities.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/activities.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/activities.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/activities.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/activities.html?lang=en">en</a>&emsp;&emsp;</p>
+<h1>Активности</h1>
+<p>Разрешите Juggluco получать записанные активности из <b>Health Connect</b>. Для этого настройте другие приложения, например Samsung Health, Strava или Garmin Connect, чтобы они передавали активности в Health Connect.</p>
+<p><b>Создавать значения из активностей</b>: В разделе <i>Метки</i> настройте создание значений для каждой активности под определённой меткой.</p>
+<p><b>Метки</b>: Для каждого типа активности, распознаваемого Health Connect, можно выбрать метку Juggluco и показатель, который будет под ней записываться. Если ничего не выбирать, используются метка <i>Активность</i> и длительность.</p>
+<p><b>Получать начиная с</b>: Укажите дату и время, начиная с которых нужно получать активности из Health Connect. На старых телефонах доступ может быть ограничен активностями за 30 дней до предоставления Juggluco разрешения Health Connect.</p>
+<p><b>Сохранить</b>: Сохраните изменения настроек.</p>
+<p><b>Получить</b>: Получите данные из Health Connect сейчас.</p>
+<p><b>Автоматическое получение</b>: Настройте регулярное получение данных из Health Connect.</p>
+<p><b>Сохранённые активности</b>: Список сохранённых активностей. Если включено <i>Создавать значения из активностей</i>, активность можно также просмотреть, нажав и удерживая соответствующее значение, а затем выбрав <i>Активность</i>.</p>
+]]>
+</string>
+<string name="assignActivity" >
+<![CDATA[
+<p><a href="https://www.juggluco.nl/Jugglucohelp/ru/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/assignActivity.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/assignActivity.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/assignActivity.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/assignActivity.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/assignActivity.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/assignActivity.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/assignActivity.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/assignActivity.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ko/assignActivity.html">ko</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/assignActivity.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/assignActivity.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/assignActivity.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/assignActivity.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/assignActivity.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/assignActivity.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/assignActivity.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/assignActivity.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/assignActivity.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/assignActivity.html?lang=en">en</a>&emsp;&emsp;</p>
+<h1>Создание значений из активностей</h1>
+<p>Настройте создание значения под определённой меткой на основе активности, полученной из Health Connect.</p>
+<p>Вверху показан соответствующий тип активности Health Connect. Выберите метку для значения в Juggluco или создайте <i>Новая метка</i>.</p>
+<p>Выберите показатель активности, который нужно сохранить под этой меткой.</p>
+<p><b>Округлять до:</b> Укажите шаг округления: при 1 отображаются только целые числа, при 0.1 — один знак после запятой и т. д.</p>
+<p><b>Также изменять ранее автоматически созданные значения</b>: Если параметр включён, все ранее автоматически созданные значения обновляются согласно новым настройкам. Если он выключен, настройки влияют только на значения, созданные для новых активностей.</p>
+]]>
+</string>
 </resources>

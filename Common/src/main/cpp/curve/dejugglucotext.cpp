@@ -95,7 +95,7 @@ jugglucotext detext {
 .duration="Dauer: %.1f Tage",
 .timeactive="%.1f%% der Zeit aktiv",
 .nrmeasurement="Anzahl Messungen: %d",
-.EstimatedA1C="Geschätzter HbA1c: %.1f%% (%d mmol/mol)",
+.EstimatedA1C="uGMI ≈ Geschätzter HbA1c: %.1f%% (%d mmol/mol)",
 .GMI="Glucose Management Indicator: %.1f%% (%d mmol/mol)",
 .SD="SD: %.2f",
 .glucose_variability="Glukosevariabilität: %.1f%%",

@@ -1196,6 +1196,7 @@ ViewGroup.LayoutParams params;
       CheckDirectionBox staticnum = new CheckDirectionBox(act);
       staticnum.setOnCheckedChangeListener( (buttonView,  isChecked)-> {
         Natives.setstaticnum(isChecked);
+        ActivityHealth.settingsChanged(act);
         if(!isWearable) {
             if(isChecked) {
                 BluetoothGlucoseMeter.stopDevices();

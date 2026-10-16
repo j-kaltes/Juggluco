@@ -105,7 +105,7 @@ jugglucotext rutext {
 	.duration="Продолжительность: %.1f дн.",
 	.timeactive="%.1f%% времени активно",
 	.nrmeasurement="Число измерений: %d",
-	.EstimatedA1C="Расчетный A1C: %.1f%% (%d ммоль/моль)",
+	.EstimatedA1C="uGMI ≈ Расчетный A1C: %.1f%% (%d ммоль/моль)",
 	.GMI="Индикатор управления глюкозой: %.1f%% (%d ммоль/моль)",
 	.SD="SD: %.2f",
 	.glucose_variability="Вариабельность глюкозы: %.1f%%",

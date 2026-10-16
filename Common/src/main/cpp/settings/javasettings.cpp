@@ -810,10 +810,11 @@ extern "C" JNIEXPORT void  JNICALL   fromjava(setuseWearos)(JNIEnv *env, jclass 
     }
 
 
-static std::mutex newLibre3ReceiverMutex;
-static uint64_t newLibre3ReceiverGeneration=0;
 
 // The caller holds newLibre3ReceiverMutex. This counter is not persisted.
+#ifndef WEAROS
+static std::mutex newLibre3ReceiverMutex;
+static uint64_t newLibre3ReceiverGeneration=0;
 static void invalidateNewLibre3ReceiverID() {
     settings->data()->newLibre3ReceiverIDreceived=false;
     ++newLibre3ReceiverGeneration;
@@ -833,9 +834,14 @@ extern "C" JNIEXPORT jboolean JNICALL fromjava(getnewLibre3Activation)(JNIEnv *e
     std::lock_guard<std::mutex> lock(newLibre3ReceiverMutex);
     return settings->data()->newLibre3Activation;
     }
+extern  void  setAskForAccount();
 extern "C" JNIEXPORT void JNICALL fromjava(setnewLibre3Activation)(JNIEnv *env,jclass cl,jboolean value) {
     std::lock_guard<std::mutex> lock(newLibre3ReceiverMutex);
     settings->data()->newLibre3Activation=value;
+
+    if(value&&!settings->data()->newLibre3ReceiverIDreceived)  {
+            setAskForAccount();
+            }
     }
 extern "C" JNIEXPORT jboolean JNICALL fromjava(getnewLibre3Takeover)(JNIEnv *env,jclass cl) {
     std::lock_guard<std::mutex> lock(newLibre3ReceiverMutex);
@@ -863,6 +869,8 @@ extern "C" JNIEXPORT jboolean JNICALL fromjava(savenewLibre3ReceiverID)(JNIEnv *
     std::lock_guard<std::mutex> lock(newLibre3ReceiverMutex);
     if(value<0 || value>0xffffffffLL || static_cast<uint64_t>(generation)!=newLibre3ReceiverGeneration)
         return false;
+    LOGGER("savenewLibre3ReceiverID(%lld,%lld)\n",(long long)value,(long long)generation);
+
     settings->data()->newLibre3ReceiverID=value;
     settings->data()->newLibre3ReceiverIDreceived=true;
     return true;
@@ -1101,7 +1109,7 @@ extern "C" JNIEXPORT jstring  JNICALL   fromjava(getnewYuApiKey)(JNIEnv *env, jc
      return env->NewStringUTF(YuKey);
     }
 
-
+#endif
 
 extern void startthreads() ;
 extern bool inituploader(JNIEnv *env);

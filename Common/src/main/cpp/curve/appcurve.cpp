@@ -443,6 +443,7 @@ int64_t JCurve::doehier(int menu,int item,bool right) {
                         case 0: 
                         showui=!showui;
                         settings->setui(showui);
+                       return menu+3*0x10;
 
                           break;
                         /*
@@ -486,7 +487,9 @@ int64_t JCurve::doehier(int menu,int item,bool right) {
                         case 4: shownumbers=!shownumbers; setshownumbers(shownumbers);return -1ll;
                         case 5: showmeals=!showmeals; setshowmeals(showmeals);return -1ll;
 
-                        case 6: invertcolors=!invertcolors; setinvertcolors(invertcolors) ; return menu+invertcolors*0x10;
+                        case 6: invertcolors=!invertcolors; 
+                                setinvertcolors(invertcolors) ; 
+                               return menu+invertcolors*0x10;
                               break;//return -1ll;
                         };
                     break;

@@ -81,7 +81,7 @@ jugglucotext kotext {
     .duration="기간: %.1f일",
     .timeactive="전체 시간의 %.1f%% 활성",
     .nrmeasurement="측정 횟수: %d",
-    .EstimatedA1C="추정 A1C: %.1f%% (%d mmol/mol)",
+    .EstimatedA1C="uGMI ≈ 추정 A1C: %.1f%% (%d mmol/mol)",
     .GMI="혈당 관리 지표(GMI): %.1f%% (%d mmol/mol)",
     .SD="SD: %.2f",
     .glucose_variability="혈당 변동성: %.1f%%",

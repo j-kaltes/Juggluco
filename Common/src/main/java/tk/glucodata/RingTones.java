@@ -106,10 +106,12 @@ void setringer(int ki,String uristr) {
 		}
 	}
 static public void EnableControls(View view,boolean enable){
-	if(talkbackrunning)
-		view.setVisibility(enable?VISIBLE:GONE);
-	else
-		subEnableControls(view,enable);
+    if(view!=null) {
+        if(talkbackrunning)
+            view.setVisibility(enable?VISIBLE:GONE);
+        else
+            subEnableControls(view,enable);
+        }
 	}
 
 static private void subEnableControls(View view,boolean enable){
@@ -118,7 +120,9 @@ static private void subEnableControls(View view,boolean enable){
 	if (view instanceof ViewGroup) {
 		ViewGroup vg = (ViewGroup) view;
 		for (int i = 0; i < vg.getChildCount(); i++) {
-			subEnableControls(vg.getChildAt(i), enable);
+            var child= vg.getChildAt(i);
+            if(child!=null)
+                subEnableControls(child, enable);
 		}
 	}
 }

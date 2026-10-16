@@ -272,12 +272,30 @@ virtual int makeconnection2(passhost_t *pass,char stype) override {
         return shakehands(pass,stype);
         }
 
+ssize_t sendstream(int direction,const void *buf,size_t len) {
+    // The command protocol reads a stream and already handles partial reads.
+    // One ICE block must fit its fixed packet acknowledgement window. Splitting
+    // here also covers encrypted commands and both directions without changing
+    // the command or activity file formats.
+    constexpr size_t chunkBytes=1024*1024;
+    static_assert(chunkBytes<=ICE_data::maxrelay);
+    const auto *data=static_cast<const char*>(buf);
+    size_t sent=0;
+    while(sent<len) {
+        if(!isConnected)return -1;
+        const int count=std::min(chunkBytes,len-sent);
+        if(icedata[direction].senddata(agent.load(),data+sent,count)!=count)return -1;
+        sent+=count;
+    }
+    return sent;
+}
+
 virtual ssize_t  r_sendni(const void *buf, size_t len) override{
     if(!isConnected)  {
           LOGGERICE("ICEConnect::r_sendni(%p,%d)= not connected\n",buf,len);
           return -1;
           }
-    auto ret= icedata[1].senddata(agent.load(), (const char *)buf,len);
+    auto ret=sendstream(1,buf,len);
     LOGGERICE("ICEConnect::r_sendni(%p,%d)=%d\n",buf,len,ret);
     return ret;
     }
@@ -295,7 +313,7 @@ virtual ssize_t  s_sendni(const void *buf, size_t len) override{
         LOGGERICE("ICEConnect::s_sendni(%p,%d) not connected\n",buf,len);
         return -1;
         }
-    auto ret= icedata[0].senddata(agent.load(), (const char *)buf,len);
+    auto ret=sendstream(0,buf,len);
     LOGGERICE("ICEConnect::s_sendni(%p,%d)=%d\n",buf,len,ret);
     return ret;
 	}

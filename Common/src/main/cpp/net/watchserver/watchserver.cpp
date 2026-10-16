@@ -1558,6 +1558,8 @@ extern   std::span<char> getstream(int startpos, int len, uint32_t starttime, ui
 extern   std::span<char> getscans(int startpos, int len, uint32_t starttime, uint32_t endtime,bool,int,bool,int,bool,bool);
 extern   std::span<char> getamounts(int startpos, int len, uint32_t starttime, uint32_t endtime,bool,int,bool,int,bool,bool);
 extern std::span<char> getmeals(int startpos, int len, uint32_t starttime, uint32_t endtime,bool header,int,bool,int,bool,bool);
+extern std::span<char> getactivities(int startpos,int len,uint32_t starttime,uint32_t endtime,bool header,int,bool,int,bool,bool);
+extern std::span<char> getextendedactivities(int startpos,int len,uint32_t starttime,uint32_t endtime,bool header,int,bool,int,bool,bool);
 extern std::span<char> libreviewweb(int startpos, int startlen, uint32_t starttime, uint32_t endtime,bool header,int unit,bool,int maxcount,bool,bool) ;
 
 
@@ -1603,6 +1605,8 @@ Getopts::Getopts(const char *posptr,int size,int defaultduration): unit(settings
       for (const char *iter = posptr + 1; iter < ends; iter = std::find(iter, ends, '&') + 1) {
          std::string_view header = "header"sv;
          if (setitervar(iter, header, headermode))
+            continue;
+         if (setitervar(iter, "extended"sv, extendedmode))
             continue;
          if (setitervar(iter, "json"sv, jsonmode))
             continue;
@@ -2535,9 +2539,9 @@ static bool jugglucos(const char * const input,int size, std::string_view hostna
         }
       }
 
-   constexpr const std::string_view types[]={"history"sv,"stream"sv,"scans"sv,"amounts"sv,"meals"sv,"libreview"sv};
-    constexpr const getdata_t procs[]={gethistory,getstream,getscans,getamounts,getmeals,libreviewweb};
-   constexpr const int perhour[]={12*62,60*81,2*81,5*85,200,700};
+   constexpr const std::string_view types[]={"history"sv,"stream"sv,"scans"sv,"amounts"sv,"meals"sv,"libreview"sv,"activities"sv};
+    constexpr const getdata_t procs[]={gethistory,getstream,getscans,getamounts,getmeals,libreviewweb,getactivities};
+   constexpr const int perhour[]={12*62,60*81,2*81,5*85,200,700,0}; // Activities grows its own buffer.
    for(int i=0;i<std::size(types);i++) {
       auto type=types[i];
       int typelen=type.size();
@@ -2557,7 +2561,8 @@ static bool jugglucos(const char * const input,int size, std::string_view hostna
          bool calibrated=opts.calibratedmode||opts.calibratedhistorymode||opts.calibratedscansmode;
 
 
-         std::span<char> res=procs[i](startpos,startlen,opts.start,opts.end,opts.headermode,opts.unit,!opts.exclusivemode,opts.datnr,calibrated,opts.pastvaluesmode);
+         const auto getdata=type=="activities"sv&&opts.extendedmode?getextendedactivities:procs[i];
+         std::span<char> res=getdata(startpos,startlen,opts.start,opts.end,opts.headermode,opts.unit,!opts.exclusivemode,opts.datnr,calibrated,opts.pastvaluesmode);
           if(!res.data()) {
                 return outofmemory(outdata);
                 }

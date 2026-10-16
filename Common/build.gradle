@@ -127,11 +127,10 @@ android {
         //compileSdk 36
         applicationId "tk.glucodata"
 
-         versionName '11.4.1'
+         versionName '11.5.0'
 //    multiDexEnabled true
 
         buildConfigField 'int', 'isRelease', '0'
-        buildConfigField 'int', 'isReleaseID', '0'
 
         externalNativeBuild {
             cmake {
@@ -202,8 +201,8 @@ flavorDimensions = ['wearos','libreVersion','SiBionics', 'DexCom','Google']
         libreOld {
     //******  Zet op rollout op 100% ******
             dimension 'libreVersion'
-            versionCode 921 //LIBRE2ONLY
-         //    versionName '11.4.1-no3'
+            versionCode 923 //LIBRE2ONLY
+         //    versionName '11.5.0-no3'
             versionNameSuffix '-no3'
             buildConfigField 'int', 'libreVersion', '2'
             externalNativeBuild.cmake {
@@ -216,7 +215,7 @@ flavorDimensions = ['wearos','libreVersion','SiBionics', 'DexCom','Google']
 //       minSdk 23
             dimension 'libreVersion'
         versionNameSuffix '-li3'
-        versionCode 921 //LIBRE3
+        versionCode 923 //LIBRE3
     //******  Zet op rollout op 100% ******
 
                buildConfigField 'int', 'libreVersion', '3'
@@ -231,7 +230,7 @@ flavorDimensions = ['wearos','libreVersion','SiBionics', 'DexCom','Google']
         si {
       dimension 'SiBionics'
         versionNameSuffix '-si'
-        versionCode 921 
+        versionCode 923 
        buildConfigField 'int', 'SiBionics', '1'
        externalNativeBuild.cmake {
          cppFlags "   -DSIBIONICS=1 "
@@ -240,7 +239,7 @@ flavorDimensions = ['wearos','libreVersion','SiBionics', 'DexCom','Google']
         }
         nosi {
             dimension 'SiBionics'
-         versionCode 921 
+         versionCode 923 
          versionNameSuffix '-nosi'
           buildConfigField 'int', 'SiBionics', '0'
           externalNativeBuild.cmake {
@@ -258,9 +257,9 @@ flavorDimensions = ['wearos','libreVersion','SiBionics', 'DexCom','Google']
         minSdk = 26
         buildConfigField 'int', 'minSDK', '26'
         manifestPlaceholders["minSDK"] = '26'
-        versionCode 922 //WATCH
+        versionCode 924 //WATCH
     //******  Zet op rollout op 100% ******
-        //versionName '11.4.1-wear'
+        //versionName '11.5.0-wear'
         versionNameSuffix '-wear'
         signingConfig signingConfigs.alg
 
@@ -279,8 +278,8 @@ flavorDimensions = ['wearos','libreVersion','SiBionics', 'DexCom','Google']
 
 //        minSdk 19
             dimension 'wearos'
-        versionCode 922 //WATCH
-        //versionName '11.4.1-small'
+        versionCode 924 //WATCH
+        //versionName '11.5.0-small'
         versionNameSuffix '-small'
         signingConfig signingConfigs.alg
 
@@ -319,14 +318,13 @@ buildTypes {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro', 'proguard-rules.my', 'proguard-rules.log'
 
             buildConfigField 'int', 'isRelease', '1'
-        buildConfigField 'int', 'isReleaseID', '1'
         buildConfigField 'int', 'doLog', '0'
 
             jniDebuggable false
             debuggable false
             externalNativeBuild.cmake {
-                cppFlags "$CPPSTD","-DRELEASEID=1","-DRELEASE=1","-DNORAWSTREAM=1" , "-DRELEASEDIR=1", "-DNOLOG=1","-DMIRRORPORT=8795" //, "-DSCANLOG=1" , "-DNOLOG=1"
-                cFlags "-DRELEASEID=1","-DRELEASE=1","-DNORAWSTREAM=1" , "-DRELEASEDIR=1", "-DNOLOG=1" //, "-DSCANLOG=1" , "-DNOLOG=1"
+                cppFlags "$CPPSTD","-DRELEASE=1","-DNORAWSTREAM=1" , "-DRELEASEDIR=1", "-DNOLOG=1","-DMIRRORPORT=8795" //, "-DSCANLOG=1" , "-DNOLOG=1"
+                cFlags "-DRELEASE=1","-DNORAWSTREAM=1" , "-DRELEASEDIR=1", "-DNOLOG=1" //, "-DSCANLOG=1" , "-DNOLOG=1"
 
 
                 }
@@ -341,14 +339,13 @@ buildTypes {
 
         buildConfigField 'int', 'doLog', '1'
             buildConfigField 'int', 'isRelease', '1'
-        buildConfigField 'int', 'isReleaseID', '1'
 
             jniDebuggable false
             debuggable false
             externalNativeBuild.cmake {
 //                 arguments "-DANDROID_SANITIZE=hwaddress"
-                cppFlags "$CPPSTD","-DRELEASEID=1","-DRELEASE=1","-DNORAWSTREAM=1" , "-DRELEASEDIR=1", "-DSCANLOG=1", "-DMIRRORPORT=8795"
-                cFlags "-DRELEASEID=1","-DRELEASE=1","-DNORAWSTREAM=1" , "-DRELEASEDIR=1", "-DSCANLOG=1"
+                cppFlags "$CPPSTD","-DRELEASE=1","-DNORAWSTREAM=1" , "-DRELEASEDIR=1", "-DSCANLOG=1", "-DMIRRORPORT=8795"
+                cFlags "-DRELEASE=1","-DNORAWSTREAM=1" , "-DRELEASEDIR=1", "-DSCANLOG=1"
 
 
                 }
@@ -364,14 +361,13 @@ buildTypes {
 
         buildConfigField 'int', 'doLog', '1'
             buildConfigField 'int', 'isRelease', '1'
-        buildConfigField 'int', 'isReleaseID', '1'
 
             jniDebuggable false
             debuggable false
             externalNativeBuild.cmake {
 //                 arguments "-DANDROID_SANITIZE=hwaddress"
-                cppFlags "$CPPSTD","-DRELEASEID=1","-DRELEASE=1","-DNORAWSTREAM=1" , "-DRELEASEDIR=1", "-DSCANLOG=1"
-                cFlags "-DRELEASEID=1","-DRELEASE=1","-DNORAWSTREAM=1" , "-DRELEASEDIR=1", "-DSCANLOG=1"
+                cppFlags "$CPPSTD","-DRELEASE=1","-DNORAWSTREAM=1" , "-DRELEASEDIR=1", "-DSCANLOG=1"
+                cFlags "-DRELEASE=1","-DNORAWSTREAM=1" , "-DRELEASEDIR=1", "-DSCANLOG=1"
 
 
                 }
@@ -389,10 +385,9 @@ buildTypes {
 
         buildConfigField 'int', 'doLog', '0'
             buildConfigField 'int', 'isRelease', '1'
-        buildConfigField 'int', 'isReleaseID', '1'
             externalNativeBuild.cmake {
-                cppFlags "$CPPSTD","-DRELEASEID=1","-DRELEASE=1","-DNORAWSTREAM=1" , "-DRELEASEDIR=1", "-DNOLOG=1", "-DAPPSUFFIX=\"quotes($applicationIdSuffix)\" ","-DMIRRORPORT=9343" //, "-DSCANLOG=1" , "-DNOLOG=1"
-                cFlags "-DRELEASEID=1","-DRELEASE=1","-DNORAWSTREAM=1" , "-DRELEASEDIR=1", "-DNOLOG=1", "-DAPPSUFFIX=\"quotes($applicationIdSuffix)\" "           //, "-DSCANLOG=1" , "-DNOLOG=1"
+                cppFlags "$CPPSTD","-DRELEASE=1","-DNORAWSTREAM=1" , "-DRELEASEDIR=1", "-DNOLOG=1", "-DAPPSUFFIX=\"quotes($applicationIdSuffix)\" ","-DMIRRORPORT=9343" //, "-DSCANLOG=1" , "-DNOLOG=1"
+                cFlags "-DRELEASE=1","-DNORAWSTREAM=1" , "-DRELEASEDIR=1", "-DNOLOG=1", "-DAPPSUFFIX=\"quotes($applicationIdSuffix)\" "           //, "-DSCANLOG=1" , "-DNOLOG=1"
 //                cppFlags "$CPPSTD","-DRELEASEID=1","-DRELEASE=1","-DNORAWSTREAM=1" , "-DRELEASEDIR=1", "-DNOLOG=1"         //, "-DSCANLOG=1" , "-DNOLOG=1"
 
 
@@ -404,7 +399,7 @@ buildTypes {
             signingConfig signingConfigs.alg
             minifyEnabled  false
             jniDebuggable true
-            buildConfigField 'int', 'isReleaseID', '0'
+            buildConfigField 'int', 'isRelease', '0'
             versionNameSuffix 'DUBDEBUG'
         applicationIdSuffix ".dub"
         buildConfigField 'int', 'doLog', '1'
@@ -421,7 +416,7 @@ buildTypes {
             versionNameSuffix 'release2'
         applicationIdSuffix ".debug"
 
-            buildConfigField 'int', 'isReleaseID', '1'
+            buildConfigField 'int', 'isRelease', '1'
             buildConfigField 'int', 'doLog', '0'
 
             jniDebuggable false
@@ -445,7 +440,6 @@ buildTypes {
             versionNameSuffix 'release2log'
         applicationIdSuffix ".debug"
 
-            buildConfigField 'int', 'isReleaseID', '1'
              buildConfigField 'int', 'doLog', '1'
 
             jniDebuggable false
@@ -469,7 +463,6 @@ buildTypes {
         applicationIdSuffix ".debug"
             versionNameSuffix 'DEBUG'
 
-            buildConfigField 'int', 'isReleaseID', '0'
              buildConfigField 'int', 'doLog', '1'
 
             jniDebuggable true 
@@ -485,43 +478,18 @@ buildTypes {
             }
             minifyEnabled  false
         }
-        releasedebug {
-         manifestPlaceholders["requireWatch"] = "false"
-         manifestPlaceholders["debuggable"] = "true"
-            versionNameSuffix 'releasedebug'
-            signingConfig signingConfigs.alg
-            minifyEnabled true 
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro', 'proguard-rules.my', 'proguard-rules.log'
-            jniDebuggable false
-        buildConfigField 'int', 'doLog', '0'
-            buildConfigField 'int', 'isRelease', '1'
-        buildConfigField 'int', 'isReleaseID', '0'
-            externalNativeBuild.cmake {
-                cppFlags "$CPPSTD","-DRELEASEID=0","-DRELEASE=1","-DNORAWSTREAM=1" , "-DRELEASEDIR=0", "-DNOLOG=1","-DMIRRORPORT=8795" //, "-DSCANLOG=1" , "-DNOLOG=1"
-                cFlags "-DRELEASEID=0","-DRELEASE=1","-DNORAWSTREAM=1" , "-DRELEASEDIR=0", "-DNOLOG=1" //, "-DSCANLOG=1" , "-DNOLOG=1"
-
-//         cppFlags "$CPPSTD","-DRELEASE=1", "-DRELEASEDIR=1","-DNORAWSTREAM=1" //, "-DNOLOG=1"
-//             cppFlags "$CPPSTD","-DRELEASE=1", "-DRELEASEDIR=1","-DNORAWSTREAM=1", "-DNOLOG=1"
-//                arguments " -DCMAKE_VERBOSE_MAKEFILE=1  -DCMAKE_CXX_FLAGS=' -DRELEASE=1 -DNORAWSTREAM=1 -DNOLOG=1'" 
-
-                }
-        }
         debug2 {
          manifestPlaceholders["requireWatch"] = "false"
          manifestPlaceholders["debuggable"] = "true"
             versionNameSuffix 'debug2'
-      //  debuggable true        
-           // jniDebuggable true
             signingConfig signingConfigs.alg
             minifyEnabled true 
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro', 'proguard-rules.my'
-        zipAlignEnabled true
-            buildConfigField 'int', 'isReleaseID', '1'
-        buildConfigField 'int', 'doLog', '1'
+            zipAlignEnabled true
+            buildConfigField 'int', 'doLog', '1'
             externalNativeBuild.cmake {
-                cppFlags "$CPPSTD","-DRELEASEID=1", "-DDEBUG=1", "-DSCANLOG=1", "-DRELEASEDIR=1","-DMIRRORPORT=9444" 
-                cFlags "-DRELEASEID=1", "-DDEBUG=1", "-DSCANLOG=1", "-DRELEASEDIR=1"
-               // cppFlags "$CPPSTD", "-DDEBUG=1", "-DSCANLOG=1"
+                cppFlags "$CPPSTD","-DDEBUG=1", "-DSCANLOG=1", "-DRELEASEDIR=1","-DMIRRORPORT=9444"
+                cFlags "-DDEBUG=1", "-DSCANLOG=1", "-DRELEASEDIR=1"
             }
         }
         debug3 {
@@ -529,11 +497,10 @@ buildTypes {
          manifestPlaceholders["debuggable"] = "true"
             signingConfig signingConfigs.alg
             minifyEnabled  false
-            buildConfigField 'int', 'isReleaseID', '1'
         buildConfigField 'int', 'doLog', '1'
             externalNativeBuild.cmake {
-                cppFlags "$CPPSTD","-DRELEASEID=1","-DDEBUG=1", "-DSCANLOG=1", "-DRELEASEDIR=1","-DNDK_DEBUG=1","-UNDEBUG","-DMIRRORPORT=8795" 
-                cFlags "-DRELEASEID=1","-DDEBUG=1", "-DSCANLOG=1", "-DRELEASEDIR=1","-DNDK_DEBUG=1","-UNDEBUG"
+                cppFlags "$CPPSTD","-DDEBUG=1", "-DSCANLOG=1", "-DRELEASEDIR=1","-DNDK_DEBUG=1","-UNDEBUG","-DMIRRORPORT=8795"
+                cFlags "-DDEBUG=1", "-DSCANLOG=1", "-DRELEASEDIR=1","-DNDK_DEBUG=1","-UNDEBUG"
         }
 
             versionNameSuffix 'DEBUGRELEASE'
@@ -630,6 +597,19 @@ buildTypes {
         // addGeneratedSourceDirectory() assigns outputDirectory and carries the task
         // dependency automatically; no java.srcDir Provider or JavaCompile hook is needed.
         onVariants(selector().all(), { variant ->
+            // One application identity controls Java and native Garmin defaults.
+            // Use the final variant ID, including flavor/build-type suffixes.
+            def releaseId = variant.applicationId.get() == "tk.glucodata" ? 1 : 0
+            variant.buildConfigFields.put("isReleaseID",
+                    new com.android.build.api.variant.BuildConfigField(
+                            "int", releaseId.toString(), "Derived from applicationId"))
+            def nativeBuild = variant.externalNativeBuild
+            if (nativeBuild != null) {
+                def releaseIdFlag = "-DRELEASEID=" + releaseId
+                nativeBuild.cFlags.add(releaseIdFlag)
+                nativeBuild.cppFlags.add(releaseIdFlag)
+            }
+
             def taskName = "generate${variant.name.capitalize()}BuildTime"
             def buildTimeTask = tasks.register(taskName, GenerateBuildTimeTask) {
                 // BUILD_TIME is deliberately different for every actual build invocation.

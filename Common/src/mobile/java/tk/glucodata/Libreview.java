@@ -133,15 +133,22 @@ public static boolean retrieveLibreReceiverID() {
       libreReceiverBusy=true;
       libreReceiverError="";
       }
+   if(doLog) {
+      Log.i(LOG_ID,"Libre receiver retrieval generation="+generation+
+              " email="+email+" legacyToken="+token+" applicationId="+applicationId);
+      }
    try {
       LibreReceiverApi api=new LibreReceiverApi(Applic.app);
       String validated=api.validate(token,email);
+      if(doLog) Log.i(LOG_ID,"Libre receiver validatedToken="+validated);
       if(generation!=Natives.getnewLibre3ReceiverGeneration())
          return libreReceiverFailed("Account changed during validation; conversion was not sent");
       String receiver=api.convert(validated,applicationId);
       long id=LibreReceiverApi.receiverNumber(receiver);
+      if(doLog) Log.i(LOG_ID,"Libre receiver conversion receiverID="+receiver+" numeric="+id);
       if(!Natives.savenewLibre3ReceiverID(id,generation))
          return libreReceiverFailed("Account changed during conversion; its result was not saved");
+      if(doLog) Log.i(LOG_ID,"Libre receiver saved receiverID="+receiver+" numeric="+id+" generation="+generation);
       libreReceiverError="";
       return true;
       }

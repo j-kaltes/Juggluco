@@ -22,7 +22,6 @@
 package tk.glucodata;
 
 
-import static tk.glucodata.Applic.isRelease;
 import static tk.glucodata.Log.doLog;
 import static tk.glucodata.Natives.getlibreAccountIDnumber;
 //import static tk.glucodata.Natives.processbar;

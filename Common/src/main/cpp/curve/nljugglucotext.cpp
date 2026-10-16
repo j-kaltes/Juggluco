@@ -92,7 +92,7 @@ static jugglucotext nltext {
 	.duration="Duur: %.1f dagen",
 	.timeactive="%.1f%% van de tijd actief",
 	.nrmeasurement="Aantal metingen: %d",
-	.EstimatedA1C="Geschatte Hba1C: %.1f%% (%d mmol/mol)",
+	.EstimatedA1C="uGMI ≈ Geschatte Hba1C: %.1f%% (%d mmol/mol)",
 	.GMI="Glucose Management Indicator: %.1f%% (%d mmol/mol)",
 	.SD="SD: %.2f",
 	.glucose_variability="Glucose variabiliteit: %.1f%%",

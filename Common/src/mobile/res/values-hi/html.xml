@@ -3200,4 +3200,29 @@ Sibionics और Linx/Lumiflex/Aidex X सेंसरों के लिए �
 <p>Juggluco सर्वर के कमांड लाइन संस्करण का उपयोग करते समय, फ़ाइलों को इसके बजाय jugglucodata के अंदर additions डायरेक्टरी में रखें।</p>
 ]]>
 </string>
+<string name="activities" >
+<![CDATA[
+<p><a href="https://www.juggluco.nl/Jugglucohelp/hi/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/activities.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/activities.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/activities.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/activities.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/activities.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/activities.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/activities.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/activities.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ko/activities.html">ko</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/activities.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/activities.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/activities.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/activities.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/activities.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/activities.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/activities.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/activities.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/activities.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/activities.html?lang=en">en</a>&emsp;&emsp;</p>
+<h1>गतिविधियाँ</h1>
+<p>Juggluco को <b>Health Connect</b> से रिकॉर्ड की गई गतिविधियाँ प्राप्त करने दें। इसका उपयोग करने के लिए Samsung Health, Strava या Garmin Connect जैसे अन्य ऐप को इस तरह सेट करें कि वे गतिविधियाँ Health Connect को भेजें।</p>
+<p><b>गतिविधियों से मान बनाएँ</b>: प्रत्येक गतिविधि के लिए किसी लेबल के अंतर्गत मान बनाने के लिए <i>लेबल</i> की सेटिंग का उपयोग करें।</p>
+<p><b>लेबल</b>: Health Connect द्वारा पहचाने जाने वाले प्रत्येक गतिविधि प्रकार के लिए आप Juggluco में लेबल और उसके अंतर्गत सहेजा जाने वाला गतिविधि माप चुन सकते हैं। कुछ न चुनने पर <i>गतिविधि</i> लेबल और अवधि माप का उपयोग होगा।</p>
+<p><b>यहाँ से प्राप्त करें</b>: वह तारीख और समय चुनें जहाँ से Health Connect से गतिविधियाँ प्राप्त की जाएँ। पुराने फ़ोन पर केवल Juggluco को Health Connect की अनुमति मिलने से पहले के अधिकतम 30 दिनों की गतिविधियों तक पहुँच हो सकती है।</p>
+<p><b>सहेजें</b>: सेटिंग में किए गए बदलाव सहेजें।</p>
+<p><b>प्राप्त करें</b>: Health Connect से डेटा अभी प्राप्त करें।</p>
+<p><b>स्वचालित प्राप्ति</b>: Juggluco को नियमित अंतराल पर Health Connect से डेटा प्राप्त करने के लिए सेट करें।</p>
+<p><b>सहेजी गई गतिविधियाँ</b>: सहेजी गई गतिविधियों की सूची। यदि <i>गतिविधियों से मान बनाएँ</i> चालू है, तो संबंधित मान को देर तक दबाकर और फिर <i>गतिविधि</i> चुनकर भी गतिविधि देख सकते हैं।</p>
+]]>
+</string>
+<string name="assignActivity" >
+<![CDATA[
+<p><a href="https://www.juggluco.nl/Jugglucohelp/hi/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/assignActivity.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/assignActivity.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/assignActivity.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/assignActivity.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/assignActivity.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/assignActivity.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/assignActivity.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/assignActivity.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ko/assignActivity.html">ko</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/assignActivity.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/assignActivity.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/assignActivity.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/assignActivity.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/assignActivity.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/assignActivity.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/assignActivity.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/assignActivity.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/assignActivity.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/assignActivity.html?lang=en">en</a>&emsp;&emsp;</p>
+<h1>गतिविधियों से मान बनाना</h1>
+<p>Health Connect से प्राप्त गतिविधि से किसी निश्चित लेबल के अंतर्गत मान बनाने का तरीका सेट करें।</p>
+<p>सबसे पहले संबंधित Health Connect गतिविधि प्रकार दिखता है। Juggluco में मान के लिए लेबल चुनें या <i>नया लेबल</i> बनाएँ।</p>
+<p>चुनें कि इस लेबल के अंतर्गत गतिविधि का कौन-सा माप सहेजा जाए।</p>
+<p><b>इस पर पूर्णांकित करें:</b> पूर्णांकन का अंतर निर्धारित करें: 1 रखने पर केवल पूर्णांक दिखेंगे और 0.1 रखने पर दशमलव के बाद एक अंक दिखेगा।</p>
+<p><b>पहले स्वचालित रूप से बनाए गए मान भी बदलें</b>: इस विकल्प के चालू होने पर पहले स्वचालित रूप से बने सभी मान नई सेटिंग के अनुसार बदल दिए जाते हैं। इसे बंद रखने पर बदलाव केवल बाद में जोड़ी गई गतिविधियों के मानों पर लागू होते हैं।</p>
+]]>
+</string>
 </resources>

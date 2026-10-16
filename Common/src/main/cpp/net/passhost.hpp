@@ -188,12 +188,12 @@ void setnameGen(const char *label,const void *padding)  {
 	for(int i=0;i<maxnamelen;i++) {
 		if(!label[i]) {
             memcpy(name+i,padding,maxnamelen-i);
-			LOGGER("setname(%s)\n",name);
+			LOGGER("setnameGen(%s)\n",name);
 			return;
 			}
 		name[i]=label[i];
 		}
-	 LOGGER("setname(%s)\n",name);
+	 LOGGER("setnameGen(%s)\n",name);
 	}
 void setname(const char *label)  {
         setnameGen(label,zeros);

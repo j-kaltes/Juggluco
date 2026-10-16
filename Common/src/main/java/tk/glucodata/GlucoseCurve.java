@@ -424,6 +424,8 @@ public static int getheight() {
 public static int getwidth() {
     return width;
     }
+/*
+DON'T use context.getResources().getDisplayMetrics().heightPixels or context.getResources().getDisplayMetrics().widthPixels  they give the wrong value.
 public static int getheight(Context context) {
     int current=context.getResources().getDisplayMetrics().heightPixels;
     return current>0?current:height;
@@ -432,13 +434,14 @@ public static int getwidth(Context context) {
     int current=context.getResources().getDisplayMetrics().widthPixels;
     return current>0?current:width;
     }
+    */
 public static boolean isLandscape(Context context) {
     int orientation=context.getResources().getConfiguration().orientation;
     if(orientation==Configuration.ORIENTATION_LANDSCAPE)
         return true;
     if(orientation==Configuration.ORIENTATION_PORTRAIT)
         return false;
-    return getwidth(context)>getheight(context);
+    return getwidth()>getheight();
     }
 static void setgeo(int w,int h) {
     width=w;
@@ -715,10 +718,10 @@ static private boolean startv1=true;
 
                                 break;
                                 }
-                                            case 6: ((Activity) getContext()).moveTaskToBack(true);break; //keeps current state 
-                                            case 7:  Notify.stopalarm();break;
-                                            default:
-                                    }
+                            case 6: ((Activity) getContext()).moveTaskToBack(true);break; //keeps current state 
+                            case 7:  Notify.stopalarm();break;
+                            default:
+                            }
 
                             break;
              case 1: {
@@ -750,13 +753,17 @@ static private boolean startv1=true;
                 };
                 };break;
             case 2: {
-                if(item==0) {
-                    ((MainActivity) getContext()).selectionSystemUI();
-                    break;
-                    }
-                var light=item==0;
-                var main=(MainActivity) getContext();
-                main.lightBars(light);
+                int val=item&0xF;
+                switch(val) {
+                        case 3: 
+                            ((MainActivity) getContext()).selectionSystemUI();
+                            break;
+                        default: ((MainActivity) getContext()).lightBars(val==0);
+                                break;
+                        };
+//                var light=item==0;
+ //               var main=(MainActivity) getContext();
+  //              main.lightBars(light);
                 };break;
             case 3:
                 switch (item) {
@@ -1473,9 +1480,9 @@ else {
 
 
     Layout layout=new Layout(context,(lay, w, h)->{
-    int width=GlucoseCurve.getwidth(context);
+    int width=GlucoseCurve.getwidth();
 
-    int height=GlucoseCurve.getheight(context);
+    int height=GlucoseCurve.getheight();
     int ymax=height-MainActivity.systembarBottom-h;
     int ypos=(int)((height - h) *.65f);
     if(ypos>ymax) {

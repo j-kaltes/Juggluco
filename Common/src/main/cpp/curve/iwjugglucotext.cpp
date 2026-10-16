@@ -94,7 +94,7 @@ jugglucotext iwtext {
 .duration="משך: %.1f ימים",
 .timeactive="%.1f%% מהזמן הפעיל",
 .nrmeasurement="מספר מדידות: %d",
-.EstimatedA1C="A1C משוער: %.1f%% (%d mmol/mol)",
+.EstimatedA1C="uGMI ≈ A1C משוער: %.1f%% (%d mmol/mol)",
 .GMI="אינדיקטור לניהול גלוקוז: %.1f%% (%d mmol/mol)",
 .SD="SD: %.2f",
 .glucose_variability="שונות גלוקוז: %.1f%%",
