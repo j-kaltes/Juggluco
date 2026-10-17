@@ -830,6 +830,8 @@ extern "C" JNIEXPORT void JNICALL   fromjava(setHostDeactivated)(JNIEnv *envin, 
 #if !defined(WEAROS)&& __NDK_MAJOR__ >= 26
 extern std::string mkbackjson(int pos);
 extern "C" JNIEXPORT jstring JNICALL   fromjava(getbackJson)(JNIEnv *envin, jclass cl,jint pos) {
+    if(!backup) // networking not started yet
+        return myNewStringUTF(envin,"");
     auto jsonstr=mkbackjson(pos);
     char *data=jsonstr.data();
     data[jsonstr.size()]='\0';

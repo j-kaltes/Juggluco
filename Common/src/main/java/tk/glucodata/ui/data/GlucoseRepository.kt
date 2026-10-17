@@ -4278,13 +4278,16 @@ class GlucoseRepository(
 
         /**
          * Connection codes are a phone feature: the native side does not export
-         * them on Wear OS, so the editor hides everything that needs one.
+         * them on Wear OS, so the editor hides everything that needs one. Probed lazily:
+         * the class loads before native networking has started.
          */
-        val mirrorCodesAvailable: Boolean = try {
-            Natives.getbackJson(0)
-            true
-        } catch (_: Throwable) {
-            false
+        val mirrorCodesAvailable: Boolean by lazy {
+            try {
+                Natives.getbackJson(-1)
+                true
+            } catch (_: Throwable) {
+                false
+            }
         }
         const val CALIBRATION_PREFS = "calibration_prefs"
         const val KEY_CALIBRATION_PROMPT_SHOWN = "calibration_prompt_shown"
