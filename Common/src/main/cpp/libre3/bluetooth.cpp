@@ -385,6 +385,17 @@ struct fastData {
         };
     } __attribute__ ((packed));
 static_assert(sizeof(fastData)==14);
+extern void wakestreamuploader();
+static void backnightscout(SensorGlucoseData *sens,int lifecount) {
+    const int iter=lifecount-sens->getStreamStart();
+    if(iter<0)
+        return;
+    if(iter<sens->nightback) {
+        LOGGER("backnightscout nightback=%d\n",iter);
+        sens->nightback=iter;
+        wakestreamuploader();
+        }
+    }
 extern "C" JNIEXPORT  jboolean JNICALL fromjava(saveLibre3fastData)(JNIEnv *env, jclass thiz, jlong sensorptr,jbyteArray jfastdata) {
     SensorGlucoseData *sens=reinterpret_cast<SensorGlucoseData *>(sensorptr);
     if(!sens)  {
@@ -446,6 +457,7 @@ extern "C" JNIEXPORT  jboolean JNICALL fromjava(saveLibre3fastData)(JNIEnv *env,
                 LOGAR("save fastdata");
                 sens->savepollallIDs<60>(wastime,lifecount,curval,0,NAN);
                 sens->backstream(lifecount);
+                backnightscout(sens,lifecount);
                 if(lifecount>=(sens->pollcount()-2))
                     backup->wakebackup(wakestream);
                 }
@@ -584,6 +596,7 @@ extern "C" JNIEXPORT jboolean JNICALL fromjava(saveLingoFastData)(JNIEnv *env, j
         if(wastime>=1666476000 && !sens->hasStreamID(lifecount,wastime)) {
             sens->savepollallIDs<60>(wastime,lifecount,curval,0,NAN);
             sens->backstream(lifecount);
+            backnightscout(sens,lifecount);
             if(lifecount>=(sens->pollcount()-2)) backup->wakebackup(wakestream);
             }
         }

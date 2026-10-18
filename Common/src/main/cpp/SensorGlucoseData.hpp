@@ -688,6 +688,7 @@ const int glucosebytes()const {
     return getelsize();
     }
 bool waiting=true;
+int nightback=INT_MAX;
 const int32_t maxpos() const {
   if(isSibionics()) {
        return maxSIhours*perhour();

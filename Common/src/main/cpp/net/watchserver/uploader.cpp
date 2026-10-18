@@ -213,6 +213,8 @@ static bool uploadCGM3() {
             std::span<const ScanData> gdata=sens->getPolldata();
             const sensorname_t *sensorname=sens->shortsensorname();
             int len=gdata.size();
+            if(int back=std::exchange(sens->nightback,INT_MAX);back<sens->getinfo()->nightiter)
+                sens->getinfo()->nightiter=back;
             int positer=sens->getinfo()->nightiter;
             LOGGER("%d: positer=%d\n",sensorid,positer);
             int left=len-positer;
@@ -238,7 +240,15 @@ extern char * writev3entry(char *outin,const ScanData *val, const sensorname_t *
                         logwriter(buf,buflen);
                         auto res=nightuploadEntries3(buf,buflen);
                         if(res==200||res==201) {
-                            sens->getinfo()->nightiter=positer+1;
+                            //back can be >= nightiter: positer runs ahead of nightiter over placeholder slots
+                            if(int back=std::exchange(sens->nightback,INT_MAX);back<=positer) {
+                                if(back<sens->getinfo()->nightiter)
+                                    sens->getinfo()->nightiter=back;
+                                LOGGER("%d: backfilled %d, restart\n",sensorid,back);
+                                positer=back-1;
+                                }
+                            else
+                                sens->getinfo()->nightiter=positer+1;
                             send=true;
                             }
                         else {
@@ -288,6 +298,8 @@ static bool uploadCGM() {
             const sensorname_t *sensorname=sens->shortsensorname();
             const char *sensornamestr=sensorname->data();
             int len=gdata.size();
+            if(int back=std::exchange(sens->nightback,INT_MAX);back<sens->getinfo()->nightiter)
+                sens->getinfo()->nightiter=back;
             int positer=sens->getinfo()->nightiter;
             LOGGER("%d: positer=%d\n",sensorid,positer);
             int left=len-positer;
@@ -321,7 +333,7 @@ constexpr const int            maxitems=5000;
                     LOGGER("%d: UPLOADER #%d\n",sensorid,datalen);
                     LOGGERN(start,datalen);
                     if(nightuploadEntries(start,datalen)==HTTP_OK) {
-                        sens->getinfo()->nightiter=len;
+                        sens->getinfo()->nightiter=std::min(std::exchange(sens->nightback,INT_MAX),len);
                         LOGGER("%d nightupload Success\n",sensorid);
                         LOGGER("%d saved nightiter=%d\n", sensorid,len);
                         newstartsensor=sensorid;
@@ -334,7 +346,7 @@ constexpr const int            maxitems=5000;
                     }
             else  {
                    LOGGER("ADDED nothing %d new positer=%d\n",sensorid,len);
-               sens->getinfo()->nightiter=len;
+               sens->getinfo()->nightiter=std::min(std::exchange(sens->nightback,INT_MAX),len);
                }
                 }
             if(sens->getmaxtime()>nu) 
