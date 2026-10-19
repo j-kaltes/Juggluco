@@ -102,7 +102,10 @@ class MessageReceiver: WearableListenerService() {
             MessageSender.WAKESTREAM_PATH -> {
                 Natives.wakestreamhereonly()
             }
-            MessageSender.DATA_PATH   -> {
+            MessageSender.DATA_PATH -> {
+                Log.e(LOG_ID,"Legacy /data rejected: update both mirror peers for session-safe streaming")
+            }
+            MessageSender.MIRROR_STREAM_PATH -> {
                 if(fromBle) {
                     val localIndex=BleMirror.hostIndex(connectionName)
                     if(localIndex<0)
@@ -176,7 +179,8 @@ class MessageReceiver: WearableListenerService() {
              MessageSender.MESSAGES_PATH -> {
                 val on=booldata(data)
                 val automaticBle=fromBle&&BleMirror.isAutomaticPhonePeer(connectionName)
-                val accepted=if(automaticBle)
+                val obsoleteMessages=!fromBle&&on&&BleMirror.shouldUse(connectionName)
+                val accepted=if(obsoleteMessages) false else if(automaticBle)
                     BleMirror.canSetAutomaticCarrier(connectionName,on)
                 else {
                     Natives.setBlueMessage(connectionName,on)
@@ -197,8 +201,11 @@ class MessageReceiver: WearableListenerService() {
                     Log.i(LOG_ID,"BLE carrier request for $connectionName: requested="+
                             "${if(on) "Bluetooth" else "TCP/IP"} accepted=$accepted ackQueued=$ackQueued activated=$activated")
                 }
-                else
-                    MessageSender.sendMessagesAck(sourceId,data)
+                else {
+                    val ack=data.copyOf()
+                    if(!accepted&&ack.isNotEmpty())ack[0]=0
+                    MessageSender.sendMessagesAck(sourceId,ack)
+                }
                 }
              MessageSender.MIRROR_TRANSPORT_PATH -> {
                 MessageSender.receiveMirrorTransport(sourceId,connectionName,data,fromBle)

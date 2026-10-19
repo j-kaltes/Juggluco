@@ -33,7 +33,6 @@
 
 namespace jgchat {
 namespace {
-constexpr std::size_t max_export = 8 * 1024 * 1024;
 std::string field(const Json& object, const char* key) {
     auto at = object.find(key);
     return at != object.end() && at->is_string() ? at->get<std::string>() : "";
@@ -218,7 +217,7 @@ std::string render_chat_export(const Json& messages, std::string_view pending, b
         const auto& plots = array(messages[message_index], "plots");
         if (static_cast<std::size_t>(plot_index) >= plots.size()) throw jgchat::UiError(jgchat::UiCode::the_plot_is_unavailable);
         auto svg = field(plots[plot_index], "svg");
-        if (!svg.starts_with("<svg ") || svg.size() > 131072) throw jgchat::UiError(jgchat::UiCode::the_plot_is_unavailable);
+        if (!svg.starts_with("<svg ")) throw jgchat::UiError(jgchat::UiCode::the_plot_is_unavailable);
         return svg;
     }
     if (format != "html" && format != "txt") throw jgchat::UiError(jgchat::UiCode::unsupported_chat_export_format);
@@ -257,7 +256,7 @@ table{border-collapse:collapse;margin:.7em 0}th,td{border:1px solid #bbb;text-al
             auto caption = field(plot, "caption");
             if (caption.empty()) caption = label("plot", "Plot");
             const auto svg = field(plot, "svg");
-            if (html && svg.starts_with("<svg ") && svg.size() <= 131072)
+            if (html && svg.starts_with("<svg "))
                 out += "<figure><img alt=\"" + escape(caption) + "\" src=\"data:image/svg+xml;base64," + base64(svg) + "\"><figcaption>" + escape(caption) + "</figcaption></figure>\n";
             else out += html ? "<p>" + escape(caption) + " (" + escape(label("plot_unavailable", "plot unavailable")) + ")</p>\n"
                 : label("plot", "Plot") + ": " + caption + " (" + label("plot_text_note", "image included in HTML export") + ")\n";
@@ -273,7 +272,7 @@ table{border-collapse:collapse;margin:.7em 0}th,td{border:1px solid #bbb;text-al
             out += html ? "<p class=\"note\">" + escape(note) + "</p>\n" : note + "\n";
         }
         if (html) out += "</section>\n";
-        if (out.size() > max_export) throw jgchat::UiError(jgchat::UiCode::the_chat_export_is_too_large);
+
     }
     if (!pending.empty()) {
         const auto note = busy ? label("pending", "Answer in progress when exported; no completed answer yet.")
@@ -283,12 +282,12 @@ table{border-collapse:collapse;margin:.7em 0}th,td{border:1px solid #bbb;text-al
                     : "\n" + you + "\n" + std::string(pending) + "\n[" + note + "]\n";
     }
     if (html) out += "</body></html>\n";
-    if (out.size() > max_export) throw jgchat::UiError(jgchat::UiCode::the_chat_export_is_too_large);
+
     return out;
 }
 
 std::size_t write_chat_export(int output, std::string_view contents) {
-    if (output < 0 || contents.size() > max_export) throw jgchat::UiError(jgchat::UiCode::cannot_write_the_chat_export);
+    if (output < 0) throw jgchat::UiError(jgchat::UiCode::cannot_write_the_chat_export);
     std::size_t done = 0;
     while (done < contents.size()) {
         const auto count = ::write(output, contents.data() + done, contents.size() - done);
@@ -308,7 +307,7 @@ std::size_t copy_chat_export(int input, int output) {
         if (count < 0) throw jgchat::UiError(jgchat::UiCode::cannot_read_the_chat_export);
         if (!count) return total;
         total += static_cast<std::size_t>(count);
-        if (total > max_export) throw jgchat::UiError(jgchat::UiCode::the_chat_export_is_too_large);
+
         write_chat_export(output, {buffer.data(), static_cast<std::size_t>(count)});
     }
 }

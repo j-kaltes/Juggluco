@@ -28,6 +28,7 @@
 #include <chrono>
 #include <cmath>
 #include <numeric>
+#include <limits>
 #include <set>
 #include <stdexcept>
 
@@ -35,7 +36,6 @@ namespace jgchat {
 namespace {
 using Vector = std::vector<double>;
 using Matrix = std::vector<Vector>;
-constexpr std::size_t max_rows = 10000, max_features = 24, max_targets = 24, max_output_rows = 20000;
 constexpr const char* interval_warning =
     "Intervals use held-out absolute errors separately per target (split-conformal order statistic). "
     "Nominal coverage relies on exchangeable calibration/future errors; serial dependence, changed behavior, "
@@ -44,13 +44,8 @@ constexpr const char* interval_warning =
     "A fitted association is not a causal treatment effect or a validated dosing algorithm.";
 struct Budget {
     const std::atomic_bool& cancel;
-    uint64_t work = 0;
-    std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now() + std::chrono::seconds(10);
-    void check(uint64_t cost = 1) {
+    void check() {
         if (cancel) throw jgchat::UiError(jgchat::UiCode::request_cancelled);
-        work += cost;
-        if (work > 60000000 || std::chrono::steady_clock::now() >= end)
-            throw jgchat::UiError(jgchat::UiCode::numerical_work_exceeds_10_seconds_60_million_operations_use_fewer_rows_features_targe);
     }
 };
 [[noreturn]] void bad(UiCode message) { throw UiError(message); }
@@ -58,20 +53,20 @@ void shape(const Json& args, std::initializer_list<const char*> keys) {
     if (!args.is_object() || args.size() != keys.size()) bad(UiCode::invalid_numerical_tool_arguments);
     for (auto key : keys) if (!args.contains(key)) bad(UiCode::missing_numerical_tool_argument);
 }
-std::string text(const Json& v, std::size_t max = 128) {
+std::string text(const Json& v) {
     if (!v.is_string()) bad(UiCode::numerical_column_name_argument_must_be_text);
     const auto s = v.get<std::string>();
-    if (s.empty() || s.size() > max || s.find('\0') != std::string::npos) bad(UiCode::invalid_numerical_column_name_length);
+    if (s.empty() || s.find('\0') != std::string::npos) bad(UiCode::invalid_numerical_column_name_length);
     return s;
 }
-bool numeric(const Json& v) { return v.is_number() && std::isfinite(v.get<double>()) && std::abs(v.get<double>()) <= 1e100; }
+bool numeric(const Json& v) { return v.is_number() && std::isfinite(v.get<double>()); }
 double real(const Json& v) {
     if (!numeric(v)) bad(UiCode::numerical_data_must_be_finite_json_numbers_within_1e100_prepare_csv_tsv_with_explicit);
     return v.get<double>();
 }
-double finite(double v) { if (!std::isfinite(v) || std::abs(v) > 1e100) bad(UiCode::numerical_overflow_or_unstable_model_rescale_inputs_or_simplify_the_model); return v; }
-std::vector<std::string> names(const Json& a, std::size_t min, std::size_t max) {
-    if (!a.is_array() || a.size() < min || a.size() > max) bad(UiCode::invalid_numerical_feature_target_count);
+double finite(double v) { if (!std::isfinite(v)) bad(UiCode::numerical_overflow_or_unstable_model_rescale_inputs_or_simplify_the_model); return v; }
+std::vector<std::string> names(const Json& a, std::size_t min) {
+    if (!a.is_array() || a.size() < min) bad(UiCode::invalid_numerical_feature_target_count);
     std::set<std::string> seen; std::vector<std::string> out;
     for (const auto& v : a) {
         auto s = text(v);
@@ -91,7 +86,7 @@ std::vector<std::size_t> columns(const AnalysisTable& t, const std::vector<std::
     return out;
 }
 void table_ok(const AnalysisTable& t) {
-    if (t.columns.empty() || t.columns.size() > 64 || t.rows.empty() || t.rows.size() > max_rows)
+    if (t.columns.empty() || t.rows.empty())
         bad(UiCode::numerical_tables_require_1_10000_rows_and_at_most_64_columns);
     for (const auto& row : t.rows) if (!row.is_array() || row.size() != t.columns.size()) bad(UiCode::invalid_numerical_table_row);
 }
@@ -121,7 +116,7 @@ void regress(Model& m, const std::vector<Row>& rows, double lambda, Budget& budg
     if (!p) return;
     Matrix a(n,Vector(p)), b(n,Vector(q));
     for (std::size_t i = 0; i < rows.size(); ++i) {
-        budget.check(p+q);
+        budget.check();
         a[i] = scaled(m,rows[i].x);
         for (std::size_t j = 0; j < q; ++j) b[i][j] = rows[i].y[j]-m.ymean[j];
     }
@@ -129,7 +124,7 @@ void regress(Model& m, const std::vector<Row>& rows, double lambda, Budget& budg
     std::vector<std::size_t> permutation(p); std::iota(permutation.begin(),permutation.end(),0);
     double largest = 0, smallest = 1e100;
     for (std::size_t k = 0; k < p; ++k) {
-        budget.check((n-k)*(p-k+q)*6);
+        budget.check();
         double norm = -1; std::size_t pivot = k;
         for (std::size_t j = k; j < p; ++j) {
             double candidate = 0;
@@ -176,7 +171,7 @@ void regress(Model& m, const std::vector<Row>& rows, double lambda, Budget& budg
 Vector predict(const Model& m, const Vector& input, Budget& budget) {
     auto z = scaled(m,input);
     if (m.method != "knn") {
-        budget.check(m.features.size()*m.targets.size()+1);
+        budget.check();
         Vector out = m.ymean;
         for (std::size_t t = 0; t < out.size(); ++t) {
             long double value = out[t];
@@ -185,7 +180,7 @@ Vector predict(const Model& m, const Vector& input, Budget& budget) {
         }
         return out;
     }
-    budget.check(m.x.size()*(z.size()+12));
+    budget.check();
     std::vector<std::pair<double,std::size_t>> distances; distances.reserve(m.x.size());
     for (std::size_t i = 0; i < m.x.size(); ++i) {
         double distance = 0;
@@ -227,7 +222,7 @@ Model load_model(const Json& data) {
     if (!data.is_object() || data.value("schema",0) != 1) bad(UiCode::unsupported_saved_numerical_model);
     Model m; m.method = text(data.at("method"));
     if (m.method != "linear" && m.method != "ridge" && m.method != "knn") bad(UiCode::unsupported_saved_numerical_method);
-    m.features = names(data.at("features"),0,max_features); m.targets = names(data.at("targets"),1,max_targets);
+    m.features = names(data.at("features"),0); m.targets = names(data.at("targets"),1);
     const auto p = m.features.size(), q = m.targets.size();
     m.mean = vector(data.at("mean"),p); m.scale = vector(data.at("scale"),p);
     m.minimum = vector(data.at("minimum"),p); m.maximum = vector(data.at("maximum"),p);
@@ -235,9 +230,9 @@ Model load_model(const Json& data) {
     for (std::size_t j = 0; j < p; ++j) if (m.scale[j] <= 0 || m.minimum[j] > m.maximum[j]) bad(UiCode::invalid_saved_feature_scaling);
     if (m.method == "knn") {
         const auto& x = data.at("training_x_standardized"); const auto& y = data.at("training_y");
-        if (!p || !x.is_array() || !y.is_array() || x.empty() || x.size() > max_rows || x.size() != y.size()) bad(UiCode::invalid_saved_neighbors);
+        if (!p || !x.is_array() || !y.is_array() || x.empty() || x.size() != y.size()) bad(UiCode::invalid_saved_neighbors);
         const auto& k = data.at("neighbors");
-        if (!k.is_number_integer() || k.get<int64_t>() < 1 || k.get<int64_t>() > 100 || static_cast<uint64_t>(k.get<int64_t>()) > x.size()) bad(UiCode::invalid_saved_neighbor_count);
+        if (!k.is_number_integer() || k.get<int64_t>() < 1 || static_cast<uint64_t>(k.get<int64_t>()) > x.size()) bad(UiCode::invalid_saved_neighbor_count);
         m.neighbors = k.get<std::size_t>();
         for (std::size_t i = 0; i < x.size(); ++i) { m.x.push_back(vector(x[i],p)); m.y.push_back(vector(y[i],q)); }
     } else {
@@ -269,12 +264,8 @@ struct Metrics {
             {"interval_width",radius.is_null() ? Json(nullptr) : Json(2*radius.get<double>())}};
     }
 };
-void output_ok(const Json& data) {
-    if (data.at("rows").size() > max_output_rows || data.dump().size() > 2*1024*1024)
-        bad(UiCode::numerical_output_exceeds_20000_rows_2_mib_reduce_rows_or_targets_no_partial_result_sa);
-}
-Json text_schema(std::size_t max) { return {{"type","string"},{"minLength",1},{"maxLength",max}}; }
-Json nullable_text() { return {{"type",Json::array({"string","null"})},{"minLength",1},{"maxLength",128}}; }
+Json text_schema() { return {{"type","string"},{"minLength",1}}; }
+Json nullable_text() { return {{"type",Json::array({"string","null"})},{"minLength",1}}; }
 Json function(const char* name,const char* description,Json props) {
     Json required = Json::array(); for (auto it=props.begin();it!=props.end();++it) required.push_back(it.key());
     return {{"type","function"},{"name",name},{"description",description},{"strict",true},
@@ -283,42 +274,42 @@ Json function(const char* name,const char* description,Json props) {
 }
 
 Json numerical_tool_definitions() {
-    auto source = function("unused","unused",{{"id",text_schema(33)},
-        {"path",{{"type","string"},{"maxLength",512}}},{"format",{{"type","string"},{"enum",Json::array({"json","csv","tsv"})}}}})["parameters"];
-    auto columns = Json{{"type","array"},{"maxItems",24},{"items",text_schema(128)}};
+    auto source = function("unused","unused",{{"id",text_schema()},
+        {"path",{{"type","string"}}},{"format",{{"type","string"},{"enum",Json::array({"json","csv","tsv"})}}}})["parameters"];
+    auto columns = Json{{"type","array"},{"items",text_schema()}};
     auto targets = columns; targets["minItems"] = 1;
     Json result = Json::array();
     result.push_back(function("juggluco_fit",
-        "Fit reusable generic numeric models, not a preset glucose predictor. Prepare a saved numeric table with juggluco_query: join inputs, past lags, interactions/polynomials and explicit future targets. Features/targets are column names (up to 24 each). Methods: linear (pivoted QR), ridge (standardized training inputs; lambda>0), knn (uniform k nearest standardized training inputs). Unused lambda/neighbors must be null. Empty features gives an intercept-only linear/ridge baseline. Chronological split by numeric order_column: <train_before trains; [train_before,calibrate_before) calibrates intervals; >=calibrate_before tests. label_end_column gives when ALL targets were available: crossing training/calibration boundaries is purged; null uses origin and cannot guard forecast leakage. Choose cutoffs with enough separate days; never use future-derived predictors. Fits/scaling use training ONLY. coverage=null disables intervals; otherwise 0.5-0.99 requests per-target held-out absolute-error intervals; time-series coverage is empirical, not guaranteed. Reports test MAE/RMSE/bias/coverage and training-mean baseline; baseline_column optionally compares persistence/another precomputed baseline. Missing/nonfinite rows are counted, not zeroed. Saves exact model, args, source and calibration/test predictions; at most 10000 input rows, 20000 output rows/2 MiB, 10 s/60M operations. Can repeat different chronological cutoffs for rolling evaluation; leave a final untouched test period when selecting models.",
-        {{"title",text_schema(160)},{"source",source},{"features",columns},{"targets",targets},
-        {"order_column",text_schema(128)},{"label_end_column",nullable_text()},
+        "Fit reusable generic numeric models, not a preset glucose predictor. Prepare a saved numeric table with juggluco_query: join inputs, past lags, interactions/polynomials and explicit future targets. Features/targets are column names. Methods: linear (pivoted QR), ridge (standardized training inputs; lambda>0), knn (uniform k nearest standardized training inputs). Unused lambda/neighbors must be null. Empty features gives an intercept-only linear/ridge baseline. Chronological split by numeric order_column: <train_before trains; [train_before,calibrate_before) calibrates intervals; >=calibrate_before tests. label_end_column gives when ALL targets were available: crossing training/calibration boundaries is purged; null uses origin and cannot guard forecast leakage. Choose cutoffs with enough separate days; never use future-derived predictors. Fits/scaling use training ONLY. coverage=null disables intervals; otherwise any coverage strictly between 0 and 1 requests per-target held-out absolute-error intervals; time-series coverage is empirical, not guaranteed. Reports test MAE/RMSE/bias/coverage and training-mean baseline; baseline_column optionally compares persistence/another precomputed baseline. Missing/nonfinite rows are counted, not zeroed. Saves exact model, args, source and calibration/test predictions; without imposed row, feature, target, byte, time or operation budgets. Can repeat different chronological cutoffs for rolling evaluation; leave a final untouched test period when selecting models.",
+        {{"title",text_schema()},{"source",source},{"features",columns},{"targets",targets},
+        {"order_column",text_schema()},{"label_end_column",nullable_text()},
         {"train_before",{{"type","number"}}},{"calibrate_before",{{"type","number"}}},
         {"method",{{"type","string"},{"enum",Json::array({"linear","ridge","knn"})}}},
-        {"lambda",{{"type",Json::array({"number","null"})},{"minimum",0},{"maximum",1000000}}},
-        {"neighbors",{{"type",Json::array({"integer","null"})},{"minimum",1},{"maximum",100}}},
-        {"coverage",{{"type",Json::array({"number","null"})},{"minimum",0.5},{"maximum",0.99}}},
+        {"lambda",{{"type",Json::array({"number","null"})},{"minimum",0}}},
+        {"neighbors",{{"type",Json::array({"integer","null"})},{"minimum",1}}},
+        {"coverage",{{"type",Json::array({"number","null"})},{"exclusiveMinimum",0},{"exclusiveMaximum",1}}},
         {"baseline_column",nullable_text()}}));
     result.push_back(function("juggluco_predict",
         "Apply a saved juggluco_fit model to another saved numeric table containing its same features and order column. No fitting or updated uncertainty calibration occurs. Saves one row per input/target with prediction, lower/upper, origin/order, target and outside-training-range flags. Missing inputs produce flagged null predictions, never zero. Intervals remain pointwise with the model's nominal coverage and original test metrics; refresh data after new records/pen scans and verify feature/target units, definitions and calibration still match training. No clinical validity or causal effect is implied. Use SQL to assign actual future plot times from each target's defined horizon, then juggluco_plot_table.",
-        {{"title",text_schema(160)},{"model_id",text_schema(33)},{"source",source}}));
-    auto series = function("unused","unused",{{"label",text_schema(60)},{"column",text_schema(128)}})["parameters"];
+        {{"title",text_schema()},{"model_id",text_schema()},{"source",source}}));
+    auto series = function("unused","unused",{{"label",text_schema()},{"column",text_schema()}})["parameters"];
     result.push_back(function("juggluco_plot_table",
-        "Plot numeric columns directly from one saved table, without transcribing points. x_column is numeric or Unix seconds; series names y columns. line/scatter/bar or band. For band, first THREE series must be center, lower, upper with aligned gaps and increasing x; shading is between lower/upper. Up to five further lines allowed. NULL y values stay gaps. max_gap=null disables extra splitting; a positive value inserts gaps when x jumps farther (seconds for time). Rows must be ordered with strictly increasing x for line/band: prepare/filter/pivot with SQL. At most 8 series and 1000 total points including inserted gaps; no silent sampling. Title/labels/provenance must identify calculated forecasts or descriptive estimates, units, coverage and assumptions accurately. Rendering does not validate a statistical confidence claim. Four plots per answer.",
-        {{"title",text_schema(100)},{"source",source},{"x_column",text_schema(128)},
-        {"x_label",text_schema(60)},{"y_label",text_schema(60)},
+        "Plot numeric columns directly from one saved table, without transcribing points. x_column is numeric or Unix seconds; series names y columns. line/scatter/bar or band. For band, first THREE series must be center, lower, upper with aligned gaps and increasing x; shading is between lower/upper. NULL y values stay gaps. max_gap=null disables extra splitting; a positive value inserts gaps when x jumps farther (seconds for time). Rows must be ordered with strictly increasing x for line/band: prepare/filter/pivot with SQL. All supplied rows and series are plotted, including inserted gaps; no silent sampling. Title/labels/provenance must identify calculated forecasts or descriptive estimates, units, coverage and assumptions accurately. Rendering does not validate a statistical confidence claim.",
+        {{"title",text_schema()},{"source",source},{"x_column",text_schema()},
+        {"x_label",text_schema()},{"y_label",text_schema()},
         {"x_type",{{"type","string"},{"enum",Json::array({"number","time"})}}},
         {"kind",{{"type","string"},{"enum",Json::array({"line","scatter","bar","band"})}}},
-        {"provenance",text_schema(160)},{"max_gap",{{"type",Json::array({"number","null"})},{"exclusiveMinimum",0}}},
-        {"series",{{"type","array"},{"minItems",1},{"maxItems",8},{"items",series}}}}));
+        {"provenance",text_schema()},{"max_gap",{{"type",Json::array({"number","null"})},{"exclusiveMinimum",0}}},
+        {"series",{{"type","array"},{"minItems",1},{"items",series}}}}));
     return result;
 }
 
 Json fit_analysis_model(const AnalysisTable& table, const Json& args, const std::atomic_bool& cancel) {
     Budget budget{cancel}; budget.check(); table_ok(table);
     shape(args,{"title","source","features","targets","order_column","label_end_column","train_before","calibrate_before","method","lambda","neighbors","coverage","baseline_column"});
-    (void)text(args.at("title"),160);
+    (void)text(args.at("title"));
     Model m; m.method = text(args.at("method"));
-    m.features = names(args.at("features"),0,max_features); m.targets = names(args.at("targets"),1,max_targets);
+    m.features = names(args.at("features"),0); m.targets = names(args.at("targets"),1);
     const auto p = m.features.size(), q = m.targets.size();
     for (const auto& f : m.features) if (std::find(m.targets.begin(),m.targets.end(),f) != m.targets.end()) bad(UiCode::a_target_cannot_also_be_a_predictor);
     const auto xcols = columns(table,m.features), ycols = columns(table,m.targets);
@@ -331,20 +322,20 @@ Json fit_analysis_model(const AnalysisTable& table, const Json& args, const std:
     if (train_before >= calibrate_before) bad(UiCode::train_before_must_be_less_than_calibrate_before);
     const bool intervals = !args["coverage"].is_null();
     const double coverage = intervals ? real(args["coverage"]) : 0;
-    if (intervals && (coverage < .5 || coverage > .99)) bad(UiCode::coverage_must_be_0_5_0_99_or_null);
+    if (intervals && (coverage <= 0 || coverage >= 1)) bad(UiCode::coverage_must_be_0_5_0_99_or_null);
     double lambda = 0;
     if (m.method == "ridge") {
         lambda = real(args["lambda"]);
-        if (lambda <= 0 || lambda > 1e6 || !args["neighbors"].is_null()) bad(UiCode::ridge_needs_lambda_in_0_1000000_and_neighbors_null);
+        if (lambda <= 0 || !args["neighbors"].is_null()) bad(UiCode::ridge_needs_lambda_in_0_1000000_and_neighbors_null);
     } else if (m.method == "knn") {
         if (!p || !args["lambda"].is_null() || !args["neighbors"].is_number_integer() ||
-            args["neighbors"].get<int64_t>() < 1 || args["neighbors"].get<int64_t>() > 100) bad(UiCode::knn_needs_predictors_neighbors_1_100_and_lambda_null);
+            args["neighbors"].get<int64_t>() < 1) bad(UiCode::knn_needs_predictors_neighbors_1_100_and_lambda_null);
         m.neighbors = args["neighbors"].get<std::size_t>();
     } else if (m.method != "linear" || !args["lambda"].is_null() || !args["neighbors"].is_null()) bad(UiCode::linear_needs_lambda_null_and_neighbors_null);
     std::vector<Row> train, calibration, test;
     std::size_t invalid = 0, purged_train = 0, purged_calibration = 0;
     for (std::size_t i = 0; i < table.rows.size(); ++i) {
-        budget.check(p+q+1); const auto& cells = table.rows[i];
+        budget.check(); const auto& cells = table.rows[i];
         bool valid = numeric(cells[order]) && numeric(cells[label_end]);
         for (auto col : xcols) valid = valid && numeric(cells[col]);
         for (auto col : ycols) valid = valid && numeric(cells[col]);
@@ -361,13 +352,12 @@ Json fit_analysis_model(const AnalysisTable& table, const Json& args, const std:
     }
     if (train.size() < 3 || (m.method == "linear" && train.size() <= p+1) || m.neighbors > train.size())
         bad(UiCode::too_few_complete_training_rows_after_purging_linear_needs_more_than_features_1_every_);
-    if ((calibration.size()+test.size())*q > max_output_rows) bad(UiCode::evaluation_exceeds_20000_rows_use_fewer_rows_or_targets);
     const auto by_time = [](const Row& a,const Row& b) { return a.at != b.at ? a.at < b.at : a.index < b.index; };
     for (auto* rows : {&train,&calibration,&test}) std::sort(rows->begin(),rows->end(),by_time);
-    m.mean.assign(p,0); m.scale.assign(p,0); m.minimum.assign(p,1e100); m.maximum.assign(p,-1e100); m.ymean.assign(q,0);
+    m.mean.assign(p,0); m.scale.assign(p,0); m.minimum.assign(p,std::numeric_limits<double>::max()); m.maximum.assign(p,-std::numeric_limits<double>::max()); m.ymean.assign(q,0);
     Vector moments(p,0);
     for (std::size_t i = 0; i < train.size(); ++i) {
-        budget.check(p+q+1);
+        budget.check();
         for (std::size_t j = 0; j < p; ++j) {
             const double delta = train[i].x[j]-m.mean[j]; m.mean[j] += delta/double(i+1);
             moments[j] += delta*(train[i].x[j]-m.mean[j]);
@@ -376,7 +366,7 @@ Json fit_analysis_model(const AnalysisTable& table, const Json& args, const std:
         for (std::size_t t = 0; t < q; ++t) m.ymean[t] += (train[i].y[t]-m.ymean[t])/double(i+1);
     }
     for (std::size_t j = 0; j < p; ++j) { m.scale[j] = finite(std::sqrt(std::max(0.0,moments[j])/train.size())); if (m.scale[j] == 0) m.scale[j] = 1; }
-    if (m.method == "knn") for (const auto& row : train) { budget.check(p+q); m.x.push_back(scaled(m,row.x)); m.y.push_back(row.y); }
+    if (m.method == "knn") for (const auto& row : train) { budget.check(); m.x.push_back(scaled(m,row.x)); m.y.push_back(row.y); }
     else regress(m,train,lambda,budget);
     Matrix cal_predictions; std::vector<Vector> errors(q);
     for (const auto& row : calibration) {
@@ -388,7 +378,7 @@ Json fit_analysis_model(const AnalysisTable& table, const Json& args, const std:
     const auto rank = intervals ? static_cast<std::size_t>(std::ceil((calibration.size()+1)*coverage)) : 0;
     const bool calibrated = intervals && calibration.size() >= 10 && rank <= calibration.size();
     for (auto& e : errors) {
-        budget.check(e.size()+1);
+        budget.check();
         if (!calibrated) radii.push_back(nullptr);
         else { std::nth_element(e.begin(),e.begin()+rank-1,e.end()); radii.push_back(e[rank-1]); }
     }
@@ -427,7 +417,7 @@ Json fit_analysis_model(const AnalysisTable& table, const Json& args, const std:
             {"absolute_error_radius_by_target",radii},{"interpretation",interval_warning}}},
         {"evaluation",test.empty() ? "no_test_rows" : "chronological_holdout"},
         {"limitations","No automatic proof of data coverage, feature availability, independent samples or causal effects. SQL preparation defines units, lags, horizons, calibration and missingness. Avoid future information in predictors; label_end only guards target overlap at split boundaries. Overlapping windows are dependent. Retrospectively imported/backdated entries do not prove they were known at the historical forecast time. Model selection using test results consumes that test set; reserve another untouched period. Repeat cutoffs for rolling evaluation. Refresh/rebuild after source corrections."}};
-    budget.check(); output_ok(result); return result;
+    budget.check(); return result;
 }
 
 Json predict_analysis_model(const AnalysisTable& table, const Json& saved, const std::atomic_bool& cancel) {
@@ -438,7 +428,6 @@ Json predict_analysis_model(const AnalysisTable& table, const Json& saved, const
     const auto& interval = saved.at("interval"); const auto& radii = interval.at("absolute_error_radius_by_target");
     if (!radii.is_array() || radii.size() != m.targets.size()) bad(UiCode::invalid_saved_uncertainty_calibration);
     for (const auto& r : radii) if (!r.is_null() && real(r) < 0) bad(UiCode::invalid_saved_interval_radius);
-    if (table.rows.size()*m.targets.size() > max_output_rows) bad(UiCode::prediction_exceeds_20000_output_rows_reduce_input_rows);
     Json rows = Json::array(); std::size_t invalid = 0;
     for (std::size_t i = 0; i < table.rows.size(); ++i) {
         budget.check(); const auto& cells = table.rows[i];
@@ -459,7 +448,7 @@ Json predict_analysis_model(const AnalysisTable& table, const Json& saved, const
     Json result{{"status","ok"},{"rows",std::move(rows)},{"input_rows",table.rows.size()},{"invalid_input_rows",invalid},
         {"interval",interval},{"model_test_metrics",saved.at("metrics")},
         {"interpretation","Calculated estimates, not observed values. Original frozen model/scaling/intervals; no automatic retraining. Match original units, target horizons and feature definitions. Outside-range count only checks marginal ranges and cannot certify familiar joint conditions. Refresh inputs after new or corrected records."}};
-    budget.check(); output_ok(result); return result;
+    budget.check(); return result;
 }
 
 Json plot_analysis_table(const AnalysisTable& table, const Json& args, const std::atomic_bool& cancel) {
@@ -470,26 +459,24 @@ Json plot_analysis_table(const AnalysisTable& table, const Json& args, const std
     const bool gap_check = !args["max_gap"].is_null();
     const double max_gap = gap_check ? real(args["max_gap"]) : 0;
     if (gap_check && max_gap <= 0) bad(UiCode::max_gap_must_be_positive_or_null);
-    if (!args["series"].is_array() || args["series"].empty() || args["series"].size() > 8) bad(UiCode::plot_needs_1_8_column_series);
+    if (!args["series"].is_array() || args["series"].empty()) bad(UiCode::plot_needs_1_8_column_series);
     Json series = Json::array(); std::vector<std::size_t> ycols;
     for (const auto& s : args["series"]) {
         shape(s,{"label","column"}); ycols.push_back(column(table,text(s["column"])));
-        series.push_back({{"label",text(s["label"],240)},{"points",Json::array()}});
+        series.push_back({{"label",text(s["label"])},{"points",Json::array()}});
     }
-    std::size_t count = 0; double previous = 0; bool first = true;
+    double previous = 0; bool first = true;
     for (const auto& row : table.rows) {
         budget.check(); const auto x = real(row[xcol]);
         if (!first && (kind == "line" || kind == "band") && x <= previous) bad(UiCode::line_band_table_x_must_increase_strictly_order_filter_pivot_it_with_sql);
         if (!first && gap_check && x-previous > max_gap) {
             for (auto& s : series) s["points"].push_back({{"x",previous+(x-previous)/2},{"y",nullptr}});
-            count += series.size();
         }
         for (std::size_t j = 0; j < ycols.size(); ++j) {
             const auto& y = row[ycols[j]];
             if (!y.is_null()) (void)real(y);
             series[j]["points"].push_back({{"x",x},{"y",y}});
         }
-        count += series.size(); if (count > 1000) bad(UiCode::saved_table_plot_exceeds_1000_total_points_explicitly_reduce_aggregate_in_sql);
         previous = x; first = false;
     }
     Json spec; for (auto key : {"title","x_label","y_label","x_type","kind","provenance"}) spec[key] = args.at(key);

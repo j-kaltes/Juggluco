@@ -1990,16 +1990,8 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getDisconnectSensor)(JNIEnv *e
     }
 
 
-std::string_view getjstring(JNIEnv *env,jstring jstr)  {
-    size_t strlen= env->GetStringUTFLength( jstr);
-    jint jstrlen = env->GetStringLength( jstr);
-    char *strbuf=new char[strlen+1];
-    env->GetStringUTFRegion( jstr, 0,jstrlen, strbuf);
-    strbuf[strlen]='\0';
-    return {strbuf,strlen};
-    }
-
-extern "C" JNIEXPORT void JNICALL fromjava(setDevice) (JNIEnv *env, jclass clazz, jstring jMANUFACTURER, jstring jMODEL, int SDK_INTin) { 
+//extern "C" JNIEXPORT void JNICALL fromjava(setDevice) (JNIEnv *env, jclass clazz, jstring jMANUFACTURER, jstring jMODEL, int SDK_INTin) { 
+extern "C" JNIEXPORT void JNICALL fromjava(saveDevice) (JNIEnv *env, jclass clazz, jstring jMANUFACTURER, jstring jMODEL, jstring jPRODUCT,int SDK_INTin) { 
    if(settings->data()->initVersion<36) { 
     if(jMODEL) {
                 size_t strlen= env->GetStringUTFLength( jMODEL);
@@ -2013,8 +2005,28 @@ extern "C" JNIEXPORT void JNICALL fromjava(setDevice) (JNIEnv *env, jclass clazz
                         constexpr const char watch4[]{"R8"};
                         if(memcmp(watch4,strbuf+3,2)) { 
                                 LOGGER("MODEL %s Samsung not Watch4\n",strbuf);
-                                constexpr const char watch9[]{"L3"};
-                                if(memcmp(watch9,strbuf+3,2)) { 
+                                if(!jPRODUCT) {
+                                     LOGAR("saveDevice jPRODUCT==null");
+                                     settings->data()->DisconnectSensor=true;
+                                     return;
+                                    }
+                                const int productlen= env->GetStringUTFLength(jPRODUCT);
+                                constexpr const char watch9[]{"fresh9"};
+                                constexpr const int watch9len=sizeof(watch9)-1;
+                                if(productlen<=watch9len) {
+                                     LOGAR("saveDevice Product name too small for watch9");
+                                     settings->data()->DisconnectSensor=true;
+                                     return;
+                                     }
+                                const char *PRODUCT = env->GetStringUTFChars( jPRODUCT, NULL);
+                                if(PRODUCT == nullptr)  {
+                                     settings->data()->DisconnectSensor=true;
+                                     LOGAR("saveDevice PRODUCT == null");
+                                     return;
+                                    }
+                                destruct   dest([jPRODUCT,PRODUCT,env]() {env->ReleaseStringUTFChars(jPRODUCT, PRODUCT);});
+
+                                if(memcmp(watch9,PRODUCT,sizeof(watch9)-1)) { 
                                         LOGGER("MODEL %s Samsung not Watch9\n",strbuf);
                                         settings->data()->DisconnectSensor=true;
                                         return;

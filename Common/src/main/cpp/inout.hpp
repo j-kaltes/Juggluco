@@ -30,6 +30,7 @@
 #include <vector>
 #include <new>
 #include <type_traits>
+#include <limits>
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -304,8 +305,12 @@ void shrink(size_t siz) {
 //operator  span<char>() { return span<char>{all,len};}
 };
 
-inline bool mksparsefile(int fp,int len) {
-    return pwrite(fp,"",1,len-1)==1;
+inline bool mksparsefile(int fp,size_t len) {
+    if(!len||len>static_cast<uintmax_t>(std::numeric_limits<off_t>::max())) {
+        errno=EOVERFLOW;
+        return false;
+        }
+    return ftruncate(fp,static_cast<off_t>(len))==0;
     }
 
 template <class T> class Mmap {
@@ -313,8 +318,14 @@ protected:
 size_t  len;
 void *buf;
 
+static size_t bytes(size_t count) {
+    if(count>static_cast<size_t>(PTRDIFF_MAX)/sizeof(T))return SIZE_MAX;
+    return count*sizeof(T);
+    }
+
 void *mopen(const char *filename,bool *created=nullptr) {
-     if(!filename)
+     if(created)*created=false;
+     if(!filename||len==SIZE_MAX)
         return nullptr;
      int    fp= open(filename,(std::is_const_v<T>?O_RDONLY:O_RDWR)|O_CREAT,S_IRUSR |S_IWUSR);
      if(fp==-1) {
@@ -327,7 +338,11 @@ void *mopen(const char *filename,bool *created=nullptr) {
             close(fp);
             return nullptr;
             }
-    if(len && st.st_size<len) {
+    if(st.st_size<0||static_cast<uintmax_t>(st.st_size)>PTRDIFF_MAX) {
+        close(fp);errno=EOVERFLOW;return nullptr;
+        }
+    const bool enlarged=len&&static_cast<uintmax_t>(st.st_size)<len;
+    if(enlarged) {
         if(!mksparsefile(fp,len)) {
             lerror("mkspacefile");
             close(fp);
@@ -343,11 +358,14 @@ void *mopen(const char *filename,bool *created=nullptr) {
         }
 //     posix_fallocate(fp,0,len);
      void *mmapbuf=mmap(NULL, len, PROT_READ | (std::is_const_v<T>?0:PROT_WRITE),MAP_SHARED, fp, 0);
-     close(fp);
      if(mmapbuf== MAP_FAILED) {
          flerror("mmap(%s len=%zu,fp=%d)",filename,len,fp);
+         if(created)*created=false;
+         if(enlarged)ftruncate(fp,st.st_size);
+         close(fp);
          return nullptr;
          }
+     close(fp);
       return mmapbuf;
       }
 
@@ -362,27 +380,28 @@ Mmap(Mmap && ander):len(ander.len),buf(ander.buf) {
     }
 Mmap& operator=(Mmap&& ander) {
 //    LOGSTRING("Mmap& operator=(Mmap&& ander) {");
-    this->~Mmap() ;
+    if(this==&ander)return *this;
+    if(buf)munmap(buf,len);
     buf=ander.buf;
     len=ander.len;
     ander.buf=nullptr;
     return *this;
     }
-Mmap(size_t count):len(count*sizeof(T)),buf(mmap(NULL,len, PROT_READ |PROT_WRITE,MAP_ANONYMOUS|MAP_PRIVATE,-1,0)) {
+Mmap(size_t count):len(bytes(count)),buf(len==SIZE_MAX?nullptr:mmap(NULL,len, PROT_READ |PROT_WRITE,MAP_ANONYMOUS|MAP_PRIVATE,-1,0)) {
 //    LOGSTRING(" Mmap(size_t)\n");
 if(MAP_FAILED==buf)
     buf=nullptr;
 
 }
-Mmap(const char *filename,size_t  count=0,bool *created=nullptr):len(count*sizeof(T)),buf(mopen(filename,created)) {
+Mmap(const char *filename,size_t  count=0,bool *created=nullptr):len(bytes(count)),buf(mopen(filename,created)) {
 //    LOGGER("Mmap %s %p %zu\n",filename,buf,len);
 }
-Mmap(const std::string_view base,const std::string_view endname,int count=0,bool *created=nullptr):Mmap(pathconcat(base,endname),count,created) { 
+Mmap(const std::string_view base,const std::string_view endname,size_t count=0,bool *created=nullptr):Mmap(pathconcat(base,endname),count,created) {
 //LOGGER("MMap string_view %s\n",endname.data());
 }
-template <typename  InitProc>
-Mmap(const std::string_view base,const std::string_view endname,int count,InitProc init,bool created=false):Mmap(pathconcat(base,endname),count,&created) { 
-if(created) {
+template <typename InitProc> requires std::is_invocable_v<InitProc,T*>
+Mmap(const std::string_view base,const std::string_view endname,size_t count,InitProc init,bool created=false):Mmap(pathconcat(base,endname),count,&created) {
+if(created&&data()) {
         init(data());
         }
 //LOGGER("MMap string_view %s\n",endname.data());
@@ -432,9 +451,12 @@ auto size() const {
     }
 
 template <typename... Ts>
-void extend(Ts... args) {
-    this->~Mmap();
-    new(this) Mmap(args...);
+bool extend(Ts... args) {
+    Mmap replacement(args...);
+    if(!replacement.data())return false;
+    std::swap(buf,replacement.buf);
+    std::swap(len,replacement.len);
+    return true;
     }
 
 

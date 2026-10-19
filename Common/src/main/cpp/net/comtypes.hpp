@@ -45,6 +45,7 @@ constexpr uint16_t sglucose=19;
 constexpr uint16_t sresetdevices=20;
 constexpr uint16_t sStartSendCalibrate=21;
 constexpr uint16_t sBlueWatch=22;
+constexpr uint16_t sactivitychunk=23;
 constexpr uint16_t stest=99;
 
 
@@ -74,7 +75,8 @@ inline static constexpr const char *comlabels[]={
 "sglucose",
 "sresetdevices",
 "sStartSendCalibrate",
-"sBlueWatch"
+"sBlueWatch",
+"sactivitychunk"
 };
 
 #endif
@@ -174,6 +176,15 @@ struct lastpos_t {
         uint16_t dbase;
         uint32_t lastpos;
         };
+
+struct activitychunk_t {
+    uint16_t com=sactivitychunk;
+    uint16_t reserved=0;
+    uint32_t totlen;
+    uint32_t size;
+    uint32_t offset;
+    uint8_t data[];
+};
 
 
 #include "misc.h"

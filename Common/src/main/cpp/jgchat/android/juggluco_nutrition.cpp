@@ -145,7 +145,7 @@ jgchat::Json ingredients(std::string_view query, uint32_t offset, uint32_t limit
     for (uint32_t id = 0; id < file.header.ingredientnr; ++id) {
         cancelled(cancel);
         if (!matches(text(file.header.ingredients[id].name), search)) continue;
-        if (count++ >= offset && records.size() < limit) records.push_back(ingredient(file.header, id));
+        if (count++ >= offset && (!limit || records.size() < limit)) records.push_back(ingredient(file.header, id));
     }
     if (!file.unchanged()) return unavailable("Ingredient definitions changed while reading; retry.");
     auto result = page("Juggluco user ingredients", query, offset, limit, count, std::move(records));
@@ -205,7 +205,7 @@ jgchat::Json food_search(std::string_view query, uint32_t offset, uint32_t limit
         cancelled(cancel);
         const char* name = db.foodlabel(id);
         if (!matches(name, search)) continue;
-        if (count++ >= offset && records.size() < limit)
+        if (count++ >= offset && (!limit || records.size() < limit))
             records.push_back({{"food_id", id}, {"name", name}});
     }
     return page("Juggluco built-in food composition database", query, offset, limit, count, std::move(records));

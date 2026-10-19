@@ -143,7 +143,7 @@ Json sensor_record(const SensorSnapshot& s, uint32_t now) {
 Json sensor_records(uint32_t offset, uint32_t limit, const std::atomic_bool* cancel) {
     check(cancel);
     const auto now = static_cast<uint32_t>(std::time(nullptr));
-    auto page = read_sensor_page(offset, limit, cancel);
+    auto page = read_sensor_page(offset, limit ? limit : UINT32_MAX, cancel);
     if (!page.available) return {{"status", "unavailable"}, {"reason", "Sensor store is not initialized."}};
     Json rows = Json::array();
     for (const auto& sensor : page.rows) { check(cancel); rows.push_back(sensor_record(sensor, now)); }
@@ -155,10 +155,9 @@ Json sensor_records(uint32_t offset, uint32_t limit, const std::atomic_bool* can
 }
 Json exact_sensor_records(const std::vector<std::string>& ids, const std::atomic_bool* cancel) {
     check(cancel);
-    if (ids.size() > 1000) throw jgchat::UiArgumentError(jgchat::UiCode::at_most_1000_sensor_ids_can_be_matched_at_once);
     std::map<std::string, unsigned> matches;
     for (const auto& id : ids) {
-        if (id.empty() || id.size() > 128 || id.find_first_of(std::string_view("\0\t\r\n", 4)) != std::string::npos)
+        if (id.empty() || id.find_first_of(std::string_view("\0\t\r\n", 4)) != std::string::npos)
             throw jgchat::UiArgumentError(jgchat::UiCode::sensor_id_must_be_1_128_bytes_without_nul_tab_or_newline);
         matches.emplace(id, 0);
     }
@@ -191,9 +190,8 @@ Json exact_sensor_records(const std::vector<std::string>& ids, const std::atomic
 Json calibration_records(const std::string& id, std::optional<uint32_t> index,
         const std::atomic_bool* cancel) {
     check(cancel);
-    if (id.empty() || id.size() > 128 || id.find_first_of(std::string_view("\0\t\r\n", 4)) != std::string::npos)
+    if (id.empty() || id.find_first_of(std::string_view("\0\t\r\n", 4)) != std::string::npos)
         throw jgchat::UiArgumentError(jgchat::UiCode::sensor_id_must_be_1_128_bytes_without_nul_tab_or_newline);
-    if (index && *index > 1000000) throw jgchat::UiArgumentError(jgchat::UiCode::sensor_index_must_be_0_1000000_or_null);
     const auto snapshot = read_calibrations(id, index, cancel);
     Json result{{"status", snapshot.status}, {"generated_at", std::time(nullptr)},
         {"sensor_id", id}, {"sensor_index", snapshot.sensor_index ? Json(*snapshot.sensor_index) : Json(nullptr)},
@@ -234,7 +232,7 @@ Json calibration_records(const std::string& id, std::optional<uint32_t> index,
 }
 void update_wear_nodes(const Json& snapshot) {
     if (!snapshot.is_object() || !snapshot.contains("available") || !snapshot["available"].is_boolean() ||
-        !snapshot.contains("nodes") || !snapshot["nodes"].is_array() || snapshot["nodes"].size() > 64)
+        !snapshot.contains("nodes") || !snapshot["nodes"].is_array())
         throw jgchat::UiArgumentError(jgchat::UiCode::invalid_android_wear_snapshot);
     Json nodes = Json::array();
     for (const auto& node : snapshot["nodes"]) {
@@ -242,7 +240,7 @@ void update_wear_nodes(const Json& snapshot) {
             !node.contains("name") || !node["name"].is_string() || !node.contains("nearby") || !node["nearby"].is_boolean())
             throw jgchat::UiArgumentError(jgchat::UiCode::invalid_android_wear_node);
         const auto id = node["id"].get<std::string>(), name = node["name"].get<std::string>();
-        if (id.empty() || id.size() > 128 || name.size() > 256 || id.find('\0') != std::string::npos || name.find('\0') != std::string::npos)
+        if (id.empty() || id.find('\0') != std::string::npos || name.find('\0') != std::string::npos)
             throw jgchat::UiArgumentError(jgchat::UiCode::invalid_android_wear_node_text);
         // Whitelist fields: never forward arbitrary platform/Java JSON.
         nodes.push_back({{"id", id}, {"name", name}, {"nearby", node["nearby"]}});
@@ -297,8 +295,6 @@ void activity_fields(Json& out, const Json& in, const std::initializer_list<cons
         if (value.is_null()) { out[name] = nullptr; continue; }
         if (type == 'b' ? !value.is_boolean() : type == 's' ? !value.is_string() : !value.is_number_integer())
             throw jgchat::UiArgumentError(jgchat::UiCode::invalid_android_activity_field_type);
-        if (type == 's' && value.get_ref<const std::string&>().size() > 2048)
-            throw jgchat::UiArgumentError(jgchat::UiCode::android_activity_text_too_long);
         out[name] = value;
     }
 }
@@ -324,7 +320,7 @@ void update_phone_activity(const Json& snapshot) {
         Json rows = Json::array();
         if (input.contains(array_name)) {
             const auto& incoming = input[array_name];
-            if (!incoming.is_array() || incoming.size() > 64) throw jgchat::UiArgumentError(jgchat::UiCode::invalid_activity_count);
+            if (!incoming.is_array()) throw jgchat::UiArgumentError(jgchat::UiCode::invalid_activity_count);
             for (const auto& row : incoming) {
                 if (!row.is_object()) throw jgchat::UiArgumentError(jgchat::UiCode::invalid_activity_record);
                 Json item = Json::object();

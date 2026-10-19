@@ -148,6 +148,7 @@ public void showexport(MainActivity activity,int width,int height,View parent) {
         final int rand=Math.round(5*density);
         final int leftright=Math.round(2*density);
         exportlabel.setPadding(leftright,rand,0,rand);
+//        exportlabel.setMaxLines(3);
         Button close=new Button(activity);
         close.setText(R.string.closename);
         close.setOnClickListener(v-> activity.doonback());
@@ -156,6 +157,7 @@ public void showexport(MainActivity activity,int width,int height,View parent) {
             isCalibrated=isChecked; 
             });
         exportscreen=new Layout(activity, (l, w, h) -> {
+        /*
             int wid = GlucoseCurve.getwidth();
             if(!smallScreen) {
                 int hei = GlucoseCurve.getheight();
@@ -163,18 +165,24 @@ public void showexport(MainActivity activity,int width,int height,View parent) {
                     if(GlucoseCurve.isLandscape(activity)) {
                         int half=wid/2;
                         int af=(half-w)/4;
-                        l.setX(half-w-af+MainActivity.systembarLeft);
-                        l.setY((int)((hei-h)*.65f));
+                        int xpos=half-w-af+MainActivity.systembarLeft;
+                        l.setX(xpos);
+                        int ypos=(int)((hei-h)*.65f);
+                        l.setY(ypos);
+                        Log.i(LOG_ID,"showexport width="+wid+ " w="+w+" height="+hei+" h="+h+" xpos="+xpos+" ypos="+ypos);
                         }
                     else {
                         int availableWidth=wid-MainActivity.systembarLeft-MainActivity.systembarRight;
-                        l.setX(MainActivity.systembarLeft+Math.max(0,(availableWidth-w)/2));
+                        int xpos= MainActivity.systembarLeft+Math.max(0,(availableWidth-w)/2);
+                        l.setX(xpos);
                         int top=MainActivity.systembarTop;
                         int bottom=hei-MainActivity.systembarBottom;
                         int half=top+(bottom-top)/2;
                         int af=((bottom-top)/2-h)/4;
-                        int ypos=half-h-af;
-                        l.setY(Math.max(top,Math.min(ypos,bottom-h)));
+                        int preypos=half-h-af;
+                        int ypos=Math.max(top,Math.min(preypos,bottom-h));
+                        l.setY(ypos);
+                        Log.i(LOG_ID,"showexport width="+wid+ " w="+w+" height="+hei+" h="+h+" xpos="+xpos+" ypos="+ypos);
                         }
                     }
                    else {
@@ -186,6 +194,7 @@ public void showexport(MainActivity activity,int width,int height,View parent) {
                  l.setX((int)(MainActivity.systembarLeft+(wid-w-MainActivity.systembarLeft-MainActivity.systembarRight)*.5f));
                 l.setY(MainActivity.systembarTop*3/4);
                  }
+                 */
                return new int[] {w,h};
             }, 
             new View[] {calibrated,daylabel,days},
@@ -198,10 +207,12 @@ public void showexport(MainActivity activity,int width,int height,View parent) {
         ((Layout)exportscreen).useMatch=true;
         exportscreen.setPadding(rand,rand,rand,rand);
         exportscreen.setBackgroundColor( Applic.backgroundcolor);
+        ((Layout)exportscreen).systembarMargins();
+//        ((Layout)exportscreen).systembarMargins((left,top,right,bottom)->new int[]{0,top,right,bottom});
         activity.addMyContentView(exportscreen, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
 //        exportlabel.requestFocus();
 
-         exportscreen.post(exportscreen::requestLayout);
+//         exportscreen.post(exportscreen::requestLayout);
         }
     else {
             exportscreen.setVisibility(VISIBLE);

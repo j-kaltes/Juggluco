@@ -220,10 +220,8 @@ Socket connect_socket(const HttpRequest& request, Clock::time_point deadline, co
         result = ::connect(socket.fd, address->ai_addr, address->ai_addrlen);
         if (result == 0) return socket;
         if (errno != EINPROGRESS && errno != EWOULDBLOCK && errno != EINTR) continue;
-        // An unusable IPv6 address must not consume the entire request budget
-        // when the same hostname has a usable IPv4 address.
         try {
-            wait_socket(socket.fd, POLLOUT, std::min(deadline, Clock::now() + 2s), cancel);
+            wait_socket(socket.fd, POLLOUT, deadline, cancel);
         } catch (const std::runtime_error&) {
             check_deadline(deadline, cancel);
             continue;
@@ -264,7 +262,7 @@ HttpResponse request_https(const HttpRequest& request, const std::atomic_bool& c
     DiagnosticOperation trace("native_https");
     trace.stage("validate_request");
     validate_http_request(request);
-    const auto deadline = Clock::now() + request.timeout;
+    const auto deadline = request.timeout.count() == 0 ? Clock::time_point::max() : Clock::now() + request.timeout;
     check_deadline(deadline, cancel);
     trace.stage("tls_setup");
     auto& api = tls_api();

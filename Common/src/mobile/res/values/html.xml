@@ -867,7 +867,12 @@ receive a glucose value. (My WearOS watch had this problem in the
 middle of the night, probably because I moved very little. Because of
 backfill afterward and slow awakening, I didn’t see it on the watch
 and phone, only in the log files. My phone doesn’t need this
-setting and seems to perform worse when it is turned on.)</p>
+setting and seems to perform worse when it is turned on.) Also under
+Libre 3 you can delay reconnection attempts with this option, but in
+a totally different way and for different reasons: it is reported to
+result in less connection loss under Samsung Galaxy Watch9. It was
+made with the idea that fewer connection attempts could improve
+connectivity, but possibly it is because the timer wakes the device.</p>
 <p style="border: none; padding: 0cm"><i><b>Permission</b></i>:
 Before Android 12 location permission was needed for searching for
 Bluetooth devices. Android 12 and later have a <i>Nearby devices</i>
@@ -3371,60 +3376,60 @@ the alarm is only generated again after 7:50.</p>
 </string>
 <string name="chatgpthelp" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/de/chatgpthelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/chatgpthelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/chatgpthelp.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">
-ChatGPT</h1>
-<p style="line-height: 100%; margin-bottom: 0in">Juggluco 11.3.0 and
+<p><a href="https://www.juggluco.nl/Jugglucohelp/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/de/chatgpthelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/chatgpthelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/chatgpthelp.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">ChatGPT</h1>
+<p style="line-height: 100%; margin-bottom: 0cm">Juggluco 11.3.0 and
 later use the Codex interface to allow users to talk to ChatGPT. You
 first need to “<i>Enable device code sign-in for Codex, Excel,
 PowerPoint, and Word</i>” in the ChatGPT settings, at the bottom of
 “<i>Security and Login</i>”. Thereafter, you can allow Juggluco
 to login via the standard Codex OpenAI login.</p>
-<p style="line-height: 100%; margin-bottom: 0in">ChatGPT gets
-read-only access Juggluco’s data. You can ask it questions, and it
-can generate answers in the following ways:</p>
+<p style="line-height: 100%; margin-bottom: 0cm">ChatGPT gets
+read-only access to Juggluco’s data. You can ask it questions, and
+it can generate answers in the following ways:</p>
 <ul>
-	<li><p style="margin-bottom: 0in; line-height: 100%">A text answer;</p></li>
-	<li><p style="margin-bottom: 0in; line-height: 100%">A curve
+	<li><p style="line-height: 100%; margin-bottom: 0cm">A text answer;</p></li>
+	<li><p style="line-height: 100%; margin-bottom: 0cm">A curve
 	displaying certain data;</p></li>
-	<li><p style="margin-bottom: 0in; line-height: 100%">Data can be
+	<li><p style="line-height: 100%; margin-bottom: 0cm">Data can be
 	saved in a file;</p></li>
-	<li><p style="line-height: 100%; margin-bottom: 0in"><span lang="en-US">P</span><span lang="en-US">ages
-	</span><span lang="en-US">added </span><span lang="en-US">to the web
-	server in Juggluco, so you can let ChatGPT make additions to the web
-	server if you have non-stan</span><span lang="en-US">dard</span><span lang="en-US">
-	request for the display of data.</span></p></li>
+	<li><p style="line-height: 100%; margin-bottom: 0cm"><span lang="en-US">Pages
+	added to the web server in Juggluco, so you can let ChatGPT make
+	additions to the web server if you have non-standard</span> <span lang="en-US">request
+	for the display of data.</span></p></li>
 </ul>
-<p style="line-height: 100%; margin-bottom: 0in"><br/>
+<p style="line-height: 100%; margin-bottom: 0cm"><br/>
 
 </p>
-<p style="line-height: 100%; margin-bottom: 0in">ChatGPT can retrieve
+<p style="line-height: 100%; margin-bottom: 0cm">ChatGPT can retrieve
 the following data:</p>
 <ul>
-	<li><p style="margin-bottom: 0in; line-height: 100%">Sensors and
+	<li><p style="line-height: 100%; margin-bottom: 0cm">Sensors and
 	sensor types;</p></li>
-	<li><p style="margin-bottom: 0in; line-height: 100%">Sensor data:
+	<li><p style="line-height: 100%; margin-bottom: 0cm">Sensor data:
 	stream, history and scans;</p></li>
-	<li><p style="margin-bottom: 0in; line-height: 100%">Entered numbers
+	<li><p style="line-height: 100%; margin-bottom: 0cm">Entered numbers
 	(amounts);</p></li>
-	<li><p style="margin-bottom: 0in; line-height: 100%">Meals;</p></li>
-	<li><p style="margin-bottom: 0in; line-height: 100%">User defined
+	<li><p style="line-height: 100%; margin-bottom: 0cm">Meals;</p></li>
+	<li><p style="margin-bottom: 0cm; line-height: 100%">Activities
+	received from Health Connect;</p></li>
+	<li><p style="line-height: 100%; margin-bottom: 0cm">User defined
 	ingredients;</p></li>
-	<li><p style="margin-bottom: 0in; line-height: 100%">The food
+	<li><p style="line-height: 100%; margin-bottom: 0cm">The food
 	database in Juggluco;</p></li>
-	<li><p style="margin-bottom: 0in; line-height: 100%">Knows of a lot
+	<li><p style="line-height: 100%; margin-bottom: 0cm">Knows of a lot
 	of settings in the app: Alarms, reminders, mirror, glucose meter
 	settings etc,</p></li>
 </ul>
-<p style="line-height: 100%; margin-bottom: 0in"><br/>
+<p style="line-height: 100%; margin-bottom: 0cm"><br/>
 
 </p>
-<p style="line-height: 100%; margin-bottom: 0in">ChatGPT can be used
+<p style="line-height: 100%; margin-bottom: 0cm">ChatGPT can be used
 to represent the data in Juggluco differently and to find or
 calculate something. You can also ask for help with Juggluco or tell
 it something about your diabetes management, but I don’t think that
 you will learn anything new, when you ask it for help with your
 diabetes management.</p>
-<p style="line-height: 100%; margin-bottom: 0in"><br/>
+<p style="line-height: 100%; margin-bottom: 0cm"><br/>
 
 </p>
 ]]>

@@ -138,7 +138,7 @@
     <string name="jgchat_native_analysis_input_exceeds_100000_rows_500000_cells_aggregate_smaller_windows_first">"Analysis input exceeds 100000 rows / 500000 cells; aggregate smaller windows first"</string>
     <string name="jgchat_native_analysis_memory_cleared">"Analysis memory cleared"</string>
     <string name="jgchat_native_analysis_memory_is_full_64_mib_4096_entries_use_more_clear_analysis_memory">"Analysis memory is full (64 MiB / 4096 entries); use More &gt; Clear analysis memory"</string>
-    <string name="jgchat_native_analysis_needs_one_sql_select_at_most_16_kib_and_at_most_16_tables">"Analysis needs one SQL SELECT (at most 16 KiB) and at most 16 tables"</string>
+    <string name="jgchat_native_analysis_needs_one_sql_select_at_most_16_kib_and_at_most_16_tables">"Analysis needs one nonempty SQL SELECT without NUL characters"</string>
     <string name="jgchat_native_analysis_output_exceeds_20000_rows_2_mib_use_aggregation_or_an_explicit_limit_no_part">"Analysis output exceeds 20000 rows / 2 MiB; use aggregation or an explicit LIMIT. No partial result was saved"</string>
     <string name="jgchat_native_analysis_produced_a_nonfinite_numeric_result">"Analysis produced a nonfinite numeric result"</string>
     <string name="jgchat_native_analysis_reached_its_five_second_20_million_step_budget_narrow_or_aggregate_the_input">"Analysis reached its five-second / 20-million-step budget; narrow or aggregate the inputs"</string>
@@ -216,7 +216,7 @@
     <string name="jgchat_native_compressed_https_responses_are_unsupported">"Compressed HTTPS responses are unsupported"</string>
     <string name="jgchat_native_conflicting_output_item_events">"Conflicting output item events"</string>
     <string name="jgchat_native_connecting">"Connecting"</string>
-    <string name="jgchat_native_conversation_exceeds_the_2_mib_history_limit_start_a_new_conversation">"Conversation exceeds the 2 MiB history limit; start a new conversation"</string>
+    <string name="jgchat_native_conversation_exceeds_the_2_mib_history_limit_start_a_new_conversation">"Conversation history must be an array"</string>
     <string name="jgchat_native_could_not_write_the_complete_chat_export">"Could not write the complete chat export"</string>
     <string name="jgchat_native_delimited_table_has_inconsistent_column_counts">"Delimited table has inconsistent column counts"</string>
     <string name="jgchat_native_delimited_table_is_missing_its_header">"Delimited table is missing its header"</string>
@@ -229,7 +229,7 @@
     <string name="jgchat_native_duplicate_output_item_identifier">"Duplicate output item identifier"</string>
     <string name="jgchat_native_empty_source_has_no_columns_inspect_its_metadata_first">"Empty source has no columns; inspect its metadata first"</string>
     <string name="jgchat_native_encrypted_tool_arguments_are_not_supported">"Encrypted tool arguments are not supported"</string>
-    <string name="jgchat_native_enter_a_question_shorter_than_32_kib">"Enter a question shorter than 32 KiB"</string>
+    <string name="jgchat_native_enter_a_question_shorter_than_32_kib">"Enter a question"</string>
     <string name="jgchat_native_file_bundle_is_not_referenced_by_this_account_s_workspace">"File bundle is not referenced by this account's workspace"</string>
     <string name="jgchat_native_fitting_and_evaluating_a_numerical_model">"Fitting and evaluating a numerical model"</string>
     <string name="jgchat_native_framing_field_in_https_trailer">"Framing field in HTTPS trailer"</string>
@@ -279,7 +279,7 @@
     <string name="jgchat_native_invalid_conversation_item_identifier">"Invalid conversation item identifier"</string>
     <string name="jgchat_native_invalid_delimited_file_quoting">"Invalid delimited-file quoting"</string>
     <string name="jgchat_native_invalid_file_bundle_identifier">"Invalid file bundle identifier"</string>
-    <string name="jgchat_native_invalid_file_bundle_use_1_8_text_files_safe_filenames_at_most_48_kib_total_and_an_htm">"Invalid file bundle: use 1-8 text files, safe filenames, at most 48 KiB total, and an HTML entrypoint or null."</string>
+    <string name="jgchat_native_invalid_file_bundle_use_1_8_text_files_safe_filenames_at_most_48_kib_total_and_an_htm">"Invalid file bundle: use text files, safe filenames, and an HTML entrypoint or null."</string>
     <string name="jgchat_native_invalid_function_call_identifier">"Invalid function call identifier"</string>
     <string name="jgchat_native_invalid_interim_https_response">"Invalid interim HTTPS response"</string>
     <string name="jgchat_native_invalid_local_juggluco_response_header">"Invalid local Juggluco response header."</string>
@@ -294,7 +294,7 @@
     <string name="jgchat_native_invalid_numeric_local_data_metadata">"Invalid numeric local data metadata."</string>
     <string name="jgchat_native_invalid_or_duplicate_analysis_table_alias">"Invalid or duplicate analysis table alias"</string>
     <string name="jgchat_native_invalid_output_item_index">"Invalid output item index"</string>
-    <string name="jgchat_native_invalid_plot_arguments_check_keys_text_limits_finite_coordinates_and_the_8_series_100">"Invalid plot arguments: check keys, text limits, finite coordinates and the 8-series/1000-point limit."</string>
+    <string name="jgchat_native_invalid_plot_arguments_check_keys_text_limits_finite_coordinates_and_the_8_series_100">"Invalid plot arguments: check keys, text, finite coordinates and nonempty series/points"</string>
     <string name="jgchat_native_invalid_plot_metadata">"Invalid plot metadata"</string>
     <string name="jgchat_native_invalid_plot_row">"Invalid plot row"</string>
     <string name="jgchat_native_invalid_plot_sensor">"Invalid plot sensor"</string>
@@ -311,14 +311,14 @@
     <string name="jgchat_native_invalid_sensor_count">"Invalid sensor count"</string>
     <string name="jgchat_native_invalid_settings_count">"Invalid settings count"</string>
     <string name="jgchat_native_invalid_stream_analysis_bounds">"Invalid stream analysis bounds"</string>
-    <string name="jgchat_native_invalid_stream_count_or_more_than_eight_sensors_shorten_the_interval">"Invalid stream count or more than eight sensors; shorten the interval"</string>
+    <string name="jgchat_native_invalid_stream_count_or_more_than_eight_sensors_shorten_the_interval">"Stream record count does not match the export metadata"</string>
     <string name="jgchat_native_invalid_stream_rate_unavailable_rate_must_be_a_native_nan_token">"Invalid stream rate; unavailable rate must be a native NaN token"</string>
     <string name="jgchat_native_invalid_stream_row_count">"Invalid stream row count"</string>
     <string name="jgchat_native_invalid_stream_sensor_id">"Invalid stream sensor ID"</string>
     <string name="jgchat_native_invalid_stream_timestamp">"Invalid stream timestamp"</string>
     <string name="jgchat_native_invalid_timeline_amount_count">"Invalid timeline amount count"</string>
     <string name="jgchat_native_invalid_timeline_bounds">"Invalid timeline bounds"</string>
-    <string name="jgchat_native_invalid_timeline_count_or_more_than_eight_sensors_shorten_the_interval">"Invalid timeline count or more than eight sensors; shorten the interval"</string>
+    <string name="jgchat_native_invalid_timeline_count_or_more_than_eight_sensors_shorten_the_interval">"Timeline record count does not match the export metadata"</string>
     <string name="jgchat_native_invalid_timeline_glucose_value">"Invalid timeline glucose value"</string>
     <string name="jgchat_native_invalid_timeline_row_count">"Invalid timeline row count"</string>
     <string name="jgchat_native_invalid_timeline_sensor">"Invalid timeline sensor"</string>
@@ -329,7 +329,7 @@
     <string name="jgchat_native_invalid_working_note">"Invalid working note"</string>
     <string name="jgchat_native_invalid_workspace_tool_arguments">"Invalid workspace tool arguments"</string>
     <string name="jgchat_native_json_nesting_limit_exceeded">"JSON nesting limit exceeded"</string>
-    <string name="jgchat_native_json_table_must_be_an_array_with_at_most_100000_rows">"JSON table must be an array with at most 100000 rows"</string>
+    <string name="jgchat_native_json_table_must_be_an_array_with_at_most_100000_rows">"JSON table must be an array or object"</string>
     <string name="jgchat_native_juggluco_settings_are_not_initialized">"Juggluco settings are not initialized"</string>
     <string name="jgchat_native_listing_reusable_analysis_files">"Listing reusable analysis files"</string>
     <string name="jgchat_native_loading_available_models">"Loading available models"</string>
@@ -399,7 +399,7 @@
     <string name="jgchat_native_preparing_files">"Preparing files"</string>
     <string name="jgchat_native_progress_nesting_limit">"Progress nesting limit"</string>
     <string name="jgchat_native_question_exceeded_the_10_minute_time_limit">"Question exceeded the 10 minute time limit"</string>
-    <string name="jgchat_native_question_must_contain_1_65536_bytes">"Question must contain 1–65536 bytes"</string>
+    <string name="jgchat_native_question_must_contain_1_65536_bytes">"Question must not be empty"</string>
     <string name="jgchat_native_reading_juggluco_settings">"Reading Juggluco settings"</string>
     <string name="jgchat_native_reading_a_saved_analysis_file">"Reading a saved analysis file"</string>
     <string name="jgchat_native_reading_entered_amounts">"Reading entered amounts"</string>
@@ -448,7 +448,7 @@
     <string name="jgchat_native_searching_the_internet">"Searching the internet"</string>
     <string name="jgchat_native_select_a_model">"Select a model"</string>
     <string name="jgchat_native_select_a_valid_model_from_the_returned_model_catalog">"Select a valid model from the returned model catalog"</string>
-    <string name="jgchat_native_sensor_id_must_be_1_128_bytes_without_nul_tab_or_newline">"Sensor ID must be 1-128 bytes without NUL, tab or newline"</string>
+    <string name="jgchat_native_sensor_id_must_be_1_128_bytes_without_nul_tab_or_newline">"Sensor ID must be nonempty, without NUL, tab or newline"</string>
     <string name="jgchat_native_sensor_index_must_be_0_1000000_or_null">"Sensor index must be 0-1000000 or null"</string>
     <string name="jgchat_native_sign_in_first">"Sign in first"</string>
     <string name="jgchat_native_sign_in_to_ask_a_question">"Sign in to ask a question"</string>
@@ -502,7 +502,7 @@
     <string name="jgchat_native_unsupported_output_item_type">"Unsupported output item type"</string>
     <string name="jgchat_native_workspace_argument_must_be_text">"Workspace argument must be text"</string>
     <string name="jgchat_native_workspace_numeric_argument_is_outside_its_bounds">"Workspace numeric argument is outside its bounds"</string>
-    <string name="jgchat_native_workspace_text_argument_exceeds_its_limit">"Workspace text argument exceeds its limit"</string>
+    <string name="jgchat_native_workspace_text_argument_exceeds_its_limit">"Workspace text arguments must not contain NUL characters"</string>
     <string name="jgchat_native_writing_reply">"Writing reply"</string>
     <string name="jgchat_waiting_round">"Waiting for OpenAI (round %1$s)"</string>
     <string name="jgchat_label_detail">"%1$s: %2$s"</string>
@@ -559,12 +559,12 @@
     <string name="jgchat_native_invalid_numerical_tool_arguments">"Invalid numerical tool arguments"</string>
     <string name="jgchat_native_missing_numerical_tool_argument">"Missing numerical tool argument"</string>
     <string name="jgchat_native_numerical_column_name_argument_must_be_text">"Numerical column/name argument must be text"</string>
-    <string name="jgchat_native_invalid_numerical_column_name_length">"Invalid numerical column/name length"</string>
-    <string name="jgchat_native_numerical_data_must_be_finite_json_numbers_within_1e100_prepare_csv_tsv_with_explicit">"Numerical data must be finite JSON numbers within +/-1e100; prepare CSV/TSV with explicit SQL casts"</string>
+    <string name="jgchat_native_invalid_numerical_column_name_length">"Numerical column names must be nonempty and contain no NUL characters"</string>
+    <string name="jgchat_native_numerical_data_must_be_finite_json_numbers_within_1e100_prepare_csv_tsv_with_explicit">"Numerical data must be finite JSON numbers; prepare CSV/TSV with explicit SQL casts"</string>
     <string name="jgchat_native_numerical_overflow_or_unstable_model_rescale_inputs_or_simplify_the_model">"Numerical overflow or unstable model; rescale inputs or simplify the model"</string>
     <string name="jgchat_native_invalid_numerical_feature_target_count">"Invalid numerical feature/target count"</string>
     <string name="jgchat_native_duplicate_numerical_column">"Duplicate numerical column"</string>
-    <string name="jgchat_native_numerical_tables_require_1_10000_rows_and_at_most_64_columns">"Numerical tables require 1-10000 rows and at most 64 columns"</string>
+    <string name="jgchat_native_numerical_tables_require_1_10000_rows_and_at_most_64_columns">"Numerical tables require at least one row and one column"</string>
     <string name="jgchat_native_invalid_numerical_table_row">"Invalid numerical table row"</string>
     <string name="jgchat_native_invalid_saved_numerical_vector">"Invalid saved numerical vector"</string>
     <string name="jgchat_native_rank_deficient_or_ill_conditioned_fit_remove_redundant_constant_features_or_use_ridge">"Rank-deficient or ill-conditioned fit: remove redundant/constant features or use ridge regularization"</string>
@@ -578,9 +578,9 @@
     <string name="jgchat_native_a_target_cannot_also_be_a_predictor">"A target cannot also be a predictor"</string>
     <string name="jgchat_native_a_target_cannot_serve_as_its_own_baseline">"A target cannot serve as its own baseline"</string>
     <string name="jgchat_native_train_before_must_be_less_than_calibrate_before">"train_before must be less than calibrate_before"</string>
-    <string name="jgchat_native_coverage_must_be_0_5_0_99_or_null">"Coverage must be 0.5-0.99 or null"</string>
-    <string name="jgchat_native_ridge_needs_lambda_in_0_1000000_and_neighbors_null">"Ridge needs lambda in (0,1000000] and neighbors=null"</string>
-    <string name="jgchat_native_knn_needs_predictors_neighbors_1_100_and_lambda_null">"KNN needs predictors, neighbors=1-100 and lambda=null"</string>
+    <string name="jgchat_native_coverage_must_be_0_5_0_99_or_null">"Coverage must be strictly between 0 and 1, or null"</string>
+    <string name="jgchat_native_ridge_needs_lambda_in_0_1000000_and_neighbors_null">"Ridge needs positive lambda and neighbors=null"</string>
+    <string name="jgchat_native_knn_needs_predictors_neighbors_1_100_and_lambda_null">"KNN needs predictors, positive integer neighbors and lambda=null"</string>
     <string name="jgchat_native_linear_needs_lambda_null_and_neighbors_null">"Linear needs lambda=null and neighbors=null"</string>
     <string name="jgchat_native_label_end_column_precedes_its_origin_order_correct_target_availability_times">"label_end_column precedes its origin/order; correct target availability times"</string>
     <string name="jgchat_native_too_few_complete_training_rows_after_purging_linear_needs_more_than_features_1_every_">"Too few complete training rows after purging; linear needs more than features+1, every fit at least 3, KNN at least k"</string>
@@ -589,7 +589,7 @@
     <string name="jgchat_native_invalid_saved_interval_radius">"Invalid saved interval radius"</string>
     <string name="jgchat_native_prediction_exceeds_20000_output_rows_reduce_input_rows">"Prediction exceeds 20000 output rows; reduce input rows"</string>
     <string name="jgchat_native_max_gap_must_be_positive_or_null">"max_gap must be positive or null"</string>
-    <string name="jgchat_native_plot_needs_1_8_column_series">"Plot needs 1-8 column series"</string>
+    <string name="jgchat_native_plot_needs_1_8_column_series">"Plot needs at least one column series"</string>
     <string name="jgchat_native_line_band_table_x_must_increase_strictly_order_filter_pivot_it_with_sql">"Line/band table x must increase strictly; order/filter/pivot it with SQL"</string>
     <string name="jgchat_native_saved_table_plot_exceeds_1000_total_points_explicitly_reduce_aggregate_in_sql">"Saved-table plot exceeds 1000 total points; explicitly reduce/aggregate in SQL"</string>
     <string name="jgchat_native_codex_http_detail">"Codex HTTP %1$s: %2$s"</string>

@@ -39,12 +39,11 @@
 
 namespace jgchat {
 namespace {
-constexpr std::size_t max_content = 48 * 1024;
 struct Fd { int fd; ~Fd() { if (fd >= 0) ::close(fd); } };
 void fail(UiCode message) { throw UiError(message); }
 void check(bool ok) { if (!ok) throw jgchat::UiArgumentError(jgchat::UiCode::invalid_file_bundle_use_1_8_text_files_safe_filenames_at_most_48_kib_total_and_an_htm); }
 bool filename(std::string_view name, bool system = false) {
-    if (name.empty() || name.size() > 64 || name.front() == '.' || (!system && name.starts_with("jg-"))) return false;
+    if (name.empty() || name.front() == '.' || (!system && name.starts_with("jg-"))) return false;
     for (const unsigned char c : name)
         if (!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '.' || c == '_' || c == '-')) return false;
     const auto dot = name.rfind('.');
@@ -123,7 +122,7 @@ void write(int directory, const std::string& name, std::string_view text) {
     }
     if (::fsync(file.fd) != 0) fail(UiCode::cannot_flush_generated_file);
 }
-std::string read(int directory, const char* name, std::size_t maximum = 16384) {
+std::string read(int directory, const char* name, std::size_t maximum = std::string{}.max_size()) {
     Fd file{::openat(directory, name, O_RDONLY | O_NONBLOCK | O_CLOEXEC | O_NOFOLLOW)};
     struct stat info{};
     if (file.fd < 0 || ::fstat(file.fd, &info) || !S_ISREG(info.st_mode) || info.st_size < 0 || uint64_t(info.st_size) > maximum)
@@ -198,24 +197,24 @@ void remove_directory(int parent, const std::string& name) noexcept {
 
 Json file_tool_definition() {
     const Json file{{"type", "object"}, {"properties", {
-        {"name", {{"type", "string"}, {"maxLength", 64}, {"description", "Flat filename using ASCII letters, digits, dot, underscore or dash; extensions html/htm/js/mjs/css/json/csv/tsv/txt/md. Names starting jg- are reserved."}}},
-        {"content", {{"type", "string"}, {"maxLength", max_content}, {"description", "UTF-8 text. For HTML give body markup, including style/script tags as needed; the app supplies the document head and Juggluco helper."}}}}},
+        {"name", {{"type", "string"}, {"description", "Flat filename using ASCII letters, digits, dot, underscore or dash; extensions html/htm/js/mjs/css/json/csv/tsv/txt/md. Names starting jg- are reserved."}}},
+        {"content", {{"type", "string"}, {"description", "UTF-8 text. For HTML give body markup, including style/script tags as needed; the app supplies the document head and Juggluco helper."}}}}},
         {"required", Json::array({"name", "content"})}, {"additionalProperties", false}};
     return {{"type", "function"}, {"name", "juggluco_save_files"}, {"strict", true},
-        {"description", "Prepare new local files for the answer, saved after successful completion. 1-8 files, 48 KiB total, four bundles per answer. Existing files are never overwritten. The user can tap Save as to choose a destination in Android's document picker, without enabling the web server. This tool cannot choose a destination or claim that external export succeeded. HTML can run ordinary JavaScript/Canvas and query the same-origin Juggluco web server with the supplied helper; external scripts/network are blocked. Use juggluco_web_context for endpoint details. A browser download page is also included."},
+        {"description", "Prepare new local files for the answer, saved after successful completion. No imposed file-count, content-size or bundle-count cap. Existing files are never overwritten. The user can tap Save as to choose a destination in Android's document picker, without enabling the web server. This tool cannot choose a destination or claim that external export succeeded. HTML can run ordinary JavaScript/Canvas and query the same-origin Juggluco web server with the supplied helper; external scripts/network are blocked. Use juggluco_web_context for endpoint details. A browser download page is also included."},
         {"parameters", {{"type", "object"}, {"properties", {
-            {"title", {{"type", "string"}, {"maxLength", 80}}},
-            {"files", {{"type", "array"}, {"minItems", 1}, {"maxItems", 8}, {"items", file}}},
+            {"title", {{"type", "string"}}},
+            {"files", {{"type", "array"}, {"minItems", 1}, {"items", file}}},
             {"entrypoint", {{"type", Json::array({"string", "null"})}, {"description", "Name of the HTML file to open, or null for the download listing."}}},
             {"open_in_browser", {{"type", "boolean"}, {"description", "True only if the user requested opening/running the generated page."}}}}},
             {"required", Json::array({"title", "files", "entrypoint", "open_in_browser"})}, {"additionalProperties", false}}}};
 }
 Json prepare_files(const Json& args) {
     check(args.is_object() && args.size() == 4 && args.contains("title") && args.contains("files") && args.contains("entrypoint") && args.contains("open_in_browser"));
-    check(args["title"].is_string() && !args["title"].get_ref<const std::string&>().empty() && args["title"].get_ref<const std::string&>().size() <= 320 && args["open_in_browser"].is_boolean());
+    check(args["title"].is_string() && !args["title"].get_ref<const std::string&>().empty() && args["open_in_browser"].is_boolean());
     const auto& title = args["title"].get_ref<const std::string&>();
     check(std::none_of(title.begin(), title.end(), [](unsigned char c) { return c < 32 || c == 127; }));
-    check(args["files"].is_array() && !args["files"].empty() && args["files"].size() <= 8);
+    check(args["files"].is_array() && !args["files"].empty());
     check(args["entrypoint"].is_null() || args["entrypoint"].is_string());
     std::set<std::string> names;
     std::size_t bytes = 0;
@@ -224,7 +223,7 @@ Json prepare_files(const Json& args) {
         check(file.is_object() && file.size() == 2 && file.contains("name") && file.contains("content") && file["name"].is_string() && file["content"].is_string());
         const auto name = file["name"].get<std::string>();
         const auto& content = file["content"].get_ref<const std::string&>();
-        check(filename(name) && names.insert(name).second && content.find('\0') == std::string::npos && content.size() <= max_content - bytes);
+        check(filename(name) && names.insert(name).second && content.find('\0') == std::string::npos);
         bytes += content.size(); metadata.push_back({{"name", name}, {"bytes", content.size()}});
     }
     if (args["entrypoint"].is_string()) {
@@ -243,8 +242,7 @@ FileStore::FileStore(const std::string& files_directory) {
 FileStore::~FileStore() { if (fd_ >= 0) ::close(fd_); }
 Json FileStore::save(const Json& bundles, const std::atomic_bool& cancel) {
     std::lock_guard lock(mutex_);
-    check(bundles.is_array() && bundles.size() <= 4);
-    if (list().size() + bundles.size() > 64) fail(UiCode::saved_file_limit_reached_delete_old_bundles_under_web_server_upload_web_pages_chatgpt);
+    check(bundles.is_array());
     Json saved = Json::array();
     std::string temporary;
     try {
@@ -305,12 +303,12 @@ Json FileStore::list() const {
     if (!directory) { if (copy >= 0) ::close(copy); fail(UiCode::cannot_list_saved_files); }
     Json result = Json::array();
     while (const auto* entry = ::readdir(directory)) {
-        if (!bundle_id(entry->d_name) || result.size() >= 64) continue;
+        if (!bundle_id(entry->d_name)) continue;
         try {
             Fd file{::openat(fd_, entry->d_name, O_RDONLY | O_DIRECTORY | O_NOFOLLOW | O_CLOEXEC)};
             auto metadata = Json::parse(read(file.fd, "jg-manifest.json"));
             if (metadata.is_object() && metadata.value("id", "") == entry->d_name && metadata.contains("title") && metadata["title"].is_string() &&
-                metadata.contains("files") && metadata["files"].is_array() && metadata["files"].size() <= 8 &&
+                metadata.contains("files") && metadata["files"].is_array() &&
                 metadata.contains("entrypoint") && metadata["entrypoint"].is_string() && filename(metadata["entrypoint"].get<std::string>(), true))
                 result.push_back(std::move(metadata));
         } catch (...) { /* An unrelated/corrupt entry does not expose its bytes. */ }
@@ -334,14 +332,14 @@ std::string FileStore::read_text(const std::string& id, const std::string& file)
         Fd directory{::openat(fd_, id.c_str(), O_RDONLY | O_DIRECTORY | O_NOFOLLOW | O_CLOEXEC)};
         const auto manifest = Json::parse(read(directory.fd, "jg-manifest.json"));
         if (!manifest.is_object() || manifest.value("id", "") != id ||
-            !manifest.contains("files") || !manifest["files"].is_array() || manifest["files"].size() > 8)
+            !manifest.contains("files") || !manifest["files"].is_array())
             fail(UiCode::invalid_saved_file_manifest);
         bool listed = file == "jg-api.js";
         for (const auto& item : manifest["files"])
             if (item.is_object() && item.contains("name") && item["name"] == file) listed = true;
         if (!listed) fail(UiCode::file_is_not_part_of_this_generated_bundle);
         // Snapshot before writing and release the lock before slow provider I/O.
-        return read(directory.fd, file.c_str(), 128 * 1024);
+        return read(directory.fd, file.c_str());
 }
 std::size_t FileStore::copy_to_fd(const std::string& id, const std::string& file, int output) const {
     const auto bytes = read_text(id, file);

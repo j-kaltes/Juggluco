@@ -59,9 +59,10 @@ static private void askdays(MainActivity act,boolean history) {
    days.setMinEms(4);
    days.setText(""+Natives.getAnalysedays());
    Layout layout = new Layout(act, (l, w, h) -> {
-      int wid = GlucoseCurve.getwidth();
+        var geo=act.getWindowSize();
+        int wid=geo.x;
       if(!smallScreen) {
-         int hei = GlucoseCurve.getheight();
+        int hei=geo.y;
          if(hei>h&&wid>w) {
              if(GlucoseCurve.isLandscape(act)) {
                 int half=wid/2;
@@ -88,8 +89,21 @@ static private void askdays(MainActivity act,boolean history) {
       },new View[]{label,days},new View[]{Cancel,Ok});
         layout.setPadding(pad,pad,pad,pad);
    act.addMyContentView(layout,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-     layout.post(layout::requestLayout);
-        layout.setBackgroundResource(R.drawable.dialogbackground);
+//     layout.post(layout::requestLayout);
+   // The dialog's position is calculated during onMeasure. Recalculate it
+   // after the window has acquired its new dimensions on rotation.
+   /*
+   View content=act.findViewById(android.R.id.content);
+   
+   View.OnLayoutChangeListener resize=(v,left,top,right,bottom,oldLeft,oldTop,oldRight,oldBottom)-> {
+      if(right-left!=oldRight-oldLeft || bottom-top!=oldBottom-oldTop)
+         layout.post(layout::requestLayout);
+      };
+   if(content!=null)
+      content.addOnLayoutChangeListener(resize);
+
+      */
+   layout.setBackgroundResource(R.drawable.dialogbackground);
    days.requestFocus();
    if(!smallScreen) {
       act.curve.numberview.showkeyboard(act,layout);
@@ -98,6 +112,7 @@ static private void askdays(MainActivity act,boolean history) {
       help.showkeyboard(act,days);
       }
 final Runnable closeonback=()-> {
+//      if(content!=null) content.removeOnLayoutChangeListener(resize);
       removeContentView(layout);
       if(smallScreen) {
          help.hidekeyboard(act);
@@ -127,6 +142,7 @@ final Runnable closeonback=()-> {
       act.curve.statspresent=false;
       act.curve.summarybutton=null;
       Natives.analysedays(get,history);
+//      if(content!=null) content.removeOnLayoutChangeListener(resize);
       removeContentView(layout);
       if(smallScreen) {
          help.hidekeyboard(act);

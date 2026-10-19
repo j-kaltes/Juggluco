@@ -121,8 +121,8 @@ std::vector<int> matching_sensor_indices(std::span<const sensor> entries,
 }
 uint32_t sensor_count() {
     const int last = sensors->last();
-    if (last < -1 || last > 1000000) throw jgchat::UiError(jgchat::UiCode::invalid_sensor_count);
-    return last + 1;
+    if (last < -1) throw jgchat::UiError(jgchat::UiCode::invalid_sensor_count);
+    return uint32_t(last) + 1;
 }
 CalibrationSeries copy_calibrations(const Calibraties& stored) {
     CalibrationSeries result;

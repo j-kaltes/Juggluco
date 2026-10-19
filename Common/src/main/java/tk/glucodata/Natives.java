@@ -672,7 +672,7 @@ static native byte[] libre3ExportSavedAuthorization(long securityContext);
 
 public static native boolean getShownintro( );
 public static native void setShownintro(boolean val);
-public static native void setDevice(String mani,String model,int SDK_INT);
+public static native void saveDevice(String mani,String model,String product,int SDK_INT);
 public static native String getxDripTrendName(float rate);
 public static native boolean getkerfstokblack( );
 public static native void setkerfstokblack(boolean val);

@@ -452,7 +452,7 @@ static int bluePermission() {
     return 2;
     }
 public static void updateservice(Context context,boolean usebluetooth) {
-        if(usebluetooth||Natives.backuphostNr( )>0) {
+        if(isWearable||usebluetooth||Natives.backuphostNr( )>0) {
             if(keeprunning.start(context))
                 {if(doLog) {Log.i(LOG_ID,"updateservice: keeprunning started");};}
             else
@@ -461,11 +461,11 @@ public static void updateservice(Context context,boolean usebluetooth) {
             }
         else
             keeprunning.stop();
-        }
+         }
 static void dontusebluetooth() {
     {if(doLog) {Log.i(LOG_ID,"dontusebluetooth()");};};
     SensorBluetooth.destructor();
-    if(Natives.backuphostNr( )<=0) {
+    if(!isWearable&&Natives.backuphostNr( )<=0) {
         keeprunning.stop();
         }
                //  act.setbluetoothmain( isChecked);
@@ -530,7 +530,7 @@ void initbluetooth(boolean usebluetooth,Context context,boolean frommain) {
         else {
             Log.i(LOG_ID,"can't askNotify, no MainActivity");
             }
-        if(usebluetooth||Natives.backuphostNr( )>0) {
+        if(isWearable||usebluetooth||Natives.backuphostNr( )>0) { //You can't use Wearable without net or bluetooth
             if(keeprunning.start(context))
                 {if(doLog) {Log.i(LOG_ID,"keeprunning started");};}
             else

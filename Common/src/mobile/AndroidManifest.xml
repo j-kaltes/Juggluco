@@ -125,6 +125,7 @@
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
                 <data android:host="*" android:pathPrefix="/data" android:scheme="wear" />
+                <data android:host="*" android:pathPrefix="/mirrorstream" android:scheme="wear" />
                 <data android:host="*" android:pathPrefix="/messages" android:scheme="wear" />
                 <data android:host="*" android:pathPrefix="/messagesack" android:scheme="wear" />
                 <data android:host="*" android:pathPrefix="/mirrortransport" android:scheme="wear" />

@@ -113,6 +113,10 @@ static Spinner mkspinner(MainActivity context, ArrayList<WatchTarget> nodeslist,
 
 
 static void remake(CheckDirectionRadio[] sensordirect, CheckDirectionRadio[] nswitch,  WatchTarget node,boolean[] direct) {
+    remake(sensordirect,nswitch,node,direct,true);
+    }
+
+private static void remake(CheckDirectionRadio[] sensordirect, CheckDirectionRadio[] nswitch, WatchTarget node,boolean[] direct,boolean setChoices) {
     int dirval,numsval;
     if(node==null) {
         dirval=-1;
@@ -134,14 +138,17 @@ static void remake(CheckDirectionRadio[] sensordirect, CheckDirectionRadio[] nsw
     if(dirval<0)  {
         for(var v:sensordirect) {
             v.setEnabled(false);
-            v.setChecked(false);
+            if(setChoices)
+                v.setChecked(false);
             }
         direct[0]=false;
         }
     else  {
         boolean watchsensor=dirval!=0; 
-        sensordirect[0].setChecked(dirval==0);
-        sensordirect[1].setChecked(watchsensor);
+        if(setChoices||(!sensordirect[0].isChecked()&&!sensordirect[1].isChecked())) {
+            sensordirect[0].setChecked(dirval==0);
+            sensordirect[1].setChecked(watchsensor);
+            }
         direct[0]=watchsensor;
         for(var v:sensordirect) {
             v.setEnabled(true);
@@ -150,12 +157,15 @@ static void remake(CheckDirectionRadio[] sensordirect, CheckDirectionRadio[] nsw
     if(numsval<0)  {
         for(var n:nswitch) {
             n.setEnabled(false);
-            n.setChecked(false);
+            if(setChoices)
+                n.setChecked(false);
             }
         }
     else  {
-        nswitch[0].setChecked(numsval==0);
-        nswitch[1].setChecked(numsval!=0);
+        if(setChoices||(!nswitch[0].isChecked()&&!nswitch[1].isChecked())) {
+            nswitch[0].setChecked(numsval==0);
+            nswitch[1].setChecked(numsval!=0);
+            }
         for(var n:nswitch)
             n.setEnabled(true);
         }
@@ -203,6 +213,7 @@ static public void show(MainActivity context,View parent) {
        }
    final var nodeslist=nodeslistin;
    boolean[] watchsensor={false};
+   boolean[] refreshing={false};
    IntConsumer setpos= pos-> {
             try {
                 nodenumptr[0]=pos;
@@ -212,7 +223,8 @@ static public void show(MainActivity context,View parent) {
                     defaults.setEnabled(true);
                     if(node!=null) {  
                        Consumer<View> switched= v-> {
-                            defaults.setEnabled(false);
+                            if(!refreshing[0])
+                                defaults.setEnabled(false);
                           };
                         Object[] switcher={switched}; 
                         Backup.setradiotest(nswitch,switcher);
@@ -264,6 +276,28 @@ static public void show(MainActivity context,View parent) {
                     Gravity.CENTER_HORIZONTAL| Gravity.CENTER);
 
     context.addMyContentView(layout, params);
+    // Synchronization can finish after the spinner's initial selection. Keep
+    // the gate current without replacing choices the user has already edited.
+    Runnable refreshStatus=new Runnable() {
+        @Override public void run() {
+            if(!layout.isAttachedToWindow())
+                return;
+            int pos=nodenumptr[0];
+            if(pos>=0&&pos<nodeslist.size()) {
+                refreshing[0]=true;
+                try {
+                    remake(sswitch,nswitch,nodeslist.get(pos),watchsensor,defaults.isEnabled());
+                    }
+                catch(Throwable e) {
+                    Log.stack(LOG_ID,e);
+                    }
+                finally {
+                    refreshing[0]=false;
+                    }
+                }
+            layout.postDelayed(this,1000L);
+            }
+        };
     //context.addMyContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
 //    layout.post(layout::requestLayout);
     Ok.setOnClickListener(v -> {
@@ -277,7 +311,14 @@ static public void show(MainActivity context,View parent) {
                 if(nodenumptr[0]>=0) {
                         var node=nodeslist.get(nodenumptr[0]);
                         var name=makenodename(node);
-                        final boolean wasdirect=watchsensor[0]; 
+                        int currentDirect=Natives.directsensorwatch(name);
+                        if(currentDirect<0||Natives.hasWatchNums(name)<0||
+                                (currentDirect==0&&!Natives.getusebluetooth())) {
+                            Log.i(LOG_ID,"Waiting for Wear mirror synchronization before changing "+name);
+                            Natives.switchSync();
+                            return;
+                            }
+                        final boolean wasdirect=currentDirect!=0;
                         {if(doLog) {Log.i(LOG_ID,"watch "+name+" "+"nums "+watchnums+" direct "+watchdirect+ " was "+wasdirect);};};
                         byte[] netinfo=Natives.getmynetinfo(name,true,watchdirect?1:-1,node.galaxy,watchnums?1:-1,false);
                         Runnable doswitch=()-> {
@@ -341,10 +382,15 @@ static public void show(MainActivity context,View parent) {
          });
 */
     context.setonback(()-> { 
+        layout.removeCallbacks(refreshStatus);
         EnableControls(parent,true);
         removeContentView(layout);
         context.hideSystemUI(); }
         );
+    if(!nodeslist.isEmpty()) {
+        layout.postDelayed(refreshStatus,1000L);
+        Natives.switchSync();
+        }
 
     }
 static String makenodename(Node node) {

@@ -504,7 +504,6 @@ public final class JugglucoChat {
                     : callbacks.toArray(new SuperGattCallback[0]);
             JSONArray rows = new JSONArray();
             for (SuperGattCallback gatt : copy) {
-                if (rows.length() == 64) break;
                 if (gatt == null) continue;
                 rows.put(new JSONObject().put("sensor_id", textOrNull(gatt.SerialNumber))
                         .put("protocol_generation", gatt.sensorgen).put("stopped", gatt.stop)
@@ -529,7 +528,6 @@ public final class JugglucoChat {
             List<tk.glucodata.nums.AllData.GarminDeviceInfo> devices = data.getGarminDeviceInfos();
             JSONArray rows = new JSONArray();
             for (tk.glucodata.nums.AllData.GarminDeviceInfo watch : devices) {
-                if (rows.length() == 64) break;
                 rows.put(new JSONObject().put("id", Long.toString(watch.id)).put("name", textOrNull(watch.name))
                         .put("connected", watch.connected).put("direct_ble", watch.direct).put("active", watch.active)
                         .put("send_glucose", watch.glucose).put("numbers_device", watch.numbers)
@@ -572,7 +570,6 @@ public final class JugglucoChat {
                 MessageSender sender = MessageSender.getMessageSender();
                 java.util.Set<Node> cached = sender == null ? null : sender.getNodes();
                 if (cached != null) for (Node node : cached) {
-                    if (nodes.length() == 64) break;
                     nodes.put(new JSONObject().put("id", node.getId()).put("name", node.getDisplayName())
                             .put("nearby", node.isNearby()));
                 }
@@ -1294,7 +1291,7 @@ public final class JugglucoChat {
                     applyMarkup(text, bodyStart, formatted);
                     linkWebText(text, bodyStart, formatted.text);
                     JSONArray citations = item.optJSONArray("citations");
-                    if (citations != null) for (int c = 0; c < Math.min(64, citations.length()); ++c) {
+                    if (citations != null) for (int c = 0; c < citations.length(); ++c) {
                         JSONObject source = citations.optJSONObject(c);
                         if (source == null) continue;
                         String url = source.optString("url", "");
@@ -1311,7 +1308,7 @@ public final class JugglucoChat {
                     }
                 }
                 JSONArray plots = item.optJSONArray("plots");
-                if (plots != null) for (int p = 0; p < Math.min(4, plots.length()); ++p) {
+                if (plots != null) for (int p = 0; p < plots.length(); ++p) {
                     JSONObject plot = plots.optJSONObject(p);
                     if (plot == null) continue;
                     final int messageIndex = i, plotIndex = p;
@@ -1327,7 +1324,7 @@ public final class JugglucoChat {
                     }, linkStart, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
                 JSONArray files = item.optJSONArray("files");
-                if (files != null) for (int f = 0; f < Math.min(4, files.length()); ++f) {
+                if (files != null) for (int f = 0; f < files.length(); ++f) {
                     JSONObject bundle = files.optJSONObject(f);
                     if (bundle == null) continue;
                     String id = bundle.optString("id", ""), entry = bundle.optString("entrypoint", "jg-files.html");
@@ -1757,7 +1754,7 @@ public final class JugglucoChat {
             hideKeyboard();
             try {
                 String svg = nativeGetPlot(messageIndex, plotIndex);
-                if (svg == null || !svg.startsWith("<svg ") || svg.length() > 131072)
+                if (svg == null || !svg.startsWith("<svg "))
                     throw new IllegalStateException(s(R.string.jgchat_the_plot_is_unavailable));
                 final String originalSvg = svg;
                 if (ColorUtils.calculateLuminance(backgroundColor) <= 0.5)

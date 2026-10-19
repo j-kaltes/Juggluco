@@ -20,6 +20,7 @@
 
 
 #include "nums/numdata.hpp"
+#include "nums/mirrordatabase.hpp"
 #include <vector>
 std::vector<Numdata*> numdatas;
 
@@ -81,9 +82,24 @@ int updateactivities(crypt_t *pass,Connect *connect,changednums &numbers) {
          if(ja::mirror::unchanged(store,cursor))return 2;
          transfer=ja::mirror::capture(store,cursor);
       } // Release the activity mutex before waiting on the network.
-      const std::vector<subdata> data={{reinterpret_cast<const uint8_t*>(transfer.bytes.data()),0,int(transfer.bytes.size())}};
-      if(!connect->senddata(pass,data,ja::mirror::filename)) {
-         numbers.activityState={};return 0;
+      static_assert(ja::mirror::maxBytes==ja::mirror::maxChunkTransfer);
+      if(!connect->activityChunkSupport) {
+         const std::vector<subdata> data={{reinterpret_cast<const uint8_t*>(transfer.bytes.data()),0,int(transfer.bytes.size())}};
+         if(!connect->senddata(pass,data,ja::mirror::filename)) {
+            numbers.activityState={};return 0;
+         }
+      }
+      else
+      for(size_t offset=0;offset<transfer.bytes.size();) {
+         const size_t length=std::min(connect->activityChunkBytes,transfer.bytes.size()-offset);
+         std::vector<uint8_t> packet(sizeof(activitychunk_t)+length);
+         auto *chunk=reinterpret_cast<activitychunk_t*>(packet.data());
+         *chunk=activitychunk_t{.totlen=uint32_t(packet.size()),.size=uint32_t(transfer.bytes.size()),.offset=uint32_t(offset)};
+         memcpy(chunk->data,transfer.bytes.data()+offset,length);
+         if(!connect->sendcommand(pass,packet.data(),packet.size())) {
+            numbers.activityState={};return 0;
+         }
+         offset+=length;
       }
       numbers.activityState=transfer.cursor;
       LOGGER("Activity: mirrored %zu bytes\n",transfer.bytes.size());return 1;
@@ -159,17 +175,15 @@ bool happened(uint32_t stime,int type,float value)  {
 
 
 bool receivelastpos(const lastpos_t *data) {
-   if(numdatas.size()<2)
-      return false;
-  const int base=data->dbase;
-   numdatas[base]-> receivelastpos(base,data->lastpos);
-   return true;
+   auto *database=mirrornums::database(numdatas,data->dbase);
+   if(!database||data->lastpos>INT_MAX)return false;
+   const int base=data->dbase;
+   return database->receivelastpos(base,data->lastpos);
    }
 
 bool backupnums(const struct numsend* innums) { 
-   if(numdatas.size()<2)
-      return false;
-   if(!numdatas[innums->dbase]->backupnums(innums))return false;
+   auto *database=mirrornums::database(numdatas,innums->dbase);
+   if(!database||!database->backupnums(innums))return false;
    // Activity metadata can arrive before or after a changed Amount packet.
    if(access((std::string(globalbasedir)+"/activities.dat").c_str(),F_OK)==0) {
       try {auto &store=ja::globalStore();std::lock_guard lock(store.mutex);bindMirroredActivityAmounts(store);}
@@ -178,9 +192,8 @@ bool backupnums(const struct numsend* innums) {
    return true;
    }
 bool backupnuminit(const numinit *numst) {
-   if(numdatas.size()<2)
-      return false;
-   return numdatas[(bool)(numst->ident)]->numbackupinit(numst);
+   auto *database=mirrornums::database(numdatas,bool(numst->ident));
+   return database&&database->numbackupinit(numst);
    }
 
 bool numsbackupsendinit(crypt_t*pass,Connect *connect,struct changednums *nuall,uint32_t starttime) {
@@ -192,9 +205,9 @@ bool numsbackupsendinit(crypt_t*pass,Connect *connect,struct changednums *nuall,
    return true;
    }
 int sendlastnum(const int dbase) {
-   if(dbase>=numdatas.size())
-      return -1;
-   return numdatas[dbase]->getlastpos();
+   auto *database=mirrornums::database(numdatas,dbase);
+   if(!database)return -1;
+   return database->mirrorRepairPending()?0:database->getlastpos();
    }
 
 uint32_t getnumlasttime() {

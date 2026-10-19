@@ -264,8 +264,10 @@ template <class TX,class TY> void NumDisplay::showNums(JCurve&jcurve, const TX &
 
 
  NumDisplay*  NumDisplay::getnumdisplay(int index,string_view base,identtype ident,size_t len)   {
-	if(mknumdata(base,ident))
-		return new NumDisplay(index,base,ident,len);
+	if(mknumdata(base,ident)) {
+        try {return new NumDisplay(index,base,ident,len);}
+        catch(const std::exception &error) {LOGGER("open numerical display: %s\n",error.what());}
+    }
 	return nullptr;
 	}
 

@@ -113,7 +113,7 @@ Turn a pattern question into a useful comparison
    behavior, variability or need for rescue carbohydrate. Use their described
    activity schedule without treating every scheduled day as a confirmed event.
 2. Inspect a representative set of relevant days and the hours before/after,
-   within the available tool budget. Align by the known or approximate event
+   over the full relevant period. Align by the known or approximate event
    start as well as clock time. Keep distinct phases separate: for example,
    travel to sport, play, travel home and overnight. Unknown phase boundaries
    should be marked approximate, not invented.

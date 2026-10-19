@@ -38,6 +38,9 @@
 #include <mutex>
 #include <thread>
 #include <semaphore>
+#include <condition_variable>
+#include "mirrorstream.hpp"
+#include "net/makerandom.hpp"
 #include "destruct.hpp"
 #include "datbackup.hpp"
 #include "net/netstuff.hpp"
@@ -88,6 +91,28 @@ std::array<std::atomic_bool,maxallhosts> mirrordirectbluetoothactive{};
 static std::array<std::atomic_bool,maxallhosts> directbluetoothmode{};
 static std::mutex messagesocketmutex;
 
+struct messagesession {
+    mirrorstream::State state;
+    std::mutex mutex,delivery;
+    std::condition_variable changed;
+    std::atomic_bool active{true};
+    messagesession(bool sender,bool ble,uint64_t nonce):state(sender,ble,nonce){}
+};
+static std::array<std::shared_ptr<messagesession>,maxallhosts> senderSessions,receiverSessions;
+static std::array<std::atomic_bool,maxallhosts> bridgeDirect{};
+static auto &sessions(const std::array<std::atomic_int,maxallhosts> &sockets) {
+    return &sockets==&messagesendersockets?senderSessions:receiverSessions;
+}
+static void invalidatesession(const std::shared_ptr<messagesession> &session,bool alreadyLocked=false) {
+    if(!session)return;
+    if(alreadyLocked)session->active=false;
+    else {
+        std::lock_guard lock(session->mutex);
+        session->active=false;
+    }
+    session->changed.notify_all();
+}
+
 void setall(auto &ar,const auto ini) {    
     for(auto &el:ar)
         el=ini;
@@ -109,11 +134,20 @@ static uint64_t installmessagesocket(std::array<std::atomic_int,maxallhosts> &so
     {
         const std::lock_guard<std::mutex> lock(messagesocketmutex);
         oldsock=sockets[host];
-        sockets[host]=sock;
+        invalidatesession(sessions(sockets)[host]);
+        if(oldsock>=0&&oldsock!=sock)shutdown(oldsock,SHUT_RDWR);
+        uint64_t nonce=0;
+        if(!makerandom(&nonce,sizeof(nonce))||!nonce) {
+            shutdown(sock,SHUT_RDWR);sockets[host]=-1;
+            sessions(sockets)[host].reset();
+        }
+        else {
+            sockets[host]=sock;
+            sessions(sockets)[host]=std::make_shared<messagesession>(
+                &sockets==&messagesendersockets,bridgeDirect[host].load(),nonce);
+        }
         generation=++generations[host];
     }
-    if(oldsock>=0&&oldsock!=sock)
-        shutdown(oldsock,SHUT_RDWR);
     return generation;
     }
 
@@ -126,26 +160,32 @@ static void stopmessagesocket(std::array<std::atomic_int,maxallhosts> &sockets,
         sock=sockets[host];
         sockets[host]=-1;
         ++generations[host];
+        invalidatesession(sessions(sockets)[host]);
+        sessions(sockets)[host].reset();
+        if(sock>=0)shutdown(sock,SHUT_RDWR);
     }
-    if(sock>=0)
-        shutdown(sock,SHUT_RDWR);
     }
 
 static void clearmessagesocket(std::array<std::atomic_int,maxallhosts> &sockets,
                                const std::array<uint64_t,maxallhosts> &generations,
                                int host,int sock,uint64_t generation) {
     const std::lock_guard<std::mutex> lock(messagesocketmutex);
-    if(generations[host]==generation&&sockets[host]==sock)
+    if(generations[host]==generation&&sockets[host]==sock) {
         sockets[host]=-1;
+        invalidatesession(sessions(sockets)[host]);
+        sessions(sockets)[host].reset();
+    }
     }
 
-static int duplicatemessagesocket(const std::array<std::atomic_int,maxallhosts> &sockets,int host) {
+static int duplicatemessagesocket(const std::array<std::atomic_int,maxallhosts> &sockets,int host,
+                                 std::shared_ptr<messagesession> *session=nullptr) {
     const std::lock_guard<std::mutex> lock(messagesocketmutex);
     const int sock=sockets[host];
+    if(session)*session=sessions(sockets)[host];
     return sock<0?-1:dup(sock);
     }
 
-int toreceiversocket(const wearmessage *mess) {
+int toreceiversocket(const wearmessage *mess,std::shared_ptr<messagesession> *session=nullptr) {
 if(mess->type.phonehostnr<0||mess->type.phonehostnr>=maxallhosts) {
     LOGGERTAG("toreceiversocket invalid phonehostnr=%d\n",mess->type.phonehostnr);
     return -1;
@@ -158,11 +198,11 @@ if(host<0||host>=maxallhosts) {
     }
 int sock;
    if(mess->type.phonesender) {
-    sock= duplicatemessagesocket(messagereceiversockets,host);
+    sock= duplicatemessagesocket(messagereceiversockets,host,session);
     LOGGERTAG("toreceiversocket host=%d receiver sock=%d\n",host,sock);
        }
 else {
-    sock= duplicatemessagesocket(messagesendersockets,host);
+    sock= duplicatemessagesocket(messagesendersockets,host,session);
     LOGGERTAG("toreceiversocket host=%d sender sock=%d\n",host,sock);
     }
 #else
@@ -176,25 +216,56 @@ else {
     }
  int sock;
    if(mess->type.phonesender) {
-       sock= phonepeer?duplicatemessagesocket(messagereceiversockets,host):
-                       duplicatemessagesocket(messagesendersockets,host);
+       sock= phonepeer?duplicatemessagesocket(messagereceiversockets,host,session):
+                       duplicatemessagesocket(messagesendersockets,host,session);
     LOGGERTAG("toreceiversocket host=%d %s sock=%d\n",host,phonepeer?"receiver":"sender",sock);
     }
 else {
-   sock= phonepeer?duplicatemessagesocket(messagesendersockets,host):
-                   duplicatemessagesocket(messagereceiversockets,host);
+   sock= phonepeer?duplicatemessagesocket(messagesendersockets,host,session):
+                   duplicatemessagesocket(messagereceiversockets,host,session);
    LOGGERTAG("toreceiversocket host=%d %s sock=%d\n",host,phonepeer?"sender":"receiver",sock);
    }
 #endif
 
 return sock;
     }
+// Pin the session AND a duplicated fd in one registry lookup. Serialize complete
+// writes so JNI callbacks cannot interleave bytes; a short send is not success.
+static bool deliverstream(const std::shared_ptr<messagesession> &session,int sock,
+                          const wearmessage *message,bool ble) {
+    if(!session||sock<0||message->len<int(sizeof(mirrorstream::Header)))return false;
+    mirrorstream::Header header;
+    memcpy(&header,message->data,sizeof(header));
+    const size_t bytes=message->len-sizeof(header);
+    std::lock_guard delivery(session->delivery);
+    {
+        std::lock_guard lock(session->mutex);
+        if(!session->active)return false;
+        if(!session->state.accept(header,ble,bytes)) {
+            // Stale frames/other carriers never enter this stream. A gap in the
+            // current stream, or a fresh OPEN, aborts it instead of resyncing in
+            // the middle of a native command.
+            if(ble==session->state.ble&&header.magic==mirrorstream::Header{}.magic&&
+               ((header.sender==session->state.sender&&header.receiver==session->state.receiver)||
+                (!session->state.initiator&&header.kind==mirrorstream::open))) {
+                invalidatesession(session,true);shutdown(sock,SHUT_RDWR);
+            }
+            LOGGERTAG("mirror stream rejected stale, unordered or wrong-carrier frame\n");
+            return false;
+        }
+        session->changed.notify_all();
+    }
+    if(header.kind!=mirrorstream::data)return true;
+    if(mirrorstream::writeAll(sock,message->data+sizeof(header),bytes))return true;
+    invalidatesession(session);shutdown(sock,SHUT_RDWR);return false;
+}
 bool receivemessage(wearmessage *pWearmessage) {
        LOGGERTAG("type.phonehostnr=%d type.phonesender=%d %p#%d\n",pWearmessage->type.phonehostnr,pWearmessage->type.phonesender,(char *)pWearmessage->data,pWearmessage->len);
-       const int sock=toreceiversocket(pWearmessage);
+       std::shared_ptr<messagesession> session;
+       const int sock=toreceiversocket(pWearmessage,&session);
        if(sock<0)
            return false;
-       const bool success=sendni(sock,pWearmessage->data,pWearmessage->len)>=0;
+       const bool success=deliverstream(session,sock,pWearmessage,false);
        sockclose(sock);
        return success;
        }
@@ -214,15 +285,16 @@ static bool receivemessageformirror(wearmessage *mess,int host) {
 #else
         mess->type.phonesender==messagephonepeer[host].load();
 #endif
+    std::shared_ptr<messagesession> session;
     const int sock=receiverSocket?
-            duplicatemessagesocket(messagereceiversockets,host):
-            duplicatemessagesocket(messagesendersockets,host);
+            duplicatemessagesocket(messagereceiversockets,host,&session):
+            duplicatemessagesocket(messagesendersockets,host,&session);
     LOGGERTAG("receivemessageformirror host=%d phonepeer=%d phonesender=%d %s sock=%d\n",
             host,messagephonepeer[host].load(),mess->type.phonesender,
             receiverSocket?"receiver":"sender",sock);
     if(sock<0)
         return false;
-    const bool success=sendni(sock,mess->data,mess->len)>=0;
+    const bool success=deliverstream(session,sock,mess,true);
     sockclose(sock);
     return success;
     }
@@ -243,6 +315,8 @@ static jboolean receivejavamessage(JNIEnv *env,jbyteArray data,int directHost) {
         env->ExceptionClear();
         return false;
         }
+    const auto *routing=reinterpret_cast<const uint8_t*>(&mess->type);
+    if(routing[2]>1||(routing[3]&~1U))return false;
     mess->len=datlen;
     return directHost<0?receivemessage(mess):receivemessageformirror(mess,directHost);
     }
@@ -354,7 +428,7 @@ bool sendMessagesON(passhost_t *pass, bool val) {
     return delivered;
     }
 
-bool    sendmessage(const int phonehostnr,bool phonesender,const uint8_t *buf,const int inlen) {
+bool    sendmessage(const int phonehostnr,bool phonesender,const uint8_t *buf,const int inlen,int localHost,bool ble) {
     if(phonehostnr<0||phonehostnr>=maxallhosts||!buf||inlen<=0||!jMessageSender)
         return false;
     auto env=getenv();
@@ -380,27 +454,10 @@ bool    sendmessage(const int phonehostnr,bool phonesender,const uint8_t *buf,co
                          .reserved=static_cast<uint8_t>(senderIndex)};
         env->SetByteArrayRegion(uit, 0, sizeof(wearmessagetype),(const jbyte *)&type);
         env->SetByteArrayRegion(uit, offdata-start, inlen,(const jbyte *)buf);
-#ifdef WEAROS
-        bool res=false;
-        if(directbluetoothmode[phonehostnr].load()) {
-            jstring jname=getconnectionname(env,phonehostnr);
-            static auto jsendDatawithName=env->GetStaticMethodID(jMessageSender,"sendDatawithName","(Ljava/lang/String;[B)Z");
-            res=jname&&jsendDatawithName&&env->CallStaticBooleanMethod(jMessageSender,jsendDatawithName,jname,uit);
-            if(jname)
-                env->DeleteLocalRef(jname);
-            }
-        else {
-            static auto jsendData=env->GetStaticMethodID(jMessageSender,"sendData","([B)Z");
-            res=jsendData&&env->CallStaticBooleanMethod(jMessageSender,jsendData,uit);
-            }
-#else
-    jstring  jname= getconnectionname(env,phonehostnr);
-
-        static auto jsendDatawithName=env->GetStaticMethodID(jMessageSender,"sendDatawithName","(Ljava/lang/String;[B)Z");
-        bool res=jname&&jsendDatawithName&&env->CallStaticBooleanMethod(jMessageSender,jsendDatawithName,jname,uit);
-        if(jname)
-            env->DeleteLocalRef(jname);
-#endif
+    jstring jname=getconnectionname(env,localHost);
+    static auto jsendStream=env->GetStaticMethodID(jMessageSender,"sendMirrorStream","(Ljava/lang/String;[BZ)Z");
+    bool res=jname&&jsendStream&&env->CallStaticBooleanMethod(jMessageSender,jsendStream,jname,uit,ble);
+    if(jname)env->DeleteLocalRef(jname);
         if(env->ExceptionCheck()) {
             env->ExceptionDescribe();
             env->ExceptionClear();
@@ -419,82 +476,103 @@ struct bridgestart {
     };
 
 void tobluetooth(int hostnr,bool sender,int sock,uint64_t generation,std::shared_ptr<bridgestart> started) {
-       LOGGERTAG("tobluetooth(%d,%d,%d)\n", hostnr, sender, sock);
-
+    LOGGERTAG("tobluetooth(%d,%d,%d)\n", hostnr, sender, sock);
     auto &registeredsockets=sender?messagesendersockets:messagereceiversockets;
     const auto &generations=sender?messagesendergenerations:messagereceivergenerations;
+    std::shared_ptr<messagesession> session;
+    {
+        std::lock_guard lock(messagesocketmutex);
+        if(generations[hostnr]==generation&&registeredsockets[hostnr]==sock)
+            session=sessions(registeredsockets)[hostnr];
+    }
     bool startreported=false;
-    destruct reportstart([started,&startreported]() {
-        if(!startreported)
-            started->ready.release();
-        });
-
-    #ifdef WEAROS
-    int phonehost=hostnr;
-    if(!directbluetoothmode[hostnr].load()) {
+    destruct cleanup([&]() {
+        if(!startreported)started->ready.release();
+        invalidatesession(session);
+        clearmessagesocket(registeredsockets,generations,hostnr,sock,generation);
+        shutdown(sock,SHUT_RDWR);sockclose(sock);
+        LOGGERTAG("%d %d Return from thread\n",hostnr,sender);
+    });
+    if(!session)return;
+    const bool ble=session->state.ble;
+#ifdef WEAROS
+    int phonehost=ble?hostnr:us2peers[hostnr].load();
+    for(int wait=0;!ble&&phonehost<0&&wait<100&&session->active;++wait) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
         phonehost=us2peers[hostnr];
-        constexpr int mappingwaits=100;
-        for(int wait=0;phonehost<0&&wait<mappingwaits&&wearmessages[hostnr];++wait) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
-            phonehost=us2peers[hostnr];
-            }
-        if(phonehost<0||phonehost>=maxallhosts) {
-            LOGGERTAG("tobluetooth no peer mapping for host=%d (peer=%d)\n",hostnr,phonehost);
-            clearmessagesocket(registeredsockets,generations,hostnr,sock,generation);
-            shutdown(sock,SHUT_RDWR);
-            sockclose(sock);
-            return;
-            }
-        }
-    #else
+    }
+    if(phonehost<0||phonehost>=maxallhosts) {
+        LOGGERTAG("tobluetooth no peer mapping for host=%d (peer=%d)\n",hostnr,phonehost);
+        return;
+    }
+    const bool phonesender=!sender;
+#else
     const int phonehost=hostnr;
-    #endif
-    const bool phonesender=
-    #ifdef WEAROS
-        !sender
-    #else
-        sender    
-    #endif
-    ;
-     int maxbuf= sysconf(_SC_PAGESIZE)*20;
-    uint8_t *buf =reinterpret_cast<uint8_t *>(mmap(NULL, maxbuf, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS , -1, 0));
+    const bool phonesender=sender;
+#endif
+    auto sendframe=[&](mirrorstream::Kind kind,const uint8_t *payload,size_t length) {
+        std::vector<uint8_t> frame(sizeof(mirrorstream::Header)+length);
+        {
+            std::lock_guard lock(session->mutex);
+            if(!session->active)return false;
+            const auto header=session->state.frame(kind);
+            memcpy(frame.data(),&header,sizeof(header));
+        }
+        if(length)memcpy(frame.data()+sizeof(mirrorstream::Header),payload,length);
+        return sendmessage(phonehost,phonesender,frame.data(),frame.size(),hostnr,ble);
+    };
+    // The receiver issues a fresh challenge for every parser/socket lifetime.
+    // Even an old OPEN delivered after process restart cannot authenticate old
+    // continuation frames or ACKs to the replacement stream.
+    if(!sender) {
+        started->success=true;startreported=true;started->ready.release();
+    }
+    if(sender&&!sendframe(mirrorstream::open,nullptr,0))return;
+    {
+        std::unique_lock lock(session->mutex);
+        const auto ready=[&] {
+            return !session->active||(sender?session->state.established:session->state.sender!=0);
+        };
+        if(sender) {
+            if(!session->changed.wait_for(lock,std::chrono::seconds(30),ready))return;
+        }
+        else session->changed.wait(lock,ready);
+        if(!session->active)return;
+        if(!sender)session->state.established=true;
+    }
+    if(!sender&&!sendframe(mirrorstream::ready,nullptr,0))return;
+    if(sender) {
+        started->success=true;startreported=true;started->ready.release();
+    }
+    const int maxbuf=ble?1024:60*1024;
+    uint8_t *buf=reinterpret_cast<uint8_t*>(mmap(NULL,maxbuf,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS,-1,0));
     if(buf==MAP_FAILED) {
         lerror("tobluetooth: mmap failed");
-        clearmessagesocket(registeredsockets,generations,hostnr,sock,generation);
-        shutdown(sock,SHUT_RDWR);
-        sockclose(sock);
         return;
-        }
-   destruct _dest([maxbuf,buf]() { munmap(buf,maxbuf); });
+    }
+    destruct bufferGuard([maxbuf,buf]{munmap(buf,maxbuf);});
     {
-    char buf[30]; 
+        char buf[30];
 #ifndef NOLOG
-    int len=
+        int len=
 #endif
-             sprintf(buf, "tobluetooth %d %s",hostnr,sender?"S":"R");
-    prctl(PR_SET_NAME, buf, 0, 0, 0);
-    LOGGERN(buf,len);
+            sprintf(buf,"tobluetooth %d %s",hostnr,sender?"S":"R");
+        prctl(PR_SET_NAME,buf,0,0,0);
+        LOGGERN(buf,len);
     }
-  started->success=true;
-  startreported=true;
-  started->ready.release();
-  auto &status=mirrorstatus[hostnr].toblue[sender];
-  status.running(true);
-  destruct stopstatus([&status](){status.running(false);});
-   while(true) { 
-     const int inlen=recvni(sock,buf,maxbuf);
-     LOGGERTAG("tobluetooth recvni(%d,...)=%d\n",sock,inlen);
-     if(inlen<=0||((status.recv=true)&&!(status.sendmessage=sendmessage(phonehost,phonesender,buf,inlen))))  {
-         if(inlen>0)
-            LOGGERTAG("sendmessage failed %d %d #%d\n",phonehost,phonesender,inlen);
-         clearmessagesocket(registeredsockets,generations,hostnr,sock,generation);
-         shutdown(sock,SHUT_RDWR);
-         sockclose(sock);
-         LOGGERTAG("%d %d Return from thread\n",hostnr,sender);
-         return;
-       }
+    auto &status=mirrorstatus[hostnr].toblue[sender];
+    status.running(true);
+    destruct stopstatus([&status](){status.running(false);});
+    while(session->active) {
+        const int inlen=recvni(sock,buf,maxbuf);
+        LOGGERTAG("tobluetooth recvni(%d,...)=%d\n",sock,inlen);
+        if(inlen<=0||((status.recv=true)&&!(status.sendmessage=sendframe(mirrorstream::data,buf,inlen)))) {
+            if(inlen>0)LOGGERTAG("sendmessage failed %d %d #%d\n",phonehost,phonesender,inlen);
+            return;
         }
     }
+}
+
     /*
 void closesock(int &sock) {
     int tmpsock=sock;
@@ -533,7 +611,7 @@ static void messagereceivecommands(passhost_t *pass) {
         prctl(PR_SET_NAME, buf, 0, 0, 0);
         LOGGERN(buf,len);
         }
-        auto connect=getconnectionas<TCPConnect>(index);
+        auto connect=std::make_shared<TCPConnect>(index);
         if(!connect) {
             sockclose(sockpair[0]);
             sockclose(sockpair[1]);
@@ -571,7 +649,7 @@ static void messagereceivecommands(passhost_t *pass) {
         LOGGERTAG("%d message join\n",index);
         stopmessagesocket(messagereceiversockets,messagereceivergenerations,index);
         th.join();
-        connect=getconnectionas<TCPConnect>(index);
+        // Keep this parser bound to its own socket until it exits.
         if(!connect) {
             LOGGER("not connection %d\n",index);
             return;
@@ -611,7 +689,6 @@ int messagemakeconnection(passhost_t *pass,int &sock,crypt_t*ctx,char stype) {
         sock=-1;
         return -1;
         }
-    sock=sockpair[0];
     const uint64_t generation=installmessagesocket(messagesendersockets,messagesendergenerations,index,sockpair[1]);
     auto started=std::make_shared<bridgestart>();
     std::thread th(tobluetooth,index,true,sockpair[1],generation,started);
@@ -622,6 +699,14 @@ int messagemakeconnection(passhost_t *pass,int &sock,crypt_t*ctx,char stype) {
         sock=-1;
         return -1;
         }
+    // Publish only after the handshake. A carrier switch while waiting must
+    // not close this unpublished fd and let this failure path close it twice.
+    sock=sockpair[0];
+    if(auto connect=getconnection(index)) {
+        connect->activityChunkSupport=true;
+        // Leave time for the per-command ACK even on a default-MTU GATT link.
+        connect->activityChunkBytes=bridgeDirect[index]?16*1024:juggluco::activity::mirror::chunkBytes;
+    }
     LOGGERTAG("messagemakeconnection %s sock=%d (other end=%d)\n",pass->getname(),sock,sockpair[1]);
 /*
     if(!pass->sendpassive)  {
@@ -685,8 +770,12 @@ void setBlueMessage(int ident,bool val) {
     LOGGERTAG("setBlueMessage(%s(%d),%d) transport=%d\n",host.getnameif(),ident,val,host.gettransport());
     if(host.deactivated&&val)
         return;
-    const bool changed=wearmessages[ident].exchange(val)!=val;
+    const bool ble=val&&(directbluetoothmode[ident].load()||mirrordirectbluetoothactive[ident].load());
+    const bool carrierChanged=bridgeDirect[ident].exchange(ble)!=ble;
+    const bool changed=wearmessages[ident].exchange(val)!=val||carrierChanged;
     if(changed) {
+        stopmessagesocket(messagesendersockets,messagesendergenerations,ident);
+        stopmessagesocket(messagereceiversockets,messagereceivergenerations,ident);
         backup->closesocksone(ident);
         if(!val) {
             stopmessagesocket(messagesendersockets,messagesendergenerations,ident);
@@ -934,6 +1023,10 @@ extern "C" JNIEXPORT void  JNICALL   fromjava(setBlueMessage)(JNIEnv *env, jclas
     if(transport==passhost_t::transport_automatic) {
         // This JNI entry point is the Wear MessageClient/TCP carrier switch.
         // Direct BLE selection arrives through mirrorTransportReady() instead.
+        if(val&&mirrordirectbluetoothactive[index].load()) {
+            LOGGERTAG("ignoring MessageClient carrier confirmation while BLE owns host=%d\n",index);
+            return;
+        }
         mirrordirectbluetoothactive[index]=false;
         LOGGERTAG("automatic mirror %s(%d): accepting remote carrier=%s\n",host.getnameif(),index,
                 val?"Messages":"TCP/IP");

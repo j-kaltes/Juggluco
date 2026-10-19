@@ -181,7 +181,7 @@ void showinfo(final SuperGattCallback gatt,MainActivity act) {
         }
     else  {
       streamhistory.setVisibility(GONE);
-      alarmclock.setVisibility(gatt.sensorgen==0x30||gatt.sensorgen==0x40?VISIBLE:GONE);
+      alarmclock.setVisibility(gatt.sensorgen==3||gatt.sensorgen==0x30||gatt.sensorgen==0x40?VISIBLE:GONE);
       final boolean resetvis=gatt.sensorgen==0x10&&Natives.getSiSubtype(gatt.dataptr)==3;
       resetbutton.setVisibility(resetvis?VISIBLE:GONE);
       }
@@ -568,7 +568,9 @@ bluediag(MainActivity act,final ArrayList<SuperGattCallback> gatts) {
         bluestate.setPaddingRelative(0,0,dp(5),0);
        diagnosticGrid.setLayoutParams( new ViewGroup.MarginLayoutParams(MATCH_PARENT,WRAP_CONTENT));
              scanview.setLayoutParams( new ViewGroup.MarginLayoutParams(MATCH_PARENT,WRAP_CONTENT));
-        Layout.getMargins(info).rightMargin=(int)(GlucoseCurve.getwidth()*.1);
+        var infoMargins= Layout.getMargins(info);
+        infoMargins.rightMargin= (int)(GlucoseCurve.getwidth()*.1);
+        infoMargins.leftMargin=dp(5);
         content=new Layout(act,
                 new View[]{bluestate,usebluetooth,sensorAction,priority,disconnectsensor,info},
                 new View[]{scanview},

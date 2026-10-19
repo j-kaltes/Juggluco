@@ -36,7 +36,7 @@ jgchat::Json statistics(uint32_t days, uint32_t end, int unit, bool history,
     std::unique_ptr<char[]> owner(data.allbuf);
     check();
     if (!ok) return {{"status", "unavailable"}, {"reason", "Juggluco could not generate statistics for this source/window (insufficient usable data or export failure)."}};
-    if (!data.start || data.len <= 0 || data.len > 64 * 1024)
+    if (!data.start || data.len <= 0)
         throw jgchat::UiError(jgchat::UiCode::invalid_native_statistics_response);
     const std::string_view http(data.start, static_cast<std::size_t>(data.len));
     const auto split = http.find("\r\n\r\n");

@@ -1214,7 +1214,7 @@ public final class BleMirror {
 
     /** Control-plane messages get the next free ATT slot before bulk /data. */
     private static boolean isGattControlPath(String path) {
-        return path!=null&&!"/data".equals(path);
+        return path!=null&&!"/data".equals(path)&&!MessageSender.MIRROR_STREAM_PATH.equals(path);
     }
 
     private static int gattOperationPriorityLocked(Connection connection) {

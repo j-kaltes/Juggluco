@@ -33,7 +33,6 @@
 
 namespace jgchat {
 namespace {
-constexpr std::size_t max_file = 8 * 1024 * 1024;
 void check_name(std::string_view name) {
     if (name != "tokens.json" && name != "conversation.json")
         throw jgchat::UiError(jgchat::UiCode::invalid_private_storage_name);
@@ -65,7 +64,7 @@ std::optional<nlohmann::json> Storage::read(const char* name) const {
     }
     struct stat st{};
     if (::fstat(file.fd, &st) != 0 || !S_ISREG(st.st_mode) || st.st_size < 0 ||
-        static_cast<unsigned long long>(st.st_size) > max_file)
+        static_cast<unsigned long long>(st.st_size) > std::string{}.max_size())
         throw jgchat::UiError(jgchat::UiCode::saved_chat_state_is_not_a_bounded_regular_file);
     if (::fchmod(file.fd, 0600) != 0)
         throw jgchat::UiError(jgchat::UiCode::cannot_restrict_saved_chat_state_permissions);
@@ -75,8 +74,6 @@ std::optional<nlohmann::json> Storage::read(const char* name) const {
         const auto n = ::read(file.fd, buffer.data(), buffer.size());
         if (n == 0) break;
         if (n < 0) { if (errno == EINTR) continue; throw jgchat::UiError(jgchat::UiCode::cannot_read_saved_chat_state); }
-        if (text.size() + static_cast<std::size_t>(n) > max_file)
-            throw jgchat::UiError(jgchat::UiCode::saved_chat_state_is_too_large);
         text.append(buffer.data(), static_cast<std::size_t>(n));
     }
     try { return nlohmann::json::parse(text); }
@@ -85,7 +82,6 @@ std::optional<nlohmann::json> Storage::read(const char* name) const {
 void Storage::write(const char* name, const nlohmann::json& value) const {
     check_name(name);
     const std::string data = value.dump();
-    if (data.size() > max_file) throw jgchat::UiError(jgchat::UiCode::chat_state_is_too_large_start_a_new_chat);
     const std::string temporary = std::string(name) + ".tmp";
     if (::unlinkat(fd_, temporary.c_str(), 0) != 0 && errno != ENOENT)
         throw jgchat::UiError(jgchat::UiCode::cannot_replace_temporary_chat_state);

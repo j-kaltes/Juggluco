@@ -29,10 +29,14 @@
 #include "passhost.hpp"
 #include "crypt.h"
 #include "backup.hpp"
+#include "activity/mirrorchunks.hpp"
 template<int nr> using unique_al= std::unique_ptr<uint8_t[],ardeleter<nr,uint8_t>> ;
 class Connect {
 protected:
 public:
+    juggluco::activity::mirror::Chunks activityChunks;
+    bool activityChunkSupport=false;
+    size_t activityChunkBytes=juggluco::activity::mirror::chunkBytes;
   std::atomic_flag senduprunning{};
     int allindex;
    bool finish=false;

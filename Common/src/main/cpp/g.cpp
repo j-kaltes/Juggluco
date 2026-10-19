@@ -446,6 +446,7 @@ extern "C" JNIEXPORT jboolean JNICALL   fromjava(useAgain)(JNIEnv *env, jclass c
      auto *sens=reinterpret_cast<SensorGlucoseData*>(sensorptr);
      sens->useAgain();
      sensors->useAgain(sens->sensorIndex);
+     sendKAuth(sens);
      sendsiScan(sens);
      sendstreaming(sens);  
      backup->resendResetDevices();

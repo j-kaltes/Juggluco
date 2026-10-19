@@ -552,7 +552,15 @@ void activereceivethread(int allindex,passhost_t *pass) {
         if(!con2) {
             return;
             }
-        con2->activegetcommands(pass,ctxptr);
+        // A handover can change the shared TCPConnect slot. Pin this parser
+        // to the original file description until EOF, including password state.
+        const int owned=dup(con->getReceiverSock());
+        if(owned>=0) {
+            TCPConnect reader(allindex);
+            reader.setReceiverSock(owned);
+            reader.activegetcommands(pass,ctxptr);
+            reader.closeReceiverConnection();
+        }
         if(getconnection(allindex)) {
             LOGGER("after activegetcommands close(%d)\n",sock);
             sockclose(sock);
@@ -677,6 +685,7 @@ void updatedata::wakestreamsender() {
 
 
 void TCPConnect::passivesender(passhost_t *pass,int &recsock,int oldrecsock)  {
+    activityChunkSupport=false; // This direction has no receiver-capability reply.
     LOGGER("passivesender %d\n",getReceiverIdent());
      if(!networkpresent) {
         LOGGER("!networkpresent close and return sock=%d\n",getSenderIdent());

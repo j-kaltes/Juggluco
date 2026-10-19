@@ -50,6 +50,7 @@ extern "C" JNIEXPORT  void JNICALL fromjava(setLibre3kAuth)(JNIEnv *env, jclass 
         return;
         }
     if(kauthin==nullptr) {
+        LOGGER("setLibre3kAuth(%p,null)\n",sensorptr);
         sens->getinfo()->haskAuth=false;
         return;
         }
@@ -59,6 +60,7 @@ extern "C" JNIEXPORT  void JNICALL fromjava(setLibre3kAuth)(JNIEnv *env, jclass 
         LOGGER("setLibre3kAuth length(kauthin)==%d!=149\n",lens);
         return;
         }
+    LOGGER("setLibre3kAuth(%p,something)\n",sensorptr);
     env->GetByteArrayRegion(kauthin, 0, kauthlen,(jbyte *)sens->getinfo()->kAuth);
     sens->getinfo()->haskAuth=true;;
     sendKAuth(sens);

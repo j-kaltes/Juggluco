@@ -2,6 +2,7 @@
 // Read-only, explicitly selected fields from Juggluco's existing settings.
 #include "jgchat/ui_messages.hpp"
 #include "juggluco_system.hpp"
+#include "juggluco_extra.hpp"
 #include "config.h"
 #include "settings/settings.hpp"
 #include <algorithm>
@@ -178,6 +179,13 @@ Json configuration_snapshot(const Tings& s, std::string_view section) {
 Json settings_configuration(const std::string& section, const std::atomic_bool* cancel) {
     if (cancel && cancel->load()) throw jgchat::UiError(jgchat::UiCode::request_cancelled);
     if (!settings) return {{"status", "unavailable"}, {"reason", "Settings store is not initialized."}};
+    if (section == "activities") {
+        Json labels = Json::array();
+        count_ok(settings->getlabelcount(), maxvarnr);
+        for (int i = 0; i < settings->getlabelcount(); ++i)
+            labels.push_back({{"id", i}, {"name", settings->getlabel(i)}});
+        return activity_settings(labels, settings->staticnum(), cancel);
+    }
     return configuration_snapshot(*settings->data(), section);
 }
 }

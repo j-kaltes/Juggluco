@@ -32,9 +32,12 @@ class Workspace;
 // never credentials or hidden reasoning.
 using EventSink = std::function<void(const UiMessage&)>;
 using TokenSink = std::function<void(const Tokens&)>;
+// Read native display settings afresh for each request, including tool rounds.
+using GlucoseDisplayProvider = std::function<Json()>;
 class ChatClient {
 public:
-    ChatClient(HttpClient, Tokens, ToolHandler, TokenSink, Workspace* workspace = nullptr);
+    ChatClient(HttpClient, Tokens, ToolHandler, TokenSink, Workspace* workspace = nullptr,
+               GlucoseDisplayProvider glucose_display = {});
     // Includes normalized reasoning_efforts and recommended_reasoning_effort.
     // No hard-coded default model; effort choices come from account metadata.
     Json list_models(const std::atomic_bool& cancel);
@@ -53,6 +56,7 @@ private:
     ToolHandler tool_;
     TokenSink save_tokens_;
     Workspace* workspace_;
+    GlucoseDisplayProvider glucose_display_;
     Json history_ = Json::array();
     Json models_ = Json::array();
     Json plots_ = Json::array();

@@ -913,14 +913,19 @@ std::pair<int,SensorGlucoseData *> makePhotoScanSensorIndex(std::string_view geg
                      std::array<char,5> si3zh;
                      };
             const auto skustr=std::string_view(sku.data(), sku.size()) ;
-            if(si3zh==sku || skustr == "64287" || skustr== "64286"|| skustr=="64328")   {
+            const auto pin=barcode.PIN;
+            if((barcode.Serial.size()==15 && pin.size()==9 && pin.starts_with("GJ6") )||si3zh==sku || skustr == "64287" || skustr== "64286"|| skustr=="64328" ||skustr== "64290") {
                 //Sibioni3GS18AAFZ
-                const auto pin=barcode.PIN;
+//                const auto pin=barcode.PIN;
                 if(pin.size()<6) {
                     return {-1,nullptr};
                     }
                 return genMakeSI3sensorIndex(pin.end()-6,gegsSI,now,5);
                 }
+
+
+
+
              bool hasnum=std::ranges::contains_subrange(gegsSI,sibionicsRecognition);
              if(!hasnum) {   
                      std::string_view si="(SI)";

@@ -21,7 +21,7 @@
 /*      Thu Oct 15 12:53:57 CEST 2026                                                */
 
 // SQLite's public-domain C amalgamation is compiled privately into this module.
-// Hidden symbols keep its configuration/heap limit separate from Android's
+// Hidden symbols keep its configuration separate from Android's
 // system SQLite and other libraries. No loadable extensions or temporary files.
 #define SQLITE_API __attribute__((visibility("hidden")))
 #define SQLITE_OMIT_LOAD_EXTENSION 1
@@ -31,6 +31,4 @@
 #define SQLITE_ENABLE_MATH_FUNCTIONS 1
 #define SQLITE_ENABLE_PERCENTILE 1
 #define SQLITE_TRUSTED_SCHEMA 0
-#define SQLITE_MAX_ALLOCATION_SIZE 16777216
-#define SQLITE_PRINTF_PRECISION_LIMIT 10000
 #include "../vendor/sqlite/sqlite3.c"

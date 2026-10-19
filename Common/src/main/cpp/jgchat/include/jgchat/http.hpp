@@ -41,8 +41,9 @@ struct HttpRequest {
     std::string method = "POST";
     std::string body;
     std::vector<std::pair<std::string, std::string>> headers;
-    std::chrono::milliseconds timeout{60000};
-    std::size_t max_response_bytes = 4 * 1024 * 1024;
+    // Zero means no overall deadline; transports still check cancellation.
+    std::chrono::milliseconds timeout{0};
+    std::size_t max_response_bytes = std::string{}.max_size();
     unsigned short port = 443;
     HttpBodySink on_body;
 };

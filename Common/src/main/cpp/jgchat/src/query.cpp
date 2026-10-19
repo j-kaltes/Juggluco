@@ -33,16 +33,14 @@
 
 namespace jgchat {
 namespace {
-constexpr std::size_t max_rows = 100000, max_columns = 64, max_cells = 500000;
 std::string lower(std::string s) {
     for (auto& c : s) c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
     return s;
 }
 void columns_ok(const std::vector<std::string>& columns) {
-    if (columns.size() > max_columns) throw jgchat::UiError(jgchat::UiCode::analysis_table_exceeds_64_columns);
     std::set<std::string> seen;
     for (const auto& c : columns)
-        if (c.empty() || c.size() > 128 || c.find('\0') != std::string::npos || !seen.insert(lower(c)).second)
+        if (c.empty() || c.find('\0') != std::string::npos || !seen.insert(lower(c)).second)
             throw jgchat::UiError(jgchat::UiCode::analysis_columns_must_have_unique_nonempty_names_case_insensitive);
 }
 std::string quoted(const std::string& s) {
@@ -75,12 +73,10 @@ void check_sql(sqlite3* db, int code) {
 }
 struct Budget {
     const std::atomic_bool& cancel;
-    std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now() + std::chrono::seconds(5);
-    unsigned ticks = 0;
     bool exhausted = false;
     static int check(void* ptr) {
         auto& b = *static_cast<Budget*>(ptr);
-        b.exhausted = b.cancel.load() || ++b.ticks > 20000 || std::chrono::steady_clock::now() >= b.end;
+        b.exhausted = b.cancel.load();
         return b.exhausted ? 1 : 0;
     }
 };
@@ -90,22 +86,10 @@ int authorize(void* ptr, int action, const char* a, const char* b, const char* d
     case SQLITE_SELECT: case SQLITE_RECURSIVE: return SQLITE_OK;
     case SQLITE_READ:
         return a && database && std::string_view(database) == "main" && names.count(lower(a)) ? SQLITE_OK : SQLITE_DENY;
-    case SQLITE_FUNCTION: {
-        static const std::set<std::string> functions{
-            "abs","avg","coalesce","count","ifnull","nullif","min","max","sum","total","round",
-            "median","percentile","percentile_cont","percentile_disc",
-            "sqrt","pow","power","exp","ln","log","log10","log2","floor","ceil","ceiling","trunc","mod",
-            "sin","cos","tan","asin","acos","atan","atan2","pi","degrees","radians",
-            "lower","upper","length","substr","substring","trim","ltrim","rtrim","replace","instr",
-            "like","glob","concat","concat_ws","group_concat","string_agg","typeof","unicode","char",
-            "json","json_array","json_object","json_extract","json_type","json_array_length","json_valid",
-            "json_group_array","json_group_object","->","->>",
-            "date","time","datetime","julianday","unixepoch","strftime","timediff",
-            "row_number","rank","dense_rank","percent_rank","cume_dist","ntile","lag","lead",
-            "first_value","last_value","nth_value","iif","if"
-        };
-        return b && functions.count(lower(b)) ? SQLITE_OK : SQLITE_DENY;
-    }
+    case SQLITE_FUNCTION:
+        // Only built-ins exist: this private SQLite cannot load extensions or
+        // access files. Ordinary computation functions remain available.
+        return b && lower(b) != "load_extension" ? SQLITE_OK : SQLITE_DENY;
     default: return SQLITE_DENY;
     }
 }
@@ -115,16 +99,15 @@ AnalysisTable analysis_table(const Json& value, std::string_view format) {
     AnalysisTable out;
     if (format == "json") {
         const Json rows = value.is_object() ? Json::array({value}) : value;
-        if (!rows.is_array() || rows.size() > max_rows) throw jgchat::UiError(jgchat::UiCode::json_table_must_be_an_array_with_at_most_100000_rows);
+        if (!rows.is_array()) throw jgchat::UiError(jgchat::UiCode::json_table_must_be_an_array_with_at_most_100000_rows);
         std::set<std::string> columns;
         for (const auto& row : rows) {
             if (row.is_object()) for (auto it = row.begin(); it != row.end(); ++it) columns.insert(it.key());
             else columns.insert("value");
-            if (columns.size() > max_columns) throw jgchat::UiError(jgchat::UiCode::analysis_table_exceeds_64_columns);
         }
         out.columns.assign(columns.begin(), columns.end());
         columns_ok(out.columns);
-        if (out.columns.size() * rows.size() > max_cells) throw jgchat::UiError(jgchat::UiCode::analysis_table_exceeds_500000_cells);
+
         for (const auto& row : rows) {
             Json cells = Json::array();
             for (const auto& c : out.columns) {
@@ -147,8 +130,6 @@ AnalysisTable analysis_table(const Json& value, std::string_view format) {
         if (out.columns.empty()) { out.columns = row; columns_ok(out.columns); }
         else {
             if (row.size() != out.columns.size()) throw jgchat::UiError(jgchat::UiCode::delimited_table_has_inconsistent_column_counts);
-            if (out.rows.size() >= max_rows || (out.rows.size()+1) * out.columns.size() > max_cells)
-                throw jgchat::UiError(jgchat::UiCode::analysis_table_exceeds_100000_rows_500000_cells);
             Json cells = Json::array();
             for (const auto& c : row) cells.push_back(delimited_cell(c));
             out.rows.push_back(std::move(cells));
@@ -165,7 +146,6 @@ AnalysisTable analysis_table(const Json& value, std::string_view format) {
             } else cell += c;
         } else if (c == separator) {
             row.push_back(std::move(cell)); cell.clear(); field_start = true; closed_quote = false;
-            if (row.size() >= max_columns) throw jgchat::UiError(jgchat::UiCode::analysis_table_exceeds_64_columns);
         } else if (c == '\r' || c == '\n') {
             if (c == '\r' && pos + 1 < text.size() && text[pos + 1] == '\n') ++pos;
             finish_row();
@@ -183,8 +163,7 @@ AnalysisTable analysis_table(const Json& value, std::string_view format) {
 
 Json analysis_tables(const Json& value) {
     Json found = Json::array();
-    const auto walk = [&](auto&& self, const Json& v, const std::string& path, unsigned depth) -> void {
-        if (depth > 6 || found.size() >= 24) return;
+    const auto walk = [&](auto&& self, const Json& v, const std::string& path) -> void {
         if (v.is_array()) {
             try {
                 const auto table = analysis_table(v, "json");
@@ -201,51 +180,38 @@ Json analysis_tables(const Json& value) {
             for (auto i = v.begin(); i != v.end(); ++i) {
                 std::string key;
                 for (char c : i.key()) { if (c == '~') key += "~0"; else if (c == '/') key += "~1"; else key += c; }
-                self(self, i.value(), path + "/" + key, depth + 1);
+                self(self, i.value(), path + "/" + key);
             }
         }
     };
-    walk(walk, value, "", 0);
+    walk(walk, value, "");
     return found;
 }
 
 Json run_analysis_query(const std::string& sql,
     const std::vector<std::pair<std::string, AnalysisTable>>& tables, const std::atomic_bool& cancel) {
-    if (sql.empty() || sql.size() > 16384 || sql.find('\0') != std::string::npos || tables.size() > 16)
+    if (sql.empty() || sql.find('\0') != std::string::npos)
         throw jgchat::UiError(jgchat::UiCode::analysis_needs_one_sql_select_at_most_16_kib_and_at_most_16_tables);
     if (cancel) throw jgchat::UiError(jgchat::UiCode::request_cancelled);
     // This statically linked, hidden SQLite instance is used only here. It
     // never opens app databases or files, registers extensions, or uses JNI.
-    sqlite3_hard_heap_limit64(64 * 1024 * 1024);
     Database database;
     auto* db = database.db;
     sqlite3_db_config(db, SQLITE_DBCONFIG_DEFENSIVE, 1, nullptr);
     sqlite3_db_config(db, SQLITE_DBCONFIG_TRUSTED_SCHEMA, 0, nullptr);
-    sqlite3_limit(db, SQLITE_LIMIT_LENGTH, 1024 * 1024);
-    sqlite3_limit(db, SQLITE_LIMIT_SQL_LENGTH, 16384);
-    sqlite3_limit(db, SQLITE_LIMIT_COLUMN, 64);
-    sqlite3_limit(db, SQLITE_LIMIT_EXPR_DEPTH, 50);
-    sqlite3_limit(db, SQLITE_LIMIT_COMPOUND_SELECT, 16);
-    sqlite3_limit(db, SQLITE_LIMIT_VDBE_OP, 100000);
-    sqlite3_limit(db, SQLITE_LIMIT_FUNCTION_ARG, 32);
     sqlite3_limit(db, SQLITE_LIMIT_ATTACHED, 0);
-    sqlite3_limit(db, SQLITE_LIMIT_LIKE_PATTERN_LENGTH, 256);
-    sqlite3_limit(db, SQLITE_LIMIT_VARIABLE_NUMBER, 64);
     Budget budget{cancel};
     sqlite3_progress_handler(db, 1000, Budget::check, &budget);
     std::set<std::string> names;
-    std::size_t input_rows = 0, input_cells = 0;
+    std::size_t input_rows = 0;
     for (const auto& [name, table] : tables) {
-        if (name.empty() || name.size() > 32 || name.starts_with("sqlite_") ||
+        if (name.empty() || name.starts_with("sqlite_") ||
             !std::isalpha(static_cast<unsigned char>(name[0])) ||
             !std::all_of(name.begin(), name.end(), [](unsigned char c) { return std::isalnum(c) || c == '_'; }) ||
             !names.insert(lower(name)).second) throw jgchat::UiError(jgchat::UiCode::invalid_or_duplicate_analysis_table_alias);
         columns_ok(table.columns);
         if (table.columns.empty()) throw jgchat::UiError(jgchat::UiCode::empty_source_has_no_columns_inspect_its_metadata_first);
         input_rows += table.rows.size();
-        input_cells += table.rows.size() * table.columns.size();
-        if (input_rows > max_rows || input_cells > max_cells)
-            throw jgchat::UiError(jgchat::UiCode::analysis_input_exceeds_100000_rows_500000_cells_aggregate_smaller_windows_first);
         std::string create = "CREATE TABLE " + quoted(name) + " (", insert = "INSERT INTO " + quoted(name) + " VALUES (";
         for (std::size_t i = 0; i < table.columns.size(); ++i) {
             if (i) { create += ','; insert += ','; }
@@ -269,7 +235,7 @@ Json run_analysis_query(const std::string& sql,
                 else if (v.is_number()) code = sqlite3_bind_double(statement.stmt, at, v.get<double>());
                 else {
                     const auto text = v.is_string() ? v.get<std::string>() : v.dump();
-                    code = sqlite3_bind_text(statement.stmt, at, text.data(), static_cast<int>(text.size()), SQLITE_TRANSIENT);
+                    code = sqlite3_bind_text64(statement.stmt, at, text.data(), text.size(), SQLITE_TRANSIENT, SQLITE_UTF8);
                 }
                 check_sql(db, code);
             }
@@ -280,7 +246,7 @@ Json run_analysis_query(const std::string& sql,
     sqlite3_set_authorizer(db, authorize, &names);
     Statement statement;
     const char* tail = nullptr;
-    check_sql(db, sqlite3_prepare_v3(db, sql.data(), static_cast<int>(sql.size()), 0, &statement.stmt, &tail));
+    check_sql(db, sqlite3_prepare_v3(db, sql.c_str(), -1, 0, &statement.stmt, &tail));
     while (tail && *tail && std::isspace(static_cast<unsigned char>(*tail))) ++tail;
     if (!statement.stmt || (tail && *tail) || !sqlite3_stmt_readonly(statement.stmt) ||
         sqlite3_bind_parameter_count(statement.stmt) || sqlite3_column_count(statement.stmt) == 0)
@@ -289,11 +255,9 @@ Json run_analysis_query(const std::string& sql,
     for (int i = 0; i < sqlite3_column_count(statement.stmt); ++i) columns.emplace_back(sqlite3_column_name(statement.stmt, i));
     columns_ok(columns); // Refuse ambiguous duplicate result keys.
     Json rows = Json::array();
-    std::size_t bytes = 0;
     for (;;) {
         const auto code = sqlite3_step(statement.stmt);
         if (cancel) throw jgchat::UiError(jgchat::UiCode::request_cancelled);
-        if (budget.exhausted) throw jgchat::UiError(jgchat::UiCode::analysis_reached_its_five_second_20_million_step_budget_narrow_or_aggregate_the_input);
         if (code == SQLITE_DONE) break;
         if (code != SQLITE_ROW) check_sql(db, code);
         Json row = Json::object();
@@ -311,9 +275,6 @@ Json run_analysis_query(const std::string& sql,
             default: throw jgchat::UiError(jgchat::UiCode::binary_sql_results_are_not_supported);
             }
         }
-        bytes += row.dump().size();
-        if (rows.size() >= 20000 || bytes > 2 * 1024 * 1024)
-            throw jgchat::UiError(jgchat::UiCode::analysis_output_exceeds_20000_rows_2_mib_use_aggregation_or_an_explicit_limit_no_part);
         rows.push_back(std::move(row));
     }
     return {{"status", "ok"}, {"engine", "SQLite " SQLITE_VERSION}, {"columns", columns},

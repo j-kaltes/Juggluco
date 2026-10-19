@@ -38,7 +38,7 @@ import static android.os.Build.VERSION.RELEASE;
 import static java.lang.System.exit;
 import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.Log.doLog;
-import static tk.glucodata.Natives.setDevice;
+import static tk.glucodata.Natives.saveDevice;
 import static tk.glucodata.Natives.startmeals;
 import static tk.glucodata.Natives.startsensors;
 
@@ -207,7 +207,7 @@ if(true) {
           if(doLog) {Log.i(LOG_ID,version+locstr+" "+country+" nativeDir="+nativedir);};
       }
 
-   setDevice(Build.MANUFACTURER, Build.MODEL, Build.VERSION.SDK_INT);
+   saveDevice(Build.MANUFACTURER, Build.MODEL,Build.PRODUCT, Build.VERSION.SDK_INT);
 
    startsensors( );
    startmeals();

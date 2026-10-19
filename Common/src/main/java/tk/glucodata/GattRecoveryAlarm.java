@@ -40,12 +40,10 @@ import static tk.glucodata.Applic.isWearable;
 /**
  * One cancellable recovery deadline for one live sensor callback.
  *
- * Wear OS uses an alarm-clock wakeup for positive delays, independently of the
- * glucose/loss alarms. Zero-delay work goes straight to the executor: Android
- * may clamp even setAlarmClock() to five seconds into the future. Queueing also
- * lets the old GATT callback finish before its replacement session is created.
- * Phone builds retain the existing executor scheduling and never set an internal
- * alarm clock. Wear alarms target the existing ConnectReceiver.
+ * When enabled, positive recovery delays use setAlarmClock() on phones and
+ * Wear OS alike. No app-executor timer is used to wait for a delayed retry.
+ * Zero-delay work is dispatched immediately: Android may clamp an alarm-clock
+ * request into the future. Alarms target the existing ConnectReceiver.
  * After process death its normal Application/startup path recreates Bluetooth
  * state; a delivered obsolete alarm is consumed without acting on a new session.
  *
@@ -83,7 +81,7 @@ final class GattRecoveryAlarm {
         deadlineElapsed = SystemClock.elapsedRealtime() + delay;
         action = nextAction;
         try {
-            if (delay == 0L || !isWearable) {
+            if (delay == 0L) {
                 future = Applic.scheduler.schedule(() -> fire(token), delay,
                         TimeUnit.MILLISECONDS);
             } else {
@@ -118,7 +116,7 @@ final class GattRecoveryAlarm {
             }
             Log.i(LOG_ID, serial + " schedule generation=" + token + " delay=" + delay
                     + " rtc=" + triggerRtc + " wear=" + isWearable
-                    + " dispatch=" + (delay == 0L || !isWearable ? "executor" : "alarmClock"));
+                    + " dispatch=" + (delay == 0L ? "executor" : "alarmClock"));
             return true;
         } catch (Throwable error) {
             Log.stack(LOG_ID, serial + " schedule recovery", error);

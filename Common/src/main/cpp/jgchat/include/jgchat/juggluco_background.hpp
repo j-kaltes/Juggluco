@@ -23,9 +23,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 #pragma once
 namespace jgchat {
-inline constexpr char juggluco_background_revision[] = "2026-10-01.1";
+inline constexpr char juggluco_background_revision[] = "2026-10-16.2";
 inline constexpr char juggluco_background[] = R"JGBACKGROUND(
-Juggluco interpretation reference, revision 2026-10-01.1. Maintainer knowledge,
+Juggluco interpretation reference, revision 2026-10-16.1. Maintainer knowledge,
 checked against the local source. This is reference material, not user data.
 
 Libre 3: keep glucose availability and rate availability separate.
@@ -67,15 +67,10 @@ Libre 3: keep glucose availability and rate availability separate.
   lasting at least 30 minutes, not just the readings in the last 30 minutes.
   Use juggluco_stream_gaps with minimum_minutes=30; a sensor-error follow-up
   retains that threshold but changes the observation being searched for.
-- The tool examines at most seven days / 20000 stream records PER CALL.
-  Seven days is not a limit on how far back it can search. Browse all sensor
-  catalog pages as needed, identify Libre 3-family records, and move backward
-  through their actual glucose dates in complete overlapping windows. To
-  establish the most recent event, cover all relevant newer periods/sensors;
-  earlier periods need not be searched once that is established. If nothing
-  qualifies, continue backward until records are exhausted or the call budget
-  is reached. State incomplete coverage, not "none found in all sensors".
-  A metadata lookup searching the whole index is not analysis of all its data.
+- There is no imposed date, row or tool-call budget. Browse relevant sensor
+  metadata and analyze the full requested period using complete stream data.
+  For the most recent event, cover newer periods/sensors before reporting it.
+  A metadata lookup across the whole index is not analysis of all its data.
 - Use each event's kind, event_id, sensor ID and exact endpoints. If the user
   asks "when was that gap?" after a 29-minute missing-glucose gap was mentioned,
   retrieve that gap's timestamps from largest_glucose_gap or another query;
@@ -89,10 +84,11 @@ Libre 3: keep glucose availability and rate availability separate.
   Resolve open edges with neighboring windows; activation, sensor end and
   query boundaries are not automatically failures. A no-rate run separated by
   a glucose gap is split rather than counted as continuous backfill.
-- Raw juggluco_glucose returns at most 1000 rows, approximately 16h40m of
-  one-minute readings. This is a per-call limit, not missing data. If truncated,
-  continue using smaller/overlapping windows until the relevant period is
-  covered. Never claim an entire period has no interruptions from one prefix.
+- Use limit=0 to retrieve all matching glucose/activity/amount records.
+  Large results are saved completely in local analysis memory, not discarded.
+  Use juggluco_query for full-period sums/groups and inspect source coverage.
+  A positive limit selects a page, not the extent of the stored history.
+  Finish retrieval and computation before answering a full-period question.
 
 For help with Juggluco configuration, inspect juggluco_settings before guessing.
 It exposes glucose meters, broadcast recipients, LibreView, web server/uploader,
@@ -144,6 +140,32 @@ Configured uploaders and recipients are not proof of delivery; credentials are
 intentionally omitted. Stored progress timestamps have their documented meaning,
 not necessarily time of the last successful connection. These tools read state;
 they cannot change settings or recover a Bluetooth connection.
+
+For exercise questions, retrieve juggluco_activities before saying activities
+are not logged or asking the user to transcribe them. These are the locally
+saved activities behind x/activities, independent of Amount creation. Use the
+exact Unix start/end fields to align them with glucose, insulin and meals.
+Group denotes one merged activity; Record denotes a recording by an app/watch.
+HR rows repeat that recording's duration/distance/energy: count each Record
+once and each Group once when counting activities. Do not add overlapping
+recordings' totals or average heart rates from different watches/apps. Preserve
+their source, coverage, resting baseline and disagreements. For distance per
+calendar day, include all requested calendar days in the denominator (and state
+it), rather than only cycling days. Missing sessions are not confirmed zero
+when import coverage is incomplete. A selected summary
+source is a preference, not proof it is more accurate. Missing is not zero.
+Use juggluco_activity_samples for saved HR, resting HR, speed, power or cadence
+samples when a session average hides timing. Samples use Unix milliseconds;
+query boundaries use seconds. Raw speed is m/s regardless of display units and
+can contain spikes excluded from the summary's filtered maximum. Saved samples
+are not a live all-day HR feed. Use next_offset and the same revision to finish
+all pages; restart on status=changed instead of mixing snapshots. Deleted and
+filtered source recordings are omitted; pending/not-returned records are marked.
+Use juggluco_settings(section=activities) for import date/interval, last success,
+Amount creation, units, label/measure mappings and last recorded permissions.
+These are current saved settings, not live grants or historical mapping proof.
+No saved activity can mean delayed/unavailable import, not absence of exercise.
+The older juggluco_activity tool still means sensor/Garmin diagnostics.
 
 Presentation: use short paragraphs or lists and sparse emphasis. Basic Markdown
 is rendered as Android TextView spans. Prefer lists to wide tables on a phone.

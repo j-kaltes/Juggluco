@@ -44,10 +44,7 @@ extern std::span<char> getscans(int, int, uint32_t, uint32_t, bool, int, bool, i
 
 namespace jgchatdata {
 namespace {
-constexpr uint32_t max_period = 31U * 24U * 60U * 60U;
 constexpr uint32_t iob_lookback = 16U * 60U * 60U;
-constexpr uint32_t max_limit = 20000;
-constexpr size_t max_body = 8U * 1024U * 1024U;
 using Args = std::vector<std::pair<std::string, std::string>>;
 
 std::string quote(std::string_view in) {
@@ -191,12 +188,11 @@ std::string metadata(uint32_t now) {
     strftime(zone, sizeof(zone), "%Z", &local);
     std::string out = "{\"schema\":1,\"generated_at\":" + std::to_string(now) +
         ",\"glucose_unit\":" + quote(settings->getunitlabel()) +
+        ",\"glucose_display\":" + glucose_display_preferences().dump() +
         ",\"timezone\":{\"abbreviation\":" + quote(zone) +
         ",\"utc_offset_seconds\":" + std::to_string(local.tm_gmtoff) +
         ",\"at\":" + std::to_string(now) +
-        "},\"limits\":{\"max_period_seconds\":" + std::to_string(max_period) +
-        ",\"max_records\":" + std::to_string(max_limit) +
-        "},\"meal_label_id\":" + std::to_string(settings->data()->mealvar) +
+        "},\"retrieval\":{\"date_range_cap\":null,\"limit_zero_returns_all\":true},\"meal_label_id\":" + std::to_string(settings->data()->mealvar) +
         ",\"iob\":" + iob_json(now) + ",\"labels\":[";
     for (int i = 0; i < settings->getlabelcount(); ++i) {
         if (i) out += ',';
@@ -216,7 +212,7 @@ std::string metadata(uint32_t now) {
 }
 
 struct Period {
-    uint32_t start{}, end{}, limit{10000};
+    uint32_t start{}, end{}, limit{};
     int unit{};
     bool calibrated{}, pastvalues{};
 };
@@ -243,10 +239,10 @@ bool period(const Args &args, uint32_t now, bool glucose, Period &p, std::string
         if (!ok) { why = "Invalid query value for: " + key; return false; }
     }
     if (hasstart != hasend) { why = "Supply both start and end, or neither."; return false; }
-    if (p.end <= p.start || p.end - p.start > max_period) {
-        why = "Require start < end, with at most 31 days per request."; return false;
+    if (p.end <= p.start) { why = "Require start < end."; return false; }
+    if (glucose && p.limit > uint32_t(std::numeric_limits<int>::max())) {
+        why = "The native exporter uses a signed int count; use limit=0 for all records."; return false;
     }
-    if (!p.limit || p.limit > max_limit) { why = "limit must be between 1 and 20000."; return false; }
     if (p.pastvalues && !p.calibrated) { why = "pastvalues=1 requires calibrated=1."; return false; }
     return true;
 }
@@ -266,8 +262,8 @@ std::string amounts(const Period &p, uint32_t now, bool meals_only = false) {
         cursors.push_back({store, begin, end, source});
     }
     std::vector<Item> items;
-    items.reserve(std::min<uint32_t>(p.limit + 1, 1024));
-    while (items.size() <= p.limit) {
+    items.reserve(1024);
+    while (!p.limit || items.size() <= p.limit) {
         Cursor *oldest = nullptr;
         for (auto &c : cursors) {
             while (c.at < c.end && (!c.store->valid(c.at) ||
@@ -284,7 +280,7 @@ std::string amounts(const Period &p, uint32_t now, bool meals_only = false) {
         ++oldest->at;
     }
     locks.clear();
-    const bool truncated = items.size() > p.limit;
+    const bool truncated = p.limit && items.size() > p.limit;
     if (truncated) items.resize(p.limit);
     std::string body = "{\"schema\":1,\"generated_at\":" + std::to_string(now) +
         ",\"start\":" + std::to_string(p.start) + ",\"end\":" + std::to_string(p.end) +
@@ -310,12 +306,13 @@ std::string glucose_export(std::string_view path, const Period &p, uint32_t now)
     const auto exporter = path == "/v1/glucose" ? getstream : path == "/v1/history" ? gethistory : getscans;
     // Request one extra record, then report truncation rather than silently
     // suggesting that the returned prefix is a complete interval.
+    const int max_count = !p.limit || p.limit == uint32_t(std::numeric_limits<int>::max())
+        ? std::numeric_limits<int>::max() : int(p.limit + 1);
     const std::span<char> data = exporter(0, 4096, p.start, p.end, true, p.unit,
-                                          true, int(p.limit + 1), p.calibrated, p.pastvalues);
+                                          true, max_count, p.calibrated, p.pastvalues);
     std::unique_ptr<char[]> owner(data.data());
     if (!owner || data.size() == std::numeric_limits<size_t>::max())
         return error(500, "export_failed", "Juggluco could not export this interval.");
-    if (data.size() > max_body) return error(413, "response_too_large", "Request a shorter interval.");
     std::string_view body(data.data(), data.size());
     size_t returned = 0, cursor = body.find('\n');
     if (cursor == std::string_view::npos) return error(500, "export_failed", "Export header is missing.");
@@ -323,13 +320,13 @@ std::string glucose_export(std::string_view path, const Period &p, uint32_t now)
     size_t cut = body.size();
     while (cursor < body.size()) {
         const size_t end = body.find('\n', cursor);
-        if (returned == p.limit) { cut = cursor; ++returned; break; }
+        if (p.limit && returned == p.limit) { cut = cursor; ++returned; break; }
         ++returned;
         if (end == std::string_view::npos) break;
         cursor = end + 1;
     }
-    const bool truncated = returned > p.limit;
-    if (truncated) { returned = p.limit; body = body.substr(0, cut); }
+    const bool truncated = (p.limit && returned > p.limit) || returned == std::size_t(std::numeric_limits<int>::max());
+    if (truncated && p.limit && returned > p.limit) { returned = p.limit; body = body.substr(0, cut); }
     const std::string extra = "X-Juggluco-Generated-At: " + std::to_string(now) +
         "\r\nX-Juggluco-Start: " + std::to_string(p.start) +
         "\r\nX-Juggluco-End: " + std::to_string(p.end) +
@@ -347,6 +344,16 @@ std::string meal_store_path() {
     return std::string(globalbasedir) + "/meals.dat";
 }
 bool glucose_data_ready() { return settings && sensors; }
+
+jgchat::Json glucose_display_preferences() {
+    if (!settings) throw jgchat::UiError(jgchat::UiCode::juggluco_settings_are_not_initialized);
+    const bool mmol = settings->data()->unit == 1;
+    // Use the same conversion factor as Juggluco's native glucose exporter.
+    return {{"unit", mmol ? "mmol/L" : "mg/dL"}, {"decimals", mmol ? 1 : 0},
+        {"mg_dl_per_mmol_l", convfactordL},
+        {"multiplier_from_mg_dl", mmol ? 1.0 / convfactordL : 1.0},
+        {"multiplier_from_mmol_l", mmol ? 1.0 : convfactordL}};
+}
 
 WebConfig web_config() {
     if (!settings) throw jgchat::UiError(jgchat::UiCode::juggluco_settings_are_not_initialized);
@@ -394,8 +401,8 @@ std::string handle_request(std::string_view target) {
         uint32_t at = now;
         if (args.size() > 1 || (!args.empty() && (args[0].first != "at" || !uintarg(args[0].second, at))))
             return error(400, "invalid_parameter", "iob accepts only at=<Unix seconds>.");
-        if (at < iob_lookback || at > now)
-            return error(400, "invalid_time", "IOB time must be at least 57600 and must not be in the future.");
+        if (at < iob_lookback)
+            return error(400, "invalid_time", "IOB time must be at least 57600.");
         return response(200, "{\"schema\":1,\"generated_at\":" + std::to_string(now) + ",\"iob\":" + iob_json(at) + "}");
     }
     Period p;

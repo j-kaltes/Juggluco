@@ -1380,7 +1380,7 @@ std::string_view getjstring(JNIEnv *env,jstring jstr)  {
     return {strbuf,strlen};
     }
 //extern "C" JNIEXPORT void JNICALL fromjava(setDevice) (JNIEnv *env, jclass clazz, jstring jMANUFACTURER, jstring jMODEL, jstring jRELEASE) { 
-extern "C" JNIEXPORT void JNICALL fromjava(setDevice) (JNIEnv *env, jclass clazz, jstring jMANUFACTURER, jstring jMODEL, int SDK_INTin) { 
+extern "C" JNIEXPORT void JNICALL fromjava(saveDevice) (JNIEnv *env, jclass clazz, jstring jMANUFACTURER, jstring jMODEL, jstring jPRODUCT,int SDK_INTin) { 
     LIBRELOGAR("setDevice");
     if(jMANUFACTURER) {
         delete[] dMANUFACTURER.data(); //Ever called twice?

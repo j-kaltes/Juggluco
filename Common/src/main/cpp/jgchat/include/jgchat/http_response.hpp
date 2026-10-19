@@ -34,7 +34,7 @@ std::string serialize_http_request(const HttpRequest& request);
 
 class HttpResponseParser {
 public:
-    explicit HttpResponseParser(std::size_t maximum_body = 4 * 1024 * 1024,
+    explicit HttpResponseParser(std::size_t maximum_body = std::string{}.max_size(),
                                 HttpBodySink on_body = {});
     void append(std::string_view bytes);
     bool complete() const;
@@ -43,7 +43,7 @@ public:
 private:
     enum class State { headers, fixed, chunk_size, chunk_data, trailers, eof_body, done };
     State state_ = State::headers;
-    std::size_t maximum_, wire_bytes_ = 0, remaining_ = 0, trailer_bytes_ = 0;
+    std::size_t maximum_, remaining_ = 0, trailer_bytes_ = 0;
     unsigned interim_ = 0;
     std::string pending_;
     HttpResponse response_;
@@ -53,5 +53,5 @@ private:
 };
 
 std::optional<HttpResponse> parse_http_response(std::string_view raw, bool eof = false,
-                                               std::size_t maximum_body = 4 * 1024 * 1024);
+                                               std::size_t maximum_body = std::string{}.max_size());
 }

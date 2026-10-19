@@ -526,8 +526,9 @@ static void menuitem(MainActivity act, NumberView numb, int mealptr, int pos, In
     Layout lay=new Layout(act,(l,w,h)-> {
         final boolean landscape=!smallScreen&&GlucoseCurve.isLandscape(act);
         if(!placed[0]||placedLandscape[0]!=landscape) {
-            int width=GlucoseCurve.getwidth();
-            int hei=GlucoseCurve.getheight();
+            var geo=act.getWindowSize();
+            int width=geo.x;
+            int hei=geo.y;
             Log.i(LOG_ID,"addcomponent width="+width+" height="+hei+" w="+w+" h="+h);
             if(landscape) {
                 int leftHalf=MainActivity.systembarLeft+safeWidth(width)/2;
@@ -550,6 +551,7 @@ static void menuitem(MainActivity act, NumberView numb, int mealptr, int pos, In
        int pad=(int)(tk.glucodata.GlucoseCurve.metrics.density*5.0);
        lay.setPadding(pad,0,pad,0);
     act.addMyContentView(lay, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+    /*
     registerOrientationLayout(act,lay,view->{
         final boolean landscape=!smallScreen&&GlucoseCurve.isLandscape(act);
         if(placedLandscape[0]!=landscape)
@@ -558,7 +560,9 @@ static void menuitem(MainActivity act, NumberView numb, int mealptr, int pos, In
         });
     lay.post(()->numshowkeyboard(numb,act,lay));
         lay.setBackgroundColor(Applic.backgroundcolor);
-
+*/
+    numshowkeyboard(numb,act,lay);
+    lay.setBackgroundColor(Applic.backgroundcolor);
     Delete.setOnClickListener(v-> {
         int newmealptr=Natives.deletefrommeal(mealptr,pos);
         give.accept(newmealptr);

@@ -7,9 +7,11 @@
 #include "jgchat/chat_export.hpp"
 #include "jgchat/workspace.hpp"
 #include "juggluco_data.hpp"
+#include "juggluco_extra.hpp"
 #include "juggluco_system.hpp"
 #include <jni.h>
 #include <memory>
+#include <limits>
 #include <mutex>
 #include <stdexcept>
 #include <thread>
@@ -41,10 +43,9 @@ State state;
 
 // JNI uses modified UTF-8. Convert Java UTF-16 explicitly so emoji and other
 // supplementary characters remain ordinary UTF-8 in JSON sent to the server.
-std::string from_java(JNIEnv* env, jstring text, jsize maximum = 32768) {
+std::string from_java(JNIEnv* env, jstring text) {
     if (!text) return {};
     const auto size = env->GetStringLength(text);
-    if (size > maximum) throw jgchat::UiError(jgchat::UiCode::text_is_too_long);
     const jchar* raw = env->GetStringChars(text, nullptr);
     if (!raw) throw jgchat::UiError(jgchat::UiCode::cannot_read_text);
     std::string out;
@@ -83,6 +84,7 @@ jstring to_java(JNIEnv* env, std::string_view text) {
         if (cp < 0x10000) out += static_cast<char16_t>(cp);
         else { cp -= 0x10000; out += static_cast<char16_t>(0xd800 + (cp >> 10)); out += static_cast<char16_t>(0xdc00 + (cp & 1023)); }
     }
+    if (out.size() > std::size_t(std::numeric_limits<jsize>::max())) throw jgchat::UiError(jgchat::UiCode::text_is_too_long);
     return env->NewString(reinterpret_cast<const jchar*>(out.data()), static_cast<jsize>(out.size()));
 }
 Json ui_json(const UiMessage& message) {
@@ -146,7 +148,7 @@ void make_client(const Tokens& tokens) {
             diagnostic("tokens saving rotated credentials");
             state.storage->write("tokens.json", tokens_to_json(next));
             diagnostic("tokens rotated credentials saved");
-        }, workspace.get());
+        }, workspace.get(), jgchatdata::glucose_display_preferences);
     state.workspace = std::move(workspace);
     state.account_id = tokens.account_id;
 }
@@ -255,7 +257,7 @@ extern "C" JNIEXPORT jobject JNICALL Java_tk_glucodata_JugglucoChat_nativeInitWi
             if (state.client) if (auto saved = state.storage->read("conversation.json")) {
                 if (saved->value("account_id", "") == state.account_id) {
                     const auto& messages = saved->at("messages");
-                    if (!messages.is_array() || messages.size() > 1000 || messages.dump().size() > 2 * 1024 * 1024)
+                    if (!messages.is_array())
                         throw jgchat::UiError(jgchat::UiCode::invalid_transcript);
                     for (const auto& m : messages) {
                         if (!m.is_object() || !m.contains("text") || !m.at("text").is_string() ||
@@ -313,9 +315,8 @@ extern "C" JNIEXPORT jobject JNICALL Java_tk_glucodata_JugglucoChat_nativeLoadMo
 extern "C" JNIEXPORT jobject JNICALL Java_tk_glucodata_JugglucoChat_nativeSendWithOptionsMessages(JNIEnv* env, jclass, jstring question, jstring model, jstring effort, jboolean internet) {
     return result(env, [&] {
         auto q = from_java(env, question), m = from_java(env, model), e = from_java(env, effort);
-        if (q.empty() || q.size() > 32768) throw jgchat::UiError(jgchat::UiCode::enter_a_question_shorter_than_32_kib);
-        if (m.empty() || m.size() > 200) throw jgchat::UiError(jgchat::UiCode::select_a_model);
-        if (e.size() > 16) throw jgchat::UiError(jgchat::UiCode::invalid_reasoning_effort);
+        if (q.empty()) throw jgchat::UiError(jgchat::UiCode::enter_a_question_shorter_than_32_kib);
+        if (m.empty()) throw jgchat::UiError(jgchat::UiCode::select_a_model);
         const auto pending = q;
         start("question", [q = std::move(q), m = std::move(m), e = std::move(e), internet] {
             require_signed_in();
@@ -350,11 +351,6 @@ extern "C" JNIEXPORT jobject JNICALL Java_tk_glucodata_JugglucoChat_nativeSendWi
                 messages.push_back({{"role", "assistant"}, {"text", answer}, {"plots", state.client->plots()},
                     {"files", saved_files}, {"citations", state.client->citations()},
                     {"model_id", m}, {"model_name", model_name}, {"reasoning_effort", e.empty() ? "default" : e}});
-                // Older public turns are searchable in analysis memory. Bound
-                // the visible transcript too, retaining complete pairs.
-                while (messages.size() > 2 && (messages.size() > 1000 || messages.dump().size() > 1536 * 1024))
-                    messages.erase(messages.begin(),messages.begin() + 2);
-                if (messages.dump().size() > 2 * 1024 * 1024) throw jgchat::UiError(jgchat::UiCode::answer_attachments_exceed_the_transcript_limit);
                 state.workspace->remember_files(saved_files);
                 if (state.cancel) throw jgchat::UiError(jgchat::UiCode::request_cancelled);
                 Json open_file = nullptr;
@@ -559,8 +555,8 @@ extern "C" JNIEXPORT jobject JNICALL Java_tk_glucodata_JugglucoChat_nativeWriteP
     return result(env, [&] {
         // Freeze the plot displayed in the viewer. A newly completed answer
         // can otherwise prune/reindex the transcript while that viewer is open.
-        const auto contents = from_java(env, svg, 131072);
-        if (!contents.starts_with("<svg ") || contents.size() > 131072)
+        const auto contents = from_java(env, svg);
+        if (!contents.starts_with("<svg "))
             throw jgchat::UiError(jgchat::UiCode::the_plot_is_unavailable);
         const auto bytes = write_chat_export(descriptor, contents);
         diagnostic("plot export prepared bytes=%zu", bytes);

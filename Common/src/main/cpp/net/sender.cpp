@@ -172,6 +172,7 @@ std::array<unsigned char,sizeof(sendmagic)>  sendmagicspec=getsendmagic();
       return 3;
       }
    LOGGERTAG("testsendmagic %d success\n",getSenderIdent());
+   activityChunkSupport=!memcmp(buf+recsize-4,juggluco::activity::mirror::capability,3);
    if(!buf[recsize-1]) {
       extern void resethost(passhost_t &host) ;
       resethost(*pass);
@@ -711,6 +712,8 @@ bool probeMirrorTcp(passhost_t *pass,int timeoutMillis) {
    }
 
 int Connect::makeconnection(passhost_t *pass,crypt_t*ctx,char stype) {
+   activityChunkSupport=false;
+   activityChunkBytes=juggluco::activity::mirror::chunkBytes;
    int res=makeconnection2(pass,stype);
    if(res>=0) {
       const auto tag=get_owner_tag(res);

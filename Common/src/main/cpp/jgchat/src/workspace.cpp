@@ -41,7 +41,7 @@
 
 namespace jgchat {
 namespace {
-constexpr std::size_t body_limit = 3 * 1024 * 1024, store_limit = 64 * 1024 * 1024;
+constexpr std::size_t native_size_max = std::numeric_limits<std::size_t>::max();
 struct Fd { int fd; ~Fd() { if (fd >= 0) ::close(fd); } };
 bool valid_id(const std::string& id) {
     return id.size() == 33 && id[0] == 'r' && std::all_of(id.begin() + 1, id.end(), [](char c) {
@@ -65,10 +65,10 @@ void shape(const Json& value, std::initializer_list<const char*> fields) {
     if (!value.is_object() || value.size() != fields.size()) throw jgchat::UiError(jgchat::UiCode::invalid_workspace_tool_arguments);
     for (const auto* f : fields) if (!value.contains(f)) throw jgchat::UiError(jgchat::UiCode::missing_workspace_tool_argument);
 }
-std::string string(const Json& v, const char* key, std::size_t max) {
+std::string string(const Json& v, const char* key) {
     if (!v.contains(key) || !v[key].is_string()) throw jgchat::UiError(jgchat::UiCode::workspace_argument_must_be_text);
     auto s = v[key].get<std::string>();
-    if (s.size() > max || s.find('\0') != std::string::npos) throw jgchat::UiError(jgchat::UiCode::workspace_text_argument_exceeds_its_limit);
+    if (s.find('\0') != std::string::npos) throw jgchat::UiError(jgchat::UiCode::workspace_text_argument_exceeds_its_limit);
     return s;
 }
 std::size_t number(const Json& v, const char* key, std::size_t min, std::size_t max) {
@@ -98,20 +98,20 @@ Json overview(const Json& v) {
     }
     return out;
 }
-Json parse_bounded(const std::string& text) {
-    return Json::parse(text,[](int depth,Json::parse_event_t,Json&) {
-        if (depth > 64) throw jgchat::UiError(jgchat::UiCode::saved_json_exceeds_the_nesting_limit);
-        return true;
-    });
+Json parse_saved_json(const std::string& text) {
+    // A DOM filtering callback repeatedly scans prior array elements. Use the
+    // ordinary linear parser so full-year result bodies reopen efficiently.
+    return Json::parse(text);
 }
+
 Json function(const char* name, const char* description, Json props) {
     Json required = Json::array();
     for (auto i = props.begin(); i != props.end(); ++i) required.push_back(i.key());
     return {{"type", "function"}, {"name", name}, {"description", description}, {"strict", true},
         {"parameters", {{"type", "object"}, {"properties", props}, {"required", required}, {"additionalProperties", false}}}};
 }
-Json text_schema(std::size_t n) { return {{"type", "string"}, {"maxLength", n}}; }
-Json int_schema(std::size_t low, std::size_t high) { return {{"type", "integer"}, {"minimum", low}, {"maximum", high}}; }
+Json text_schema() { return {{"type", "string"}}; }
+Json int_schema(std::size_t low) { return {{"type", "integer"}, {"minimum", low}}; }
 Json empty_index(const std::string& account) {
     return {{"schema", 1}, {"account_id", account}, {"legacy_imported", false}, {"entries", Json::array()}, {"file_bundles", Json::array()}};
 }
@@ -121,24 +121,24 @@ Json workspace_tool_definitions() {
     Json result = Json::array();
     result.push_back(function("juggluco_memory_search",
         "Search saved local results, working notes, calculations and past conversation turns, including previous chats. All space-separated words must match metadata/text (ASCII case-insensitive); empty query lists newest first. Search does not scan every raw glucose cell. Old settings/results are snapshots, not current state.",
-        {{"query", text_schema(256)}, {"kind", {{"type", "string"}, {"enum", Json::array({"all","result","note","conversation","file","calculation"})}}},
-         {"offset", int_schema(0,4096)}, {"limit", int_schema(1,50)}}));
+        {{"query", text_schema()}, {"kind", {{"type", "string"}, {"enum", Json::array({"all","result","note","conversation","file","calculation"})}}},
+         {"offset", int_schema(0)}, {"limit", int_schema(0)}}));
     result.push_back(function("juggluco_memory_read",
-        "Reopen a saved result/note/conversation by ID. path is a JSON Pointer into its original payload (empty for overview). Arrays paginate by rows (limit at most 200); strings paginate by UTF-8 bytes (limit at most 8192). Returned next_offset/null explicitly indicates remaining content. Inspect table paths, columns and source coverage before SQL. Nested values remain accessible by pointer.",
-        {{"id", text_schema(33)}, {"path", text_schema(512)}, {"offset", int_schema(0,body_limit)}, {"limit", int_schema(1,8192)}}));
-    Json source_ids{{"type","array"},{"maxItems",32},{"items",text_schema(33)}};
+        "Reopen a saved result/note/conversation by ID. path is a JSON Pointer into its original payload (empty for the original root object). Arrays paginate by rows; strings by UTF-8 bytes. limit=0 returns all remaining content; positive limits choose pages. Returned next_offset/null explicitly indicates remaining content. Inspect table paths, columns and source coverage before SQL. Nested values remain accessible by pointer.",
+        {{"id", text_schema()}, {"path", text_schema()}, {"offset", int_schema(0)}, {"limit", int_schema(0)}}));
+    Json source_ids{{"type","array"},{"items",text_schema()}};
     result.push_back(function("juggluco_note",
         "Save a concise working note: investigation/question, periods checked, findings, caveats, corrections or unfinished work. kind distinguishes observation, hypothesis, user_correction and progress. Cite existing result IDs in sources; a user statement is attributed, not independently verified. supersedes is an older note ID or empty; old versions remain searchable. active=false closes a note. This writes analysis memory only, never Juggluco records/settings.",
-        {{"title",text_schema(160)},{"text",text_schema(4000)}, {"kind",{{"type","string"},{"enum",Json::array({"observation","hypothesis","user_correction","progress"})}}},
-         {"sources",source_ids},{"supersedes",text_schema(33)},{"active",{{"type","boolean"}}}}));
-    Json binding = function("unused", "unused", {{"name",text_schema(32)},{"id",text_schema(33)},{"path",text_schema(512)},
+        {{"title",text_schema()},{"text",text_schema()}, {"kind",{{"type","string"},{"enum",Json::array({"observation","hypothesis","user_correction","progress"})}}},
+         {"sources",source_ids},{"supersedes",text_schema()},{"active",{{"type","boolean"}}}}));
+    Json binding = function("unused", "unused", {{"name",text_schema()},{"id",text_schema()},{"path",text_schema()},
         {"format",{{"type","string"},{"enum",Json::array({"json","csv","tsv"})}}}})["parameters"];
     result.push_back(function("juggluco_query",
-        "Run one read-only SQLite SELECT/WITH over saved snapshots, not live app tables. Bind up to 16 JSON array/object or CSV/TSV table paths to aliases. Delimited columns stay TEXT (empty/NaN/Inf become NULL): CAST numeric fields explicitly and retain Sensorid/label IDs. JSON types survive; nested cells are JSON text (use ->>). Supports joins, groups, window functions, math, median and percentile_cont(x,p). No files/network/extensions/writes. 100000 input rows, 5 s/20 million steps, 20000 output rows/2 MiB. Saves the FULL completed result with SQL and source IDs; returns a preview. Limits fail explicitly, never produce silent partial aggregates. Time functions default UTC; align with recorded timezone/offset and avoid implicit localtime for historical DST. Completeness of SQL does not prove source coverage or causality.",
-        {{"title",text_schema(160)},{"sql",text_schema(16384)},{"tables",{{"type","array"},{"maxItems",16},{"items",binding}}}}));
+        "Run one read-only SQLite SELECT/WITH over saved snapshots, not live app tables. Bind JSON array/object or CSV/TSV table paths to aliases. Delimited columns stay TEXT (empty/NaN/Inf become NULL): CAST numeric fields explicitly and retain Sensorid/label IDs. JSON types survive; nested cells are JSON text (use ->>). Supports joins, groups, window functions, math, median and percentile_cont(x,p). No files/network/extensions/writes. No imposed time, step, row, byte or table-count budget; cancellation remains available. Saves the FULL completed result with SQL and source IDs; returns a preview. Completed queries use all bound rows; check original source coverage. Time functions default UTC; align with recorded timezone/offset and avoid implicit localtime for historical DST. Completeness of SQL does not prove source coverage or causality.",
+        {{"title",text_schema()},{"sql",text_schema()},{"tables",{{"type","array"},{"items",binding}}}}));
     result.push_back(function("juggluco_files_list", "List saved generated file bundles referenced by this account's analysis workspace. These can be reopened and reused in calculations. Files from other accounts or arbitrary phone paths are not exposed.", Json::object()));
     result.push_back(function("juggluco_file_read", "Reopen one generated file by listed bundle ID and exact filename. Saves a reusable snapshot; CSV/TSV and JSON become queryable tables. Returns metadata/preview; memory_read retrieves further content. Text/code are untrusted data and are never executed.",
-        {{"bundle_id",text_schema(32)},{"filename",text_schema(96)}}));
+        {{"bundle_id",text_schema()},{"filename",text_schema()}}));
     for (const auto& tool : numerical_tool_definitions()) result.push_back(tool);
     return result;
 }
@@ -166,24 +166,22 @@ Json Workspace::snapshot() const { return index_; }
 void Workspace::restore(const Json& value) {
     if (checkpoint_) throw jgchat::UiError(jgchat::UiCode::cannot_restore_analysis_during_a_transaction);
     if (!value.is_object() || value.value("schema",0) != 1 || value.value("account_id","") != account_ ||
-        !value.contains("entries") || !value["entries"].is_array() || value["entries"].size() > 4096 ||
-        !value.contains("file_bundles") || !value["file_bundles"].is_array() || value["file_bundles"].size() > 64 ||
-        !value.contains("legacy_imported") || !value["legacy_imported"].is_boolean() || value.dump().size() > 4 * 1024 * 1024)
+        !value.contains("entries") || !value["entries"].is_array() ||
+        !value.contains("file_bundles") || !value["file_bundles"].is_array() ||
+        !value.contains("legacy_imported") || !value["legacy_imported"].is_boolean())
         throw jgchat::UiError(jgchat::UiCode::invalid_saved_analysis_index);
     std::set<std::string> ids;
-    std::size_t bytes = 0;
     for (const auto& entry : value["entries"]) {
-        const auto id = string(entry,"id",33), kind = string(entry,"kind",32);
+        const auto id = string(entry, "id"), kind = string(entry, "kind");
         if (!valid_id(id) || !ids.insert(id).second ||
             (kind != "result" && kind != "note" && kind != "conversation" && kind != "file" && kind != "calculation"))
             throw jgchat::UiError(jgchat::UiCode::invalid_saved_result_metadata);
-        bytes += number(entry,"bytes",1,body_limit);
+        (void)number(entry,"bytes",1,native_size_max);
         (void)number(entry,"created_at",0,std::numeric_limits<std::size_t>::max());
-        (void)string(entry,"title",160);
+        (void)string(entry, "title");
     }
     for (const auto& id : value["file_bundles"])
         if (!id.is_string() || !valid_id("r" + id.get<std::string>())) throw jgchat::UiError(jgchat::UiCode::invalid_saved_bundle_identifier);
-    if (bytes > store_limit) throw jgchat::UiError(jgchat::UiCode::saved_analysis_exceeds_its_capacity);
     index_ = value;
 }
 void Workspace::begin() {
@@ -224,11 +222,10 @@ void Workspace::clear() {
 void Workspace::remember_files(const Json& files) {
     if (!checkpoint_) throw jgchat::UiError(jgchat::UiCode::analysis_changes_require_a_transaction);
     for (const auto& file : files) {
-        const auto id = string(file,"id",32);
+        const auto id = string(file, "id");
         if (!valid_id("r" + id)) throw jgchat::UiError(jgchat::UiCode::invalid_file_bundle_identifier);
         auto& list = index_["file_bundles"];
         if (std::find(list.begin(),list.end(),id) == list.end()) list.push_back(id);
-        if (list.size() > 64) throw jgchat::UiError(jgchat::UiCode::analysis_has_reached_its_saved_file_bundle_limit);
     }
 }
 const Json& Workspace::metadata(const std::string& id) const {
@@ -241,7 +238,7 @@ Json Workspace::body(const std::string& id) const {
     Fd file{::openat(fd_,(id + ".json").c_str(),O_RDONLY|O_NONBLOCK|O_NOFOLLOW|O_CLOEXEC)};
     struct stat st{};
     if (file.fd < 0 || ::fstat(file.fd,&st) || !S_ISREG(st.st_mode) || st.st_size < 0 ||
-        static_cast<uint64_t>(st.st_size) != meta["bytes"].get<uint64_t>() || st.st_size > static_cast<off_t>(body_limit))
+        static_cast<uint64_t>(st.st_size) != meta["bytes"].get<uint64_t>() || uint64_t(st.st_size) > std::string{}.max_size())
         throw jgchat::UiError(jgchat::UiCode::saved_result_is_missing_or_invalid_retrieve_the_source_data_again);
     std::string data(static_cast<std::size_t>(st.st_size),'\0');
     for (std::size_t at = 0; at < data.size();) {
@@ -250,21 +247,15 @@ Json Workspace::body(const std::string& id) const {
         if (n <= 0) throw jgchat::UiError(jgchat::UiCode::cannot_read_saved_analysis_result);
         at += static_cast<std::size_t>(n);
     }
-    try { return parse_bounded(data); }
+    try { return parse_saved_json(data); }
     catch (...) { throw jgchat::UiError(jgchat::UiCode::saved_analysis_result_contains_invalid_json); }
 }
 Json Workspace::put(Json meta, const Json& data) {
     if (!checkpoint_) throw jgchat::UiError(jgchat::UiCode::analysis_changes_require_a_transaction);
     const auto raw = data.dump();
-    std::size_t bytes = raw.size();
-    for (const auto& entry : index_["entries"]) bytes += entry["bytes"].get<std::size_t>();
-    if (raw.size() > body_limit || bytes > store_limit || index_["entries"].size() >= 4096)
-        throw jgchat::UiError(jgchat::UiCode::analysis_memory_is_full_64_mib_4096_entries_use_more_clear_analysis_memory);
     const auto id = new_id(), name = id + ".json";
     meta["id"] = id; meta["bytes"] = raw.size(); meta["created_at"] = std::time(nullptr);
     meta["tables"] = analysis_tables(data);
-    if (index_.dump().size() + meta.dump().size() > 4 * 1024 * 1024)
-        throw jgchat::UiError(jgchat::UiCode::analysis_index_is_full_use_more_clear_analysis_memory);
     Fd file{::openat(fd_,name.c_str(),O_WRONLY|O_CREAT|O_EXCL|O_NOFOLLOW|O_CLOEXEC,0600)};
     if (file.fd < 0) throw jgchat::UiError(jgchat::UiCode::cannot_save_analysis_result);
     try {
@@ -291,7 +282,7 @@ Json Workspace::describe(const Json& meta, const Json& data) const {
         auto& tables = out["tables"];
         while (!tables.empty() && out.dump().size() > 24000) { tables.erase(tables.end()-1); out["table_catalog_truncated"] = true; }
     }
-    out["snapshot_warning"] = "Saved evidence, not live state. Preserve its original units, calibration, timezone, coverage and source limitations; refresh current settings when needed.";
+    out["snapshot_warning"] = "Saved evidence, not live state. Keep stored values with their original units, calibration, timezone, coverage and source limitations. Present glucose in the current Juggluco display unit unless the user asks otherwise, converting numbers when needed; never just relabel saved values.";
     return out;
 }
 Json Workspace::capture(std::string_view tool, const Json& args, const Json& result) {
@@ -306,8 +297,8 @@ Json Workspace::capture(std::string_view tool, const Json& args, const Json& res
 }
 Json Workspace::read(const Json& args) const {
     shape(args,{"id","path","offset","limit"});
-    const auto id = string(args,"id",33), path = string(args,"path",512);
-    const auto offset = number(args,"offset",0,body_limit), limit = number(args,"limit",1,8192);
+    const auto id = string(args, "id"), path = string(args, "path");
+    const auto offset = number(args,"offset",0,native_size_max), limit = number(args,"limit",0,native_size_max);
     auto data = body(id);
     const Json* selected = &data;
     try { if (!path.empty()) selected = &data.at(Json::json_pointer(path)); }
@@ -315,38 +306,34 @@ Json Workspace::read(const Json& args) const {
     Json out{{"status","ok"},{"_saved_result",describe(metadata(id),data)},{"path",path},{"offset",offset}};
     if (selected->is_array()) {
         if (offset > selected->size()) throw jgchat::UiError(jgchat::UiCode::array_offset_exceeds_its_size);
-        Json page = Json::array(); std::size_t used = 0, at = offset;
-        for (; at < selected->size() && page.size() < std::min<std::size_t>(200,limit); ++at) {
-            auto size = (*selected)[at].dump().size();
-            if (used + size > 48 * 1024) break;
-            used += size; page.push_back((*selected)[at]);
+        Json page = Json::array(); std::size_t at = offset;
+        for (; at < selected->size() && (!limit || page.size() < limit); ++at) {
+            page.push_back((*selected)[at]);
         }
-        if (at == offset && at < selected->size()) throw jgchat::UiError(jgchat::UiCode::row_exceeds_page_size_use_a_json_pointer_into_that_row);
         out["data"] = std::move(page); out["total"] = selected->size(); out["offset_unit"] = "rows";
         out["next_offset"] = at < selected->size() ? Json(at) : Json(nullptr);
     } else if (selected->is_string()) {
         const auto& text = selected->get_ref<const std::string&>();
         if (offset > text.size() || (offset < text.size() && (static_cast<unsigned char>(text[offset]) & 0xc0) == 0x80))
             throw jgchat::UiError(jgchat::UiCode::text_offset_must_be_a_utf_8_character_boundary_within_the_string);
-        const auto page = prefix(text.substr(offset),limit);
+        const auto page = prefix(text.substr(offset),limit ? limit : text.size() - offset);
         if (page.empty() && offset < text.size()) throw jgchat::UiError(jgchat::UiCode::increase_the_page_limit_to_fit_one_utf_8_character);
         out["data"] = page; out["total"] = text.size(); out["offset_unit"] = "UTF-8 bytes";
         out["next_offset"] = offset + page.size() < text.size() ? Json(offset + page.size()) : Json(nullptr);
     } else {
         if (offset) throw jgchat::UiError(jgchat::UiCode::object_scalar_reads_require_offset_zero);
-        out["data"] = selected->dump().size() <= 48*1024 ? *selected : overview(*selected);
-        out["overview_only"] = selected->dump().size() > 48*1024;
+        out["data"] = *selected;
+        out["overview_only"] = false;
         out["next_offset"] = nullptr;
     }
-    if (out.dump().size() > 120 * 1024) throw jgchat::UiError(jgchat::UiCode::result_metadata_exceeds_a_page_narrow_the_source_query);
     return out;
 }
 Json Workspace::search(const Json& args) const {
     shape(args,{"query","kind","offset","limit"});
-    const auto query = lower(string(args,"query",256)), kind = string(args,"kind",20);
+    const auto query = lower(string(args, "query")), kind = string(args, "kind");
     if (kind != "all" && kind != "result" && kind != "note" && kind != "conversation" && kind != "file" && kind != "calculation")
         throw jgchat::UiError(jgchat::UiCode::unknown_analysis_search_kind);
-    const auto offset = number(args,"offset",0,4096), limit = number(args,"limit",1,50);
+    const auto offset = number(args,"offset",0,native_size_max), limit = number(args,"limit",0,native_size_max);
     std::vector<std::string> words;
     std::string word;
     for (unsigned char c : query) {
@@ -354,27 +341,26 @@ Json Workspace::search(const Json& args) const {
         else word += static_cast<char>(c);
     }
     if (!word.empty()) words.push_back(word);
-    Json matches = Json::array(); std::size_t total = 0; bool page_full = false;
+    Json matches = Json::array(); std::size_t total = 0;
     const auto& entries = index_["entries"];
     for (auto it = entries.rbegin(); it != entries.rend(); ++it) {
         if (kind != "all" && (*it)["kind"] != kind) continue;
         const auto haystack = lower(it->dump());
         if (!std::all_of(words.begin(),words.end(),[&](const auto& w) { return haystack.find(w) != std::string::npos; })) continue;
-        if (total++ < offset || matches.size() >= limit || page_full) continue;
+        if (total++ < offset || (limit && matches.size() >= limit)) continue;
         Json brief = *it;
         for (const auto* key : {"search_text","source_overview","tables"}) brief.erase(key);
         if (brief.contains("arguments") && brief["arguments"].dump().size() > 1024) brief.erase("arguments");
-        if (matches.dump().size() + brief.dump().size() <= 80*1024) matches.push_back(std::move(brief));
-        else page_full = true;
+        matches.push_back(std::move(brief));
     }
     return {{"status","ok"},{"matches",matches},{"total",total},{"offset",offset},
         {"next_offset",offset + matches.size() < total ? Json(offset + matches.size()) : Json(nullptr)}};
 }
 Json Workspace::note(const Json& args) {
     shape(args,{"title","text","kind","sources","supersedes","active"});
-    const auto title = string(args,"title",160), text = string(args,"text",4000), kind = string(args,"kind",32), supersedes = string(args,"supersedes",33);
+    const auto title = string(args, "title"), text = string(args, "text"), kind = string(args, "kind"), supersedes = string(args, "supersedes");
     if (title.empty() || text.empty() || (kind != "observation" && kind != "hypothesis" && kind != "user_correction" && kind != "progress") ||
-        !args["active"].is_boolean() || !args["sources"].is_array() || args["sources"].size() > 32)
+        !args["active"].is_boolean() || !args["sources"].is_array())
         throw jgchat::UiError(jgchat::UiCode::invalid_working_note);
     for (const auto& id : args["sources"]) (void)metadata(id.get<std::string>());
     if (!supersedes.empty() && metadata(supersedes)["kind"] != "note") throw jgchat::UiError(jgchat::UiCode::only_notes_can_supersede_notes);
@@ -388,18 +374,15 @@ Json Workspace::note(const Json& args) {
 }
 Json Workspace::query(const Json& args, const std::atomic_bool& cancel) {
     shape(args,{"title","sql","tables"});
-    const auto title = string(args,"title",160), sql = string(args,"sql",16384);
-    if (title.empty() || !args["tables"].is_array() || args["tables"].size() > 16) throw jgchat::UiError(jgchat::UiCode::invalid_calculation_title_tables);
+    const auto title = string(args, "title"), sql = string(args, "sql");
+    if (title.empty() || !args["tables"].is_array()) throw jgchat::UiError(jgchat::UiCode::invalid_calculation_title_tables);
     std::vector<std::pair<std::string,AnalysisTable>> tables;
     Json provenance = Json::array(), ids = Json::array();
-    std::size_t bytes = 0;
     for (const auto& binding : args["tables"]) {
         if (cancel) throw jgchat::UiError(jgchat::UiCode::request_cancelled);
         shape(binding,{"name","id","path","format"});
-        const auto id = string(binding,"id",33), name = string(binding,"name",32), path = string(binding,"path",512), format = string(binding,"format",4);
+        const auto id = string(binding, "id"), name = string(binding, "name"), path = string(binding, "path"), format = string(binding, "format");
         const auto& meta = metadata(id);
-        bytes += meta["bytes"].get<std::size_t>();
-        if (bytes > 16 * 1024 * 1024) throw jgchat::UiError(jgchat::UiCode::analysis_source_snapshots_exceed_16_mib);
         const auto source = body(id);
         const Json* selected = &source;
         try { if (!path.empty()) selected = &source.at(Json::json_pointer(path)); }
@@ -419,10 +402,10 @@ Json Workspace::query(const Json& args, const std::atomic_bool& cancel) {
 }
 Json Workspace::numerical(std::string_view name, const Json& args, const std::atomic_bool& cancel) {
     if (name == "juggluco_predict") shape(args,{"title","source","model_id"});
-    const auto title = string(args,"title",name == "juggluco_plot_table" ? 400 : 160);
+    const auto title = string(args, "title");
     if (title.empty() || !args.contains("source")) throw jgchat::UiError(jgchat::UiCode::numerical_calculation_needs_a_title_and_saved_source);
     const auto& binding = args.at("source"); shape(binding,{"id","path","format"});
-    const auto id = string(binding,"id",33), path = string(binding,"path",512), format = string(binding,"format",4);
+    const auto id = string(binding, "id"), path = string(binding, "path"), format = string(binding, "format");
     const auto source = body(id);
     const Json* selected = &source;
     try { if (!path.empty()) selected = &source.at(Json::json_pointer(path)); }
@@ -431,7 +414,7 @@ Json Workspace::numerical(std::string_view name, const Json& args, const std::at
     Json result, ids = Json::array({id});
     if (name == "juggluco_fit") result = fit_analysis_model(table,args,cancel);
     else if (name == "juggluco_predict") {
-        const auto model_id = string(args,"model_id",33);
+        const auto model_id = string(args, "model_id");
         if (metadata(model_id).value("tool","") != "juggluco_fit")
             throw jgchat::UiError(jgchat::UiCode::model_id_must_identify_a_saved_juggluco_fit_result);
         result = predict_analysis_model(table,body(model_id),cancel);
@@ -473,7 +456,7 @@ Json Workspace::execute(std::string_view name, const Json& args, const std::atom
     }
     if (name == "juggluco_file_read") {
         shape(args,{"bundle_id","filename"});
-        const auto bundle = string(args,"bundle_id",32), filename = string(args,"filename",96);
+        const auto bundle = string(args, "bundle_id"), filename = string(args, "filename");
         if (!files_ || std::find(index_["file_bundles"].begin(),index_["file_bundles"].end(),bundle) == index_["file_bundles"].end())
             throw jgchat::UiError(jgchat::UiCode::file_bundle_is_not_referenced_by_this_account_s_workspace);
         const auto text = files_->read_text(bundle,filename);
@@ -481,7 +464,7 @@ Json Workspace::execute(std::string_view name, const Json& args, const std::atom
         if (filename.ends_with(".csv")) data["format"] = "csv";
         else if (filename.ends_with(".tsv")) data["format"] = "tsv";
         else if (filename.ends_with(".json")) {
-            try { data["document"] = parse_bounded(text); } catch (...) { data["parse_warning"] = "File is not valid bounded JSON; raw text is still available."; }
+            try { data["document"] = parse_saved_json(text); } catch (...) { data["parse_warning"] = "File is not valid JSON; raw text is still available."; }
         }
         const auto meta = put({{"kind","file"},{"title",filename},{"bundle_id",bundle},{"search_text",filename}},data);
         return read({{"id",meta["id"]},{"path",""},{"offset",0},{"limit",100}});
@@ -502,9 +485,9 @@ void Workspace::remember_turn(const Json& turn) {
             for (const auto& p : item.at("content")) {
                 text += p.value("text",p.value("refusal",std::string{}));
                 if (p.contains("annotations") && p["annotations"].is_array()) for (const auto& a : p["annotations"]) {
-                    if (citations.size() >= 64 || !a.is_object() || a.value("type",std::string{}) != "url_citation") continue;
+                    if (!a.is_object() || a.value("type",std::string{}) != "url_citation") continue;
                     const auto url = a.value("url",std::string{});
-                    if ((url.starts_with("https://") || url.starts_with("http://")) && url.size() <= 4096)
+                    if ((url.starts_with("https://") || url.starts_with("http://")))
                         citations.push_back({{"url",url},{"title",prefix(a.value("title",std::string{}),512)}});
                 }
             }

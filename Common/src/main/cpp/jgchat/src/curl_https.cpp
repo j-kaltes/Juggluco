@@ -80,7 +80,7 @@ HttpResponse perform(const HttpRequest& request, const std::atomic_bool& cancel)
         curl_easy_setopt(curl, CURLOPT_CAINFO, ca);
     curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1L);
     const auto timeout = static_cast<long>(std::min<std::int64_t>(request.timeout.count(), LONG_MAX));
-    curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT_MS, std::min(timeout, 10000L));
+    curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT_MS, timeout);
     curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, timeout);
     // Keep environment proxy selection intact. CONNECT response headers belong
     // to the proxy, not to the authenticated HTTPS response being parsed.

@@ -17,6 +17,7 @@ if(ANDROID AND NOT WEAROS)
         "${JGCHAT_ROOT}/src/native_https.cpp"
         "${JGCHAT_ROOT}/android/juggluco_data.cpp"
         "${JGCHAT_ROOT}/android/juggluco_nutrition.cpp"
+        "${JGCHAT_ROOT}/android/juggluco_activities.cpp"
         "${JGCHAT_ROOT}/android/juggluco_statistics.cpp"
         "${JGCHAT_ROOT}/android/juggluco_system.cpp"
         "${JGCHAT_ROOT}/android/juggluco_system_native.cpp"

@@ -2701,7 +2701,9 @@ int getMinimalWarmup() const {
 std::atomic_flag processing{}; 
 
 void useAgain() {
+    extern void   sendKAuth(SensorGlucoseData *hist);
        auto *info= getinfo();
+       info->haskAuth=false;
        info->lastscantime=time(nullptr);
        }
 
@@ -2721,6 +2723,26 @@ uint32_t getRestartTime() const {
     LOGGER("getRestartTime()=%u\n",starttime);
     return starttime;
     }
+
+
+bool lastLifeCountReceivedUser() const { //Used to signify last backfilled value
+    return isLibre3() || isDexcom() ||isAidexX();
+    }
+
+
+std::span<const ScanData> getDefiniteStream() const { //gives definite stream values, which will not be changed later by backfill
+    if(lastLifeCountReceivedUser()) {
+            const int start=getStreamStart();
+            int  last=std::min(getinfo()->lastLifeCountReceived+1,pollcount());
+            int len=last-start;
+            if(len<0)
+                len=0;
+            return std::span<const ScanData>(polls.data()+start,len);
+            }
+     else 
+             return getPolldata();
+    }
+
 };
 struct lastscan_t {
     int sensorindex;

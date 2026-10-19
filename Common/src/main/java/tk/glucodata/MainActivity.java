@@ -53,6 +53,9 @@ import android.widget.TextView;
 import android.widget.EditText;
 
 
+import android.graphics.Rect;
+import android.os.Build;
+import android.graphics.Point;
 import android.app.Activity;
 import android.view.MotionEvent;
 import android.view.Surface;
@@ -2275,4 +2278,23 @@ public boolean canForceMenuLandscape(Configuration config) {
     final boolean android16LargeScreen=testPortrait || hasAndroid16LargeScreenRestriction();
     return !(largeScreen && android16LargeScreen);
     }
+
+
+public  Point getWindowSize() {
+    final MainActivity act=this;
+    Point size;
+    if (Build.VERSION.SDK_INT >= 30) {
+        Rect bounds = act.getWindowManager().getCurrentWindowMetrics().getBounds();
+        size=new Point(bounds.width(), bounds.height());
+        }
+    else {
+            size = new Point();
+            act.getWindowManager().getDefaultDisplay().getRealSize(size);
+            }
+    GlucoseCurve.setgeo(size.x,size.y);
+    return size;
+   }
+
 }
+
+

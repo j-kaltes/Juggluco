@@ -210,7 +210,7 @@ static bool uploadCGM3() {
     for(int sensorid=last;sensorid>=startsensor;--sensorid) {
         if(SensorGlucoseData *sens=sensors->getSensorData(sensorid)) {
             auto cali= make_calibrator<ScanData>(sens);
-            std::span<const ScanData> gdata=sens->getPolldata();
+            std::span<const ScanData> gdata=sens->getDefiniteStream();
             const sensorname_t *sensorname=sens->shortsensorname();
             int len=gdata.size();
             int positer=sens->getinfo()->nightiter;
@@ -284,7 +284,7 @@ static bool uploadCGM() {
     int newstartsensor=startsensor;
     for(int sensorid=last;sensorid>=startsensor;--sensorid) {
         if(SensorGlucoseData *sens=sensors->getSensorData(sensorid)) {
-            std::span<const ScanData> gdata=sens->getPolldata();
+            std::span<const ScanData> gdata=sens->getDefiniteStream();
             const sensorname_t *sensorname=sens->shortsensorname();
             const char *sensornamestr=sensorname->data();
             int len=gdata.size();

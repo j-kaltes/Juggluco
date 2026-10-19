@@ -60,11 +60,16 @@ class MessageSender(val activity: Context):CapabilityClient.OnCapabilityChangedL
     private val nexttimes=ConcurrentHashMap<String,Long>()
 
     private fun setnodes(ns:Set<Node>) {
+        // A fresh watch cannot create its mirror row until native code knows
+        // its watch type. Initialize this before publishing discovery results
+        // or scheduling the first /netinfo exchange.
+        Natives.isGalaxyWatch(galaxywatch)
         nodes = ns
         val reachable=ns.mapTo(HashSet<String>()) { it.id }
         nexttimes.keys.removeAll { !it.startsWith("ble:")&&it !in reachable }
         associateConfiguredMirrorNodes(ns)
-        sendnetinfo();
+        if(ns.isNotEmpty())
+            sendnetinfo();
     }
 
     private fun associateConfiguredMirrorNodes(ns:Set<Node>) {
@@ -148,7 +153,6 @@ suspend fun findWearDevicesWithApp() {
         val capabilityInfo = capabilityClient.getCapability( JUGGLUCOIDENT, CapabilityClient.FILTER_REACHABLE).await()
         setnodes(capabilityInfo.nodes)
         Log.d(LOG_ID, "Capable Nodes: $nodes")
-        Natives.isGalaxyWatch(galaxywatch)
     } catch (cancellationException: CancellationException) {
         throw cancellationException
     } catch (th: Throwable) {
@@ -169,10 +173,6 @@ public fun finddevices() {
       }
      Wearable.getCapabilityClient(activity).addListener(sender, JUGGLUCOIDENT)
      }
-
-  init {
-      finddevices()
-      }
 
 /*
     public fun startActivity() {
@@ -445,6 +445,7 @@ companion object {
     const val BLUETOOTH_PATH = "/bluetooth"
     const val UNPAIR_PATH = "/unpair"
     const val DATA_PATH = "/data"
+    const val MIRROR_STREAM_PATH = "/mirrorstream"
     const val MESSAGES_PATH = "/messages"
     const val MESSAGES_ACK_PATH = "/messagesack"
     const val MIRROR_TRANSPORT_PATH = "/mirrortransport"
@@ -632,6 +633,31 @@ companion object {
         val res=sender.nameSendMessageResult(ident, DATA_PATH, data)
     if(doLog) {Log.i(LOG_ID,"end sendDatawithName $ident");}
     return res;
+    }
+
+    /** Native sockets choose one carrier for their entire lifetime. Never reroute
+     * an in-flight stream because Automatic changed its preferred transport. */
+    @Keep
+    @JvmStatic
+    fun sendMirrorStream(ident:String,data:ByteArray,ble:Boolean):Boolean {
+        if(ble)
+            return BleMirror.shouldUse(ident)&&BleMirror.send(ident,MIRROR_STREAM_PATH,data)
+        if(BleMirror.shouldUse(ident))return false
+        val sender=messagesender?:return false
+        val node=mirrorNodes[ident]?:if(isWearable) sender.nodes?.firstOrNull()?.id else ident
+        if(node==null)return false
+        val delivered=sender.nameSendMessageResultDirect(node,MIRROR_STREAM_PATH,data,WEAR_DATA_TASK_SECONDS)
+        if(BleMirror.isAutomaticWearPeer(ident)) {
+            if(delivered) {
+                wearMessageSelected.add(ident)
+                ensureAutomaticWearMessageLiveness(ident,node)
+            }
+            else {
+                wearMessageSelected.remove(ident)
+                requestDirectBleFallback(ident,"MessageClient mirror stream send failed")
+            }
+        }
+        return delivered
     }
 
     public fun watchBluetooth(act:MainActivity,sensor:Boolean,nums:Boolean) {
@@ -1340,7 +1366,11 @@ public fun sendDatawithInt(ident: Int, data: ByteArray) {
     @JvmStatic
     public fun initwearos(app: Context) {
         if(doLog) {Log.i(LOG_ID, "before new MessageSender");}
-        messagesender = MessageSender(app)
+        val sender=MessageSender(app)
+        messagesender = sender
+        // Discovery can complete immediately. Its callbacks must see the
+        // shared sender before they try to bootstrap the Wear mirror.
+        sender.finddevices()
         BleMirror.init(app)
         if(retryJob==null) {
             retryJob=scope.launch {

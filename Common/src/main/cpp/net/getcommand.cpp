@@ -24,6 +24,7 @@
 #include <string.h>
        #include <unistd.h>
 #include "comtypes.hpp"
+#include "mirrorvalidate.hpp"
 #include "receive.hpp"
 #include "passhost.hpp"
 #include "makerandom.hpp"
@@ -173,12 +174,15 @@ for(int it=0;it<len;) {
             };break;
         case sopen: 
             {
+            if(len-it<int(sizeof(fileopen)))return {it+int(sizeof(fileopen)),sizeof(fileopen)};
             struct fileopen *com=reinterpret_cast<fileopen *>(data);
-            comlen=sizeof(struct fileopen)+com->len+1;
+            if(com->len>4096)return {-1,0};
+            comlen=aligner<4>(sizeof(struct fileopen)+com->len+1);
             addlen(it,comlen);
             if(it>len) {
                 return {it,comlen};
                 }
+            if(!mirrorvalidate::filename(com->name,com->len+1))return {-1,0};
             ret=openfile(ctx,com->name);
             break;};
         case smklen: 
@@ -207,7 +211,10 @@ for(int it=0;it<len;) {
             ret=backupnuminit(reinterpret_cast<const numinit *>(data));
             };break;
         case snums: {
+            if(len-it<int(sizeof(numsend)))return {it+int(sizeof(numsend)),sizeof(numsend)};
             numsend *numgeg=reinterpret_cast<numsend *>(data);
+            if(!numgeg->nr||numgeg->dbase>1||
+               !mirrorvalidate::length(numgeg->totlen,sizeof(numsend)+8,it))return {-1,0};
             comlen=numgeg->totlen;
             addlen(it,comlen);
             if(it>len) {
@@ -217,8 +224,12 @@ for(int it=0;it<len;) {
             };break;
         case swrite: 
             {
+            if(len-it<int(sizeof(offwrite)))return {it+int(sizeof(offwrite)),sizeof(offwrite)};
             struct offwrite *wcom=reinterpret_cast<struct offwrite*>(data);
-            comlen=sizeof(struct offwrite)+wcom->len;
+            if(wcom->len>mirrorvalidate::maxCommand-sizeof(offwrite)||wcom->off>INT_MAX||
+               wcom->len>uint32_t(INT_MAX)-wcom->off)return {-1,0};
+            comlen=aligner<4>(sizeof(struct offwrite)+wcom->len);
+            if(!mirrorvalidate::length(comlen,sizeof(offwrite),it))return {-1,0};
             addlen(it,comlen);
             if(it>len) {
                 return {it,comlen};
@@ -332,10 +343,12 @@ extern                bool updateDevices() ;
             if(it>len)
                 return {it,minlen};
             struct askfile *ask=reinterpret_cast<struct askfile *>(data);
-            addlen(it,ask->namelen);
-            if(it>ask->len) {
-                return {it,aligner<4>(minlen+ask->namelen)};
-                }
+            if(ask->namelen>4096||ask->len>mirrorvalidate::maxCommand||
+               ask->off>INT_MAX||ask->len>uint32_t(INT_MAX)-ask->off)return {-1,0};
+            const int requestlen=aligner<4>(minlen+ask->namelen);
+            it+=requestlen-minlen;
+            if(it>len)return {it,requestlen};
+            if(!mirrorvalidate::filename(ask->name,ask->namelen))return {-1,0};
             ret=sendfile(ctx,ask->name,ask->off,ask->len);
             };
             break;
@@ -353,23 +366,33 @@ extern                bool updateDevices() ;
             ret=r_noacksendcommand(ctx, reinterpret_cast<uint8_t*>(&last),sizeof(last)) ;
             }; break;
 
+        case sactivitychunk: {
+            if(len-it<int(sizeof(activitychunk_t)))return {it+int(sizeof(activitychunk_t)),sizeof(activitychunk_t)};
+            const auto *chunk=reinterpret_cast<const activitychunk_t*>(data);
+            if(chunk->reserved||!mirrorvalidate::length(chunk->totlen,sizeof(activitychunk_t)+1,it)||
+               chunk->totlen>sizeof(activitychunk_t)+juggluco::activity::mirror::chunkBytes)return {-1,0};
+            comlen=aligner<4>(chunk->totlen);
+            addlen(it,comlen);
+            if(it>len)return {it,comlen};
+            extern bool receiveActivityMirror(const uint8_t*,size_t);
+            ret=activityChunks.append(chunk->size,chunk->offset,
+                {chunk->data,size_t(chunk->totlen)-sizeof(activitychunk_t)},receiveActivityMirror);
+            break;
+        }
         case sfileonce:
             {
             LOGARTAG("fileonce");
-            int tolen=offsetof(fileonce_t,nr);
+            if(len-it<int(sizeof(fileonce_t)))return {it+int(sizeof(fileonce_t)),sizeof(fileonce_t)};
             const fileonce_t *gegs=reinterpret_cast<const fileonce_t *>(data);
-            if(len>(it+tolen)) {
-                comlen=gegs->totlen;
-                }
-            else {
-                comlen=sizeof(fileonce_t);
-                }
+            if(!mirrorvalidate::length(gegs->totlen,sizeof(fileonce_t),it))return {-1,0};
+            comlen=aligner<4>(gegs->totlen);
             addlen(it,comlen);
             if(it>len) {
                 logprint("too small %d\n",len);
                 return {it,comlen};
                 }
 
+            if(!mirrorvalidate::file(*gegs,gegs->totlen))return {-1,0};
             ret=savefileonce(gegs);
             } break;
         default:;
@@ -393,6 +416,8 @@ struct senddata_deleter { // deleter
 };
  
 bool    Connect::getcommandsnopass(passhost_t *host) {
+    activityChunks.reset();
+    destruct chunksGuard([this]{activityChunks.reset();});
     int allindex=gethostindex(host);
     auto &status=mirrorstatus[allindex].receive;
     status.running(true);
@@ -482,6 +507,8 @@ bool    Connect::getcommandsnopass(passhost_t *host) {
 constexpr int MAXDATA=1024*1024*256;
 
  bool Connect::getcom( passhost_t *host,ascon_aead_ctx_t *ctx) {
+    activityChunks.reset();
+    destruct chunksGuard([this]{activityChunks.reset();});
     int allindex=gethostindex(host);
     auto &status=mirrorstatus[allindex].receive;
     status.running(true);
@@ -535,7 +562,7 @@ constexpr int MAXDATA=1024*1024*256;
         const int totlen=(intdatlen<16?16:intdatlen);
         if(totlen>maxcom) {
             senddata_t *newbuf= new (maxalign,std::nothrow) senddata_t [totlen];
-            if(!uit) {
+            if(!newbuf) {
             savemessage(host,"Out of Memory?");
                 sleep(1);
                 return false;

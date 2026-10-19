@@ -41,6 +41,9 @@
 #include "datbackup.hpp"
 #include "meal/Meal.hpp"
 #include "num.h"
+#include "mirrorrepair.hpp"
+#include "mirrordatabase.hpp"
+#include "net/mirrorvalidate.hpp"
 #include "activity/global.hpp"
 #include "activity/amount_binding.hpp"
 //extern void wakeaftermin(const int waitmin) ;
@@ -107,23 +110,46 @@ uint32_t changed(int pos) const {
 bool changedsince(uint32_t tim,int pos) const {
     return changed(pos)>=tim;
     }
-Numdata(int index,const std::string_view base,identtype id,size_t len=0):newnumsfile(numfilename(base,id==0LL?0LL:-1LL)), ident(renamefile(base,id)),nums(newnumsfile.get(),len),libreids(base,libreidsname,len),librechanged(base,librechangedname,len), changetimes(base,changetimesname,len),numdatasPos(index)
+Numdata(int index,const std::string_view base,identtype id,size_t len=0):newnumsfile(numfilename(base,id==0LL?0LL:-1LL)), ident(renamefile(base,id)),nums((numrepair::prepare(std::string(base),newnumsfile.get(),len?len:nummmaplen),newnumsfile.get()),len),libreids(base,libreidsname,len),librechanged(base,librechangedname,len), changetimes(base,changetimesname,len),numdatasPos(index)
 {
+    if(!mappingsAvailable())throw std::runtime_error("Numerical database mapping unavailable");
     auto lastpo=getlastpos();
+    if(lastpo<0||size_t(lastpo)>capacity()||getfirstpos()<0||getfirstpos()>lastpo)
+        throw std::runtime_error("Invalid numerical database positions");
     LOGGERTAG("Numdata ident=%lld lastpo=%d\n",ident,lastpo);
     if(ident!=-1LL)
         setnewident(ident);
-    if(lastpo*3/2> nums.size()) {
-        auto newsize=nums.size()*10;
-        nums.extend(newnumsfile.get(),newsize);
-        libreids.extend(base,libreidsname,newsize);
-        librechanged.extend(base,librechangedname,newsize);
-        changetimes.extend(base,changetimesname,newsize);
+    if(size_t(lastpo)+size_t(lastpo)/2+16>nums.size()) {
+        const auto newsize=nums.size()*10;
+        if(nums.extend(newnumsfile.get(),newsize)) {
+            libreids.extend(base,libreidsname,newsize);
+            librechanged.extend(base,librechangedname,newsize);
+            changetimes.extend(base,changetimesname,newsize);
+        }
+        else LOGGERTAG("numerical database growth failed; retaining existing mapping\n");
         }
     else {
         if(len)
             addmagic();
         }
+    if(mirrorRepairPending())LOGGERTAG("numerical mirror repair pending resynchronization file=%s\n",newnumsfile.get());
+    }
+
+bool mappingsAvailable() const {
+    return nums.data()&&nums.size()>=16&&libreids.data()&&librechanged.data()&&changetimes.data();
+    }
+size_t capacity() const {
+    return mappingsAvailable()?std::min({nums.size()-16,libreids.size(),librechanged.size(),changetimes.size()}):0;
+    }
+bool mirrorRepairPending() const {
+    uint32_t marker;memcpy(&marker,raw()+numrepair::markerOffset,sizeof(marker));
+    return marker==numrepair::pending;
+    }
+void finishMirrorRepair(uint32_t last) {
+    if(!mirrorRepairPending())return;
+    const uint32_t cleared=0;
+    memcpy(raw()+numrepair::markerOffset,&cleared,sizeof(cleared));
+    LOGGERTAG("numerical mirror repair resynchronized last=%u\n",last);
     }
 
 //Numdata(const std::string_view base):Numdata(base,readident(base)) { }
@@ -211,8 +237,10 @@ static bool mknumdata(const string_view base,identtype ident)   {
     return true;
     }
 static Numdata* getnumdata(int index,const string_view base,identtype ident,size_t len)   {
-    if(mknumdata(base,ident))
-        return new Numdata(index,base,ident,len);
+    if(mknumdata(base,ident)) {
+        try {return new Numdata(index,base,ident,len);}
+        catch(const std::exception &error) {LOGGERTAG("open numerical database: %s\n",error.what());}
+    }
     return nullptr;
     }
 Numdata* createnew(int index,const string_view base,identtype ident,size_t len)  const {
@@ -233,9 +261,11 @@ Numdata* createnew(int index,const string_view base,identtype ident,size_t len) 
     if(!writeident(base,ident)) {
         LOGARTAG("writeident failed");
         }
-    Numdata *numdata=new Numdata(index,base,ident,len);
-    numdata->addmagic();
-    return numdata;
+    try {
+        Numdata *numdata=new Numdata(index,base,ident,len);
+        numdata->addmagic();
+        return numdata;
+    } catch(const std::exception &error) {LOGGERTAG("create numerical database: %s\n",error.what());return nullptr;}
     }
 static std::unique_ptr<char[]> numfilename(const std::string_view path ,identtype ident) {
     return identfilename(path,"/nums%lld",ident);
@@ -561,15 +591,24 @@ struct Num {
 
 //Libreids libreids;
 
-void receivelastpos(int base,int lastpos)  {
+bool receivelastpos(int base,int lastpos)  {
+    std::lock_guard<std::mutex> lock(nummutex);
+    if(!mirrornums::source(base,getindex())||!mappingsAvailable())return false;
+    const bool repairing=mirrorRepairPending();
     const auto oldlastpos=getlastpos();
+    const auto first=getfirstpos();
+    if((repairing&&lastpos!=first)||lastpos<first||
+       lastpos>std::max(oldlastpos,first)||size_t(oldlastpos)>capacity())return false;
     setlastpos(lastpos);
+    if(repairing)setlastpolledpos(lastpos);
     if(lastpos<oldlastpos) {
         setchangetimes(lastpos,oldlastpos);
 #if defined(JUGGLUCO_APP)&& !defined(WEAROS)
         Garmindeletelast(base,lastpos,oldlastpos);
 #endif
         }
+    finishMirrorRepair(lastpos);
+    return true;
     }
 
 void setonlychangetimes(int ind,int nr,const Num*data) { 
@@ -1243,6 +1282,9 @@ static bool    sendlastpos(crypt_t*pass,Connect *connect,uint16_t dbase,uint32_t
 //static void renamefromident(std::string_view base,identtype ident) 
 bool numbackupinit(const numinit *nums) {
     LOGARTAG("numbackupinit");
+    std::lock_guard<std::mutex> lock(nummutex);
+    if(!mirrornums::source(bool(nums->ident),getindex())||
+       !mappingsAvailable()||nums->first>capacity())return false;
     const identtype  newident=nums->ident;
     if(ident!=newident) {
         extern pathconcat numbasedir;
@@ -1252,6 +1294,11 @@ bool numbackupinit(const numinit *nums) {
         }
     const uint32_t sendfirst=nums->first;
     setfirstpos(sendfirst);
+    // An interrupted initialization must still leave an empty, valid range.
+    if(sendfirst>getlastpos()) {
+        setlastpos(sendfirst);
+        setlastpolledpos(sendfirst);
+    }
     /*(
     int endpos=getlastpos();
     int begpos=getfirstpos();    
@@ -1356,6 +1403,17 @@ uint32_t findEarlymeal(int pos) const {
 public:
 static inline constexpr const int intinnum=(sizeof(Num)/sizeof(uint32_t));
 int update(crypt_t*pass,Connect *connect,struct changednums *nuall,int ind) {
+// A receiver may have repaired/reinstalled its mirror while our persisted
+// outgoing cursor still points past its data. Reconcile before every update;
+// this also recovers from interrupted transfers without manual Reinit.
+    if(mirrorRepairPending())return 2; // Never echo an incomplete repair to its source.
+    asklastnum query{.dbase=static_cast<uint16_t>(bool(ident))};
+    if(!connect->s_noacksendcommand(pass,reinterpret_cast<const uint8_t*>(&query),sizeof(query)))return 0;
+    auto reply=connect->receivedata_s(pass,sizeof(int));
+    if(!reply)return 0;
+    int remote;memcpy(&remote,reply.get(),sizeof(remote));
+    if(remote<0)return 0;
+    if(remote<=getfirstpos()&&!sendbackupinit(pass,connect,nuall))return 0;
 //     NUMLOCKGUARD
     nummutexupdate.lock();
     updatebusy[ind]=false; //Otherwise it has lock in network operation and which can lead to an ANR kill off app.
@@ -1363,6 +1421,10 @@ int update(crypt_t*pass,Connect *connect,struct changednums *nuall,int ind) {
     struct changednums *nu=nuall+dbindex;    
     LOGGER("numdata: update ind=%d dbindex=%d nu->len=%d\n",ind,dbindex,nu->len);
     struct numspan *ch=nu->changed;
+    if(remote<nu->lastlastpos) {
+        nu->len=1;ch[0].start=getfirstpos();ch[0].end=0;
+        nu->lastlastpos=getfirstpos();
+    }
     int endpos=getlastpos();
 
     uint16_t dbase=(bool)ident;
@@ -1384,6 +1446,10 @@ int update(crypt_t*pass,Connect *connect,struct changednums *nuall,int ind) {
         if(nu->lastlastpos==endpos) {
             LOGGERTAG("ind=%d dbase=%d lastlastpos==endpos %d\n",ind,dbase,endpos);
             ret=2;
+            if(remote<=getfirstpos()&&endpos==getfirstpos()) {
+                if(!sendlastpos(pass,connect,dbase,endpos))return 0;
+                ret=1;
+            }
             }
         else {
             LOGGERTAG("ind=%d dbase=%d lastlastpos (%d) !=endpos (%d)\n",ind,dbase,nu->lastlastpos,endpos);
@@ -1450,7 +1516,16 @@ void resendtowatch() {
     setlastpolledpos(getlastpos());
     getchangedpos()=0;
     }
-bool backupnums(const struct numsend* innums) { 
+bool backupnums(const struct numsend* innums) {
+    std::lock_guard<std::mutex> lock(nummutex);
+    if(!mirrornums::source(innums->dbase,getindex())||
+       !mappingsAvailable()||getlastpos()<0||size_t(getlastpos())>capacity()||
+       getfirstpos()<0||size_t(getfirstpos())>capacity()||
+       !mirrorvalidate::numbers(*innums,innums->totlen,capacity(),getfirstpos(),
+           mirrorRepairPending()?uint32_t(getfirstpos()):uint32_t(getlastpos()))) {
+        LOGGERTAG("backupnums rejected invalid positions or spans\n");
+        return false;
+    }
     const int nr=innums->nr;
     const uint32_t *numsar=innums->nums;
     Num *start=startdata();
@@ -1484,7 +1559,8 @@ bool backupnums(const struct numsend* innums) {
         }
     librechangelastpos(newlastpos);
     setlastpos(newlastpos);
-    setlastpolledpos(newlastpos); 
+    setlastpolledpos(newlastpos);
+    finishMirrorRepair(newlastpos);
     
     if(backup)
         backup->wakebackup(wakenums);

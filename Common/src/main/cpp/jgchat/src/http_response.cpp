@@ -30,8 +30,7 @@
 
 namespace jgchat {
 namespace {
-constexpr std::size_t max_headers = 32768, max_request = 2 * 1024 * 1024;
-constexpr std::size_t max_configured_response = 64 * 1024 * 1024;
+constexpr std::size_t max_headers = 32768;
 bool token(std::string_view value) {
     if (value.empty()) return false;
     return std::all_of(value.begin(), value.end(), [](unsigned char c) {
@@ -71,8 +70,7 @@ void validate_http_request(const HttpRequest& r) {
     if (r.host.empty() || r.host.size() > 253 || !std::all_of(r.host.begin(), r.host.end(), [](unsigned char c) {
         return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
                (c >= '0' && c <= '9') || c == '.' || c == '-';
-    }) || !r.port || r.timeout.count() <= 0 || r.timeout > std::chrono::hours(1) ||
-        !r.max_response_bytes || r.max_response_bytes > max_configured_response || r.body.size() > max_request)
+    }) || !r.port || r.timeout.count() < 0 || !r.max_response_bytes)
         throw jgchat::UiError(jgchat::UiCode::invalid_https_request_configuration);
     if (r.path.empty() || r.path.front() != '/' || r.path.size() > 8192 ||
         r.path.find('#') != std::string::npos || !std::all_of(r.path.begin(), r.path.end(), [](unsigned char c) {
@@ -113,7 +111,7 @@ std::string serialize_http_request(const HttpRequest& r) {
 }
 HttpResponseParser::HttpResponseParser(std::size_t maximum_body, HttpBodySink on_body)
     : maximum_(maximum_body), on_body_(std::move(on_body)) {
-    if (!maximum_ || maximum_ > max_configured_response) throw jgchat::UiError(jgchat::UiCode::invalid_https_response_limit);
+    if (!maximum_) throw jgchat::UiError(jgchat::UiCode::invalid_https_response_limit);
 }
 void HttpResponseParser::body(std::string_view bytes) {
     response_.body.append(bytes);
@@ -126,8 +124,6 @@ bool HttpResponseParser::complete() const { return state_ == State::done; }
 void HttpResponseParser::append(std::string_view bytes) {
     if (bytes.empty()) return;
     if (complete()) throw jgchat::UiError(jgchat::UiCode::unexpected_data_after_https_response);
-    if (bytes.size() > maximum_ * 2 + 65536 - wire_bytes_) throw jgchat::UiError(jgchat::UiCode::https_wire_response_too_large);
-    wire_bytes_ += bytes.size();
     pending_.append(bytes);
     process();
 }
