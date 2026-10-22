@@ -118,6 +118,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 
@@ -167,7 +168,6 @@ private void startall() {
        }
    }
 
-static private  int askedNotify=5;
 
  void               onceshowintro() {
                  if(getlibrary.showintro) {
@@ -184,27 +184,67 @@ static private  int askedNotify=5;
                           }); 
                    }
                 }
+private final Deque<Runnable> permissionQueue=new ArrayDeque<>();
+private final Set<Integer> pendingPermissionCodes=new HashSet<>();
+private int activePermissionCode=-1;
+
+void queuePermissionRequest(int requestCode,Runnable request) {
+    RunOnUiThread(() -> {
+        if(pendingPermissionCodes.add(requestCode)) {
+            permissionQueue.addLast(() -> {
+                activePermissionCode=requestCode;
+                request.run();
+                });
+            nextPermissionRequest();
+            }
+        });
+    }
+
+private void nextPermissionRequest() {
+    if(activePermissionCode==-1 && !permissionQueue.isEmpty())
+        permissionQueue.removeFirst().run();
+    }
+
+private void permissionFinished(int requestCode) {
+    if(activePermissionCode==requestCode) {
+        activePermissionCode=-1;
+        pendingPermissionCodes.remove(requestCode);
+        nextPermissionRequest();
+        }
+    }
+
+static private  int askedNotify=5;
 boolean askNotify() {
-      askedNotify=-1;
-      if(Build.VERSION.SDK_INT >=33)  {
+     if(Build.VERSION.SDK_INT >=33)  {
         var perm= Manifest.permission.POST_NOTIFICATIONS;
         if(ContextCompat.checkSelfPermission(this, perm)!= PackageManager.PERMISSION_GRANTED)  {
-            {if(doLog) {Log.i(LOG_ID,"askNotify");};};
-            var permar=new String[]{perm};
-            if(shouldShowRequestPermissionRationale(perm) ) {
-                 help.help(R.string.notificationpermission,this,l-> {
+            queuePermissionRequest(NOTIFICATION_PERMISSION_REQUEST_CODE, () -> {
+                if(ContextCompat.checkSelfPermission(this, perm)==PackageManager.PERMISSION_GRANTED) {
+                    askedNotify=-1;
+                    Log.i(LOG_ID,"askNotify explicit");
+                    explicit(this);
+                    permissionFinished(NOTIFICATION_PERMISSION_REQUEST_CODE);
+                    return;
+                    }
+                askedNotify=-1;
+                {if(doLog) {Log.i(LOG_ID,"askNotify");};};
+                var permar=new String[]{perm};
+                if(shouldShowRequestPermissionRationale(perm) ) {
+                     help.help(R.string.notificationpermission,this,l-> {
+                        requestPermissions(permar, NOTIFICATION_PERMISSION_REQUEST_CODE);
+                        });
+                    }
+                else   {
                     requestPermissions(permar, NOTIFICATION_PERMISSION_REQUEST_CODE);
-                    });
-                }
-            else   {
-                requestPermissions(permar, NOTIFICATION_PERMISSION_REQUEST_CODE);
-                }
+                    }
+                });
             return false;
             }
         }
-   Log.i(LOG_ID,"askNotify explicit");
+    askedNotify=-1;
+    Log.i(LOG_ID,"askNotify explicit");
     explicit(this);
-   return true;
+    return true;
     }
 public static int systembarTop=0;
 public static int systembarBottom=0;
@@ -972,7 +1012,7 @@ if(!isWearable) {
      
      if(!showsdialog) {
          if(askedNotify>=0) {
-            if(askedNotify==0)
+             if(askedNotify==0)
                 askNotify();
             else
                 --askedNotify;
@@ -1378,27 +1418,27 @@ boolean finepermission() {
         if(noperm.length==0) {
            return systemlocation() ;
            }
-RunOnUiThread(() -> {
-        for(var scanpermission:noperm) {
-            if(shouldShowRequestPermissionRationale(scanpermission)) {
-                gaverational=true;
-                help.help(Build.VERSION.SDK_INT>30?R.string.nearbypermission:R.string.locationpermission,act,l-> {
-                if(help.whelplayout!=null&&help.whelplayout.get()!=null) {
-                    removeContentView(help.whelplayout.get()); //setContentView makes view inaccessable
-                    help.whelplayout=null;
+        queuePermissionRequest(BLUETOOTH_PERMISSION_REQUEST_CODE, () -> {
+                for(var scanpermission:noperm) {
+                    if(shouldShowRequestPermissionRationale(scanpermission)) {
+                        gaverational=true;
+                        help.help(Build.VERSION.SDK_INT>30?R.string.nearbypermission:R.string.locationpermission,act,l-> {
+                        if(help.whelplayout!=null&&help.whelplayout.get()!=null) {
+                            removeContentView(help.whelplayout.get()); //setContentView makes view inaccessable
+                            help.whelplayout=null;
+                            }
+                        requestPermissions(noperm, BLUETOOTH_PERMISSION_REQUEST_CODE);
+                        });
+                        break;
+                        }
+                    else   {
+                        requestPermissions( noperm, BLUETOOTH_PERMISSION_REQUEST_CODE);
+                        break;
+                        }
                     }
-                requestPermissions(noperm, BLUETOOTH_PERMISSION_REQUEST_CODE);
-                });
-                break;
-                }
-            else   {
-                requestPermissions( noperm, BLUETOOTH_PERMISSION_REQUEST_CODE);
-                break;
-                }
-            }
-            });
+                    });
 
-        return false;
+            return false;
         }
     else
         return true;
@@ -1460,6 +1500,7 @@ public void onRequestPermissionsResult(int requestCode, String[] permissions, in
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     var granted=grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED;
     Log.i(LOG_ID,"onRequestPermissionsResult("+requestCode+",["+String.join(",",permissions)+"],"+Arrays.toString(grantResults)+") "+(granted?"":"not ")+"granted");
+    try {
     switch (requestCode) {
          case REQ_SET_PUSHED_WATCH_FACE_ACTIVE:
                 if(permissions.length==0&&grantResults.length==0) {
@@ -1472,6 +1513,10 @@ public void onRequestPermissionsResult(int requestCode, String[] permissions, in
                         };
                 break;
          case NOTIFICATION_PERMISSION_REQUEST_CODE: {
+             if(grantResults.length==0) {
+                askedNotify=1;
+                break;
+                }
             if(granted) {
                 if(doLog) {Log.i(LOG_ID,"Notification permission granted");};
                 keeprunning.start(this);
@@ -1533,6 +1578,10 @@ public void onRequestPermissionsResult(int requestCode, String[] permissions, in
                 }
             return;
     }
+    }
+    finally {
+        permissionFinished(requestCode);
+        }
 }
 
 

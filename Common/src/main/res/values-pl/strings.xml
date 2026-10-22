@@ -225,7 +225,6 @@
  <string name="touchable">Dotykowa</string>
 
  <string name="overlaypermission">Wymaga uprawnienia</string>
- <string name="overlaypermissionmessage">adb shell pm grant tk.glucodata android.permission.SYSTEM_ALERT_WINDOW</string>
  <string name="deletereminder">Usunąć przypomnienie?</string>
  <string name="deletelabel">Usunąć etykietę?</string>
 

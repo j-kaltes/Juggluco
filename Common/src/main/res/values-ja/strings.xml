@@ -226,8 +226,6 @@
  <string name="touchable">タッチ可能</string>
 
  <string name="overlaypermission">権限が必要です</string>
- <string name="overlaypermissionmessage">adb shell pm grant tk.glucodata android.permission.SYSTEM_ALERT_WINDOW</string>
- https://www.juggluco.nl/Jugglucohelp/floatingconfig.html
  <string name="deletereminder">リマインダーを削除しますか?</string>
  <string name="deletelabel">ラベルを削除しますか?</string>
 

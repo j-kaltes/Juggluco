@@ -216,7 +216,6 @@
     <string name="transparent">Прозорий</string>
     <string name="touchable">Доторкається</string>
     <string name="overlaypermission">Щоб надати дозвіл:</string>
-    <string name="overlaypermissionmessage">adb shell pm grant tk.glucodata android.permission.SYSTEM_ALERT_WINDOW</string>
     <string name="deletereminder">Видалити нагадування?</string>
     <string name="deletelabel">Видалити мітку?</string>
     <string name="finish">Припинити</string>

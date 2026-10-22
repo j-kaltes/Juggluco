@@ -337,7 +337,6 @@
     <string name="play">Пуск</string>
     <string name="xdripbroadcast">Передача в xDrip</string>
     <string name="fontsizeshort">@string/fontsize</string>
-    <string name="overlaypermissionmessage">adb shell pm grant tk.glucodata android.permission.SYSTEM_ALERT_WINDOW</string>
     <string name="clampnow">Закрепить сейчас</string>
     <string name="upload">Загрузить</string>
     <string name="sibionics">Sibionics</string>

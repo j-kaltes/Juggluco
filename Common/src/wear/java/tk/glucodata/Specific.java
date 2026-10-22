@@ -164,13 +164,24 @@ static void installwatchface(Context context) {
                             if (ContextCompat.checkSelfPermission( activity, WatchFacePushHelper.PERMISSION_SET_ACTIVE) == PackageManager.PERMISSION_GRANTED) {
                                         activatePending(activity);
                             } else {
-                                Log.i(LOG_ID,"requestPermissions "+ WatchFacePushHelper.PERMISSION_SET_ACTIVE);
-
-                                ActivityCompat.requestPermissions(
-                                        activity,
-                                        new String[]{WatchFacePushHelper.PERMISSION_SET_ACTIVE},
-                                        REQ_SET_PUSHED_WATCH_FACE_ACTIVE
-                                );
+                                if(activity instanceof MainActivity) {
+                                    ((MainActivity)activity).queuePermissionRequest(REQ_SET_PUSHED_WATCH_FACE_ACTIVE, () -> {
+                                        Log.i(LOG_ID,"requestPermissions "+ WatchFacePushHelper.PERMISSION_SET_ACTIVE);
+                                        ActivityCompat.requestPermissions(
+                                                activity,
+                                                new String[]{WatchFacePushHelper.PERMISSION_SET_ACTIVE},
+                                                REQ_SET_PUSHED_WATCH_FACE_ACTIVE
+                                        );
+                                        });
+                                    }
+                                else {
+                                    Log.i(LOG_ID,"requestPermissions "+ WatchFacePushHelper.PERMISSION_SET_ACTIVE);
+                                    ActivityCompat.requestPermissions(
+                                            activity,
+                                            new String[]{WatchFacePushHelper.PERMISSION_SET_ACTIVE},
+                                            REQ_SET_PUSHED_WATCH_FACE_ACTIVE
+                                    );
+                                    }
                             }
                         }
 

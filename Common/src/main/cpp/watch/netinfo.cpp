@@ -702,7 +702,12 @@ extern "C" JNIEXPORT jstring JNICALL fromjava(setmynetinfo)(JNIEnv *env,jclass c
    connectionbusy[index]=true;
    destruct _{[index]{ connectionbusy[index]=false;}};
 //   std::jthread th{Backup::closesocksone,backup,index};
-   backup->closesocksone(index);
+    // Endpoint metadata does not change the selected MessageClient/BLE stream.
+    // Closing it here leaves the peer waiting for a replacement OPEN timeout.
+#ifdef WEAROS_MESSAGES
+    if(!usemessagecarrier(index,*host))
+#endif
+        backup->closesocksone(index);
     const char *infolabel=id;
    LOGGERTAG("setmynetinfo %s usedversion=%d infolabel=%s galaxy=%d watchsensor=%d\n",id,usedversion,infolabel,galaxy,info->watchsensor);
     host->setname(infolabel);
@@ -736,10 +741,12 @@ extern "C" JNIEXPORT jstring JNICALL fromjava(setmynetinfo)(JNIEnv *env,jclass c
                        }
                     if(acceptpass) {
                         //remakewearhost=true;
+                        const bool passwordchanged=memcmp(host->pass.data(),info->pass.data(),info->pass.size())!=0;
                         memcpy(host->pass.data(),info->pass.data(),info->pass.size());
                         LOGARTAG("setpass");
                         backup->setcrypt(host);
-                        backup->closesocksone(index);
+                        if(passwordchanged)
+                            backup->closesocksone(index);
                         }
                     }
                 }

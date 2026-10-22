@@ -225,8 +225,6 @@
  <string name="touchable">Toccabile</string>
 
  <string name="overlaypermission">Servono permessi</string>
- <string name="overlaypermissionmessage">adb shell pm grant tk.glucodata android.permission.SYSTEM_ALERT_WINDOW</string>
- https://www.juggluco.nl/Jugglucohelp/floatingconfig.html
  <string name="deletereminder">Cancellare il promemoria?</string>
  <string name="deletelabel">Cancellare l\'etichetta?</string>
 

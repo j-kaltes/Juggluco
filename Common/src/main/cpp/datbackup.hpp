@@ -1270,8 +1270,16 @@ void closesocksone(int allindex) {
 bool sendwakesender(int h) {
     LOGGER("sendwakesender(%d)\n",h);
     updateone &shost=getupdatedata()->tosend[h];
-    shost.close();
-    shost.open();
+#ifdef WEAROS_MESSAGES
+    // A wake command can use the established message stream.
+    if(auto con=shost.getConnect();!usemessagecarrier(shost.allindex,getupdatedata()->allhosts[shost.allindex])||
+            !con||!con->isConnectedSender()) {
+#endif
+        shost.close();
+        shost.open();
+#ifdef WEAROS_MESSAGES
+        }
+#endif
     if(auto con=shost.getConnect()) {
         if(con->finish) {
             LOGGER("sendwakesenser: %d finish\n",h);
@@ -1290,8 +1298,16 @@ bool sendwakesender(int h) {
 bool sendwakestreamsender(int h) {
     LOGGER("sendwakestreamsender(%d)\n",h);
     updateone &shost=getupdatedata()->tosend[h];
-    shost.close();
-    shost.open();
+#ifdef WEAROS_MESSAGES
+    // A wake command can use the established message stream.
+    if(auto con=shost.getConnect();!usemessagecarrier(shost.allindex,getupdatedata()->allhosts[shost.allindex])||
+            !con||!con->isConnectedSender()) {
+#endif
+        shost.close();
+        shost.open();
+#ifdef WEAROS_MESSAGES
+        }
+#endif
     if(auto con=shost.getConnect()) {
         if(con->finish) {
             LOGGER("sendwakestreamsender: %d finish\n",h);

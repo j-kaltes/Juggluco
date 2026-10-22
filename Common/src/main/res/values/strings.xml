@@ -226,7 +226,6 @@
 
  <string name="overlaypermission">Needs permission</string>
  <string name="overlaypermissionmessage">adb shell pm grant tk.glucodata android.permission.SYSTEM_ALERT_WINDOW</string>
- https://www.juggluco.nl/Jugglucohelp/floatingconfig.html
  <string name="deletereminder">Delete reminder?</string>
  <string name="deletelabel">Delete label?</string>
 

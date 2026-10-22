@@ -7,6 +7,17 @@ plugins {
 def requestedTasks = gradle.startParameter.taskNames
 def requestedTask = requestedTasks ? requestedTasks[0] : ""
 
+// -Pabi=armeabi-v7a or -Pabi=arm64-v8a selects one ABI; the default builds both.
+def selectedAbi = providers.gradleProperty('abi').getOrElse('all')
+def selectedAbis = [
+        'all': ['armeabi-v7a', 'arm64-v8a'],
+        'armeabi-v7a': ['armeabi-v7a'],
+        'arm64-v8a': ['arm64-v8a']
+][selectedAbi]
+if (selectedAbis == null) {
+    throw new GradleException("Unknown ABI '${selectedAbi}'. Use -Pabi=all, -Pabi=armeabi-v7a or -Pabi=arm64-v8a.")
+}
+
 //def MINSDK = 19
 int MINSDK = 19
 def ndkver
@@ -127,7 +138,7 @@ android {
         //compileSdk 36
         applicationId "tk.glucodata"
 
-         versionName '11.5.3'
+         versionName '11.5.4'
 //    multiDexEnabled true
 
         buildConfigField 'int', 'isRelease', '0'
@@ -143,9 +154,7 @@ android {
             }
         }
 //    resourceConfigurations += ["en", "nl", "fr","it", "de", "pl", "pt","be","uk"]
-    //ndk { abiFilters  'armeabi-v7a' }
-      // ndk { abiFilters  'arm64-v8a' }
-      ndk { abiFilters  'armeabi-v7a',   'arm64-v8a' }
+    ndk { abiFilters.addAll(selectedAbis) }
         signingConfig signingConfigs.alg
     //buildToolsVersion '33.0.0'
     }
@@ -201,8 +210,8 @@ flavorDimensions = ['wearos','libreVersion','SiBionics', 'DexCom','Google']
         libreOld {
     //******  Zet op rollout op 100% ******
             dimension 'libreVersion'
-            versionCode 927 //LIBRE2ONLY
-         //    versionName '11.5.3-no3'
+            versionCode 931 //LIBRE2ONLY
+         //    versionName '11.5.4-no3'
             versionNameSuffix '-no3'
             buildConfigField 'int', 'libreVersion', '2'
             externalNativeBuild.cmake {
@@ -215,7 +224,7 @@ flavorDimensions = ['wearos','libreVersion','SiBionics', 'DexCom','Google']
 //       minSdk 23
             dimension 'libreVersion'
         versionNameSuffix '-li3'
-        versionCode 927 //LIBRE3
+        versionCode 931 //LIBRE3
     //******  Zet op rollout op 100% ******
 
                buildConfigField 'int', 'libreVersion', '3'
@@ -230,7 +239,7 @@ flavorDimensions = ['wearos','libreVersion','SiBionics', 'DexCom','Google']
         si {
       dimension 'SiBionics'
         versionNameSuffix '-si'
-        versionCode 927 
+        versionCode 931 
        buildConfigField 'int', 'SiBionics', '1'
        externalNativeBuild.cmake {
          cppFlags "   -DSIBIONICS=1 "
@@ -239,7 +248,7 @@ flavorDimensions = ['wearos','libreVersion','SiBionics', 'DexCom','Google']
         }
         nosi {
             dimension 'SiBionics'
-         versionCode 927 
+         versionCode 931 
          versionNameSuffix '-nosi'
           buildConfigField 'int', 'SiBionics', '0'
           externalNativeBuild.cmake {
@@ -257,9 +266,9 @@ flavorDimensions = ['wearos','libreVersion','SiBionics', 'DexCom','Google']
         minSdk = 26
         buildConfigField 'int', 'minSDK', '26'
         manifestPlaceholders["minSDK"] = '26'
-        versionCode 928 //WATCH
+        versionCode 932 //WATCH
     //******  Zet op rollout op 100% ******
-        //versionName '11.5.3-wear'
+        //versionName '11.5.4-wear'
         versionNameSuffix '-wear'
         signingConfig signingConfigs.alg
 
@@ -278,8 +287,8 @@ flavorDimensions = ['wearos','libreVersion','SiBionics', 'DexCom','Google']
 
 //        minSdk 19
             dimension 'wearos'
-        versionCode 928 //WATCH
-        //versionName '11.5.3-small'
+        versionCode 932 //WATCH
+        //versionName '11.5.4-small'
         versionNameSuffix '-small'
         signingConfig signingConfigs.alg
 
@@ -571,6 +580,7 @@ buildTypes {
            }
 
            wearLibre3SiDexNogoogle{
+               manifest.srcFile 'src/wearNogoogle/AndroidManifest.xml'
                java.srcDirs = ['src/wearSi/java']
                jniLibs.srcDirs = [ 'src/wearSi/jniLibs']
            }

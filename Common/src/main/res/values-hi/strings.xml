@@ -225,8 +225,6 @@
  <string name="touchable">स्पर्शनीय</string>
 
  <string name="overlaypermission">अनुमति आवश्यक</string>
- <string name="overlaypermissionmessage">adb shell pm grant tk.glucodata android.permission.SYSTEM_ALERT_WINDOW</string>
- https://www.juggluco.nl/Jugglucohelp/floatingconfig.html
  <string name="deletereminder">अनुस्मारक हटाएं?</string>
  <string name="deletelabel">लेबल हटाएं?</string>
 

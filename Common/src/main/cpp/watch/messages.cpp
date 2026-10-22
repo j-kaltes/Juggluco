@@ -845,9 +845,11 @@ void applyConfiguredMirrorTransports() {
             setBlueMessage(index,true);
             }
         if(wearmessages[index]&&transport!=passhost_t::transport_bluetooth) {
-            if(!messagereceiverrunning[index])
+            // Re-reading unchanged configuration must not reconnect a live stream.
+            if(!messagereceiverrunning[index]) {
                 startmessagereceiver(host);
-            wakemessagehost(host);
+                wakemessagehost(host);
+                }
             }
         }
     for(int index=static_cast<int>(hosts.size());index<maxallhosts;++index) {
@@ -855,11 +857,17 @@ void applyConfiguredMirrorTransports() {
         mirrordirectbluetoothactive[index]=false;
         wearmessages[index]=false;
         mirrorfallbackrequested[index]=false;
-        peers2us[index]=-1;
         us2peers[index]=-1;
         messagephonepeer[index]=false;
         stopmessagesocket(messagesendersockets,messagesendergenerations,index);
         stopmessagesocket(messagereceiversockets,messagereceivergenerations,index);
+        }
+    // peers2us is indexed by the remote row, not our local host index.
+    // Keep mappings to existing local hosts even when the remote row is larger.
+    for(auto &mapped:peers2us) {
+        int localIndex=mapped.load();
+        if(localIndex>=static_cast<int>(hosts.size()))
+            mapped.compare_exchange_strong(localIndex,-1);
         }
     if(needtcpreceiver)
         backup->startreceiver(false);

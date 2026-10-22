@@ -1167,6 +1167,12 @@ companion object {
         scope.launch {
             if(!BleMirror.isAutomaticCarrierActive(label))
                 return@launch
+            // A peer's Wi-Fi address is not usable while this device has no
+            // local TCP/IP endpoint. Keep the working Bluetooth carrier then.
+            val localAddresses=Natives.getMirrorAddresses(hostIndex)
+            if(localAddresses==null||localAddresses.size<2||
+                localAddresses[0].toInt()!=1||(localAddresses[1].toInt() and 0xff)==0)
+                return@launch
             Log.i(LOG_ID,"BLE supplied authenticated current IPs for $label; releasing Bluetooth for preferred TCP/IP retry")
             val switched=sendBleControl(label,false)
             Log.i(LOG_ID,"TCP/IP handoff after authenticated BLE endpoint update for $label: $switched")

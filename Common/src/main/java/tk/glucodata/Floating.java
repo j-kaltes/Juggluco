@@ -38,6 +38,7 @@ import static tk.glucodata.MainActivity.setonback;
 import static tk.glucodata.Notify.glucosetimeoutSEC;
 import static tk.glucodata.Notify.timef;
 import static tk.glucodata.NumberView.minhourstr;
+import static tk.glucodata.settings.Settings.removeContentView;
 import static tk.glucodata.util.getbutton;
 import static tk.glucodata.util.getlabel;
 
@@ -61,6 +62,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -136,13 +138,13 @@ public static void invalidatefloat() {
         view.postInvalidate();
     }
 
-public static void rewritefloating(Activity context) {
-    setfloatglucose(context,true);
+public static void rewritefloating(MainActivity context) {
+    setfloatglucose( context,true);
     }
     public static void rewritefloating() {
         makefloat();
         }
-
+/*
  static void shoulduseadb(Context context) {
         final var builder = new AlertDialog.Builder(context);
         String title=context.getString(R.string.overlaypermission);
@@ -159,26 +161,6 @@ public static void rewritefloating(Activity context) {
         }).create();
         dialog.setCanceledOnTouchOutside(false);
         final var metrics = Applic.app.getResources().getDisplayMetrics();
-        /*
-        dialog.setOnShowListener(a ->  {
-            final var colres= android.R.color.holo_orange_light;
-            final var col=
-           (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)?context.getResources().getColor(colres, context.getTheme()):
-                context.getResources().getColor(colres);
-         var posbut=dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-         posbut.setTextColor(col);
-        posbut.setPadding(0,0,0,0);
-         ViewGroup parent=(ViewGroup)posbut.getParent();
-         if(parent!=null)  {
-            parent.setPadding(0,0,0,0);
-            parent.setMinimumHeight(0);
-            parent.set
-            {if(doLog) {Log.i(LOG_ID,"dialog.setOnShowListener");};};
-//        var dens=GlucoseCurve.getDensity();
-//        negbut.setPadding((int)(dens*10),0,0,0);
-            }    
-            }
-            );  */
         dialog.show();
         TextView messageText = (TextView)dialog.findViewById(android.R.id.message);
         var screenwidth = metrics.widthPixels;
@@ -188,8 +170,40 @@ public static void rewritefloating(Activity context) {
         messageText.setPadding(pad,0,pad,0);  
 
     }
+*/
+ static void shoulduseadb(MainActivity context) {
+       var ok=getbutton(context,R.string.ok);
+        String titlestr=context.getString(R.string.overlaypermission);
+        var    title=getlabel(context,titlestr);
+        var  message=getlabel(context,R.string.overlaypermissionmessage);
+        var layout=new Layout(context,new View[]{title},new View[]{message},new View[]{ok});
 
-    public static void setfloatglucose(Activity context, boolean val) {
+
+    var par=isWearable? ViewGroup.LayoutParams.MATCH_PARENT: ViewGroup.LayoutParams.WRAP_CONTENT;
+    var  params =    new FrameLayout.LayoutParams( par,par,isWearable?0:(Gravity.CENTER_HORIZONTAL|Gravity.CENTER));
+    if(isWearable) {
+         var geo= context.getWindowSize();
+         var height=geo.y;
+         var widthpad=(int)(geo.x*.05f);
+        var toppad=(int)(height*.16f);
+        layout.setPadding(widthpad,toppad,widthpad,(int)(height*.01f));
+        }
+   else {
+       var density= tk.glucodata.GlucoseCurve.metrics.density;
+       int pad=(int)(25.0*density);
+       var marg=Layout.getMargins(message);
+        marg.topMargin=marg.bottomMargin=pad;
+       layout.setPadding(pad,pad,pad,pad);
+       }
+    context.addMyContentView(layout, params);
+
+   layout.setBackgroundColor(Applic.backgroundcolor);
+   ok.setOnClickListener(v-> {
+        MainActivity.doonback();
+        });
+    MainActivity.setonback(()-> removeContentView(layout));
+    }
+    public static void setfloatglucose(MainActivity context, boolean val) {
     {
         if(val) {
             if(!makefloat()) {

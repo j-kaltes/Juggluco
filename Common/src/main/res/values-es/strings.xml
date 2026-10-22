@@ -216,8 +216,6 @@
     <string name="transparent">Transparente</string>
     <string name="touchable">Tocable</string>
     <string name="overlaypermission">Necesita permiso</string>
-    <string name="overlaypermissionmessage">adb shell pm grant tk.glucodata android.permission.SYSTEM_ALERT_WINDOW</string>
- https://www.juggluco.nl/Jugglucohelp/floatingconfig.html
  <string name="deletereminder">¿Eliminar recordatorio?</string>
     <string name="deletelabel">¿Eliminar etiqueta?</string>
     <string name="finish">Finalizar</string>

@@ -154,6 +154,8 @@ class MessageReceiver: WearableListenerService() {
                                 sendnetinfo(sourceId)
                             }
                             MessageSender.peerNetworkInfoChanged()
+                            BleMirror.configurationChanged()
+
                         }
                     }
                     else

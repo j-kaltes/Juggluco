@@ -216,8 +216,6 @@
     <string name="transparent">Shaffof</string>
     <string name="touchable">Tegiladigan</string>
     <string name="overlaypermission">Ruxsat kerak</string>
-    <string name="overlaypermissionmessage">adb shell pm grant tk.glucodata android.permission.SYSTEM_ALERT_WINDOW</string>
- https://www.juggluco.nl/Jugglucohelp/floatingconfig.html
  <string name="deletereminder">Eslatma o\'chirilsinmi?</string>
     <string name="deletelabel">Yorliq o\'chirilsinmi?</string>
     <string name="finish">Tugatish</string>
