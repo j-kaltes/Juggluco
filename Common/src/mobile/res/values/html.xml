@@ -343,11 +343,29 @@ over a portable hotspot.</p>
 <string name="locationpermission" >
 <![CDATA[
 <p><a href="https://www.juggluco.nl/Jugglucohelp/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/locationpermission.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/locationpermission.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/locationpermission.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/locationpermission.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/locationpermission.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/locationpermission.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/locationpermission.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/locationpermission.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ko/locationpermission.html">ko</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/locationpermission.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/locationpermission.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/locationpermission.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/locationpermission.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/locationpermission.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/locationpermission.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/locationpermission.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/locationpermission.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/locationpermission.html?lang=en">en</a>&emsp;&emsp;</p><h1>Location permission</h1>
-<p style="margin-bottom: 0in">Devices running Android 6 to 11 need
+<p style="margin-bottom: 0cm">Devices running Android 6 to 11 need
 location permission to find Bluetooth devices. This scanning for
-Bluetooth devices is needed for <b>Sibionics</b>, <b>Aidex X</b> and <b>Dexcom </b>and
-is also used by Juggluco on Android 6, 7 and 7.1</p>
-<p style="margin-bottom: 0in"><br/>
+Bluetooth devices is needed for <b>Aidex X, Accu-Check SmartGuide,
+CareSens Air and Dexcom G7 </b><span style="font-weight: normal">and</span>
+<b>Sibionics</b> sensors and to receive glucose measurement from
+finger-stick glucose meters via Bluetooth.</p>
+<p style="margin-bottom: 0cm">Scanning for Bluetooth devices happens
+regularly when connecting and reconnecting to Bluetooth devices, it
+doesn’t happen only one time.</p>
+<p style="margin-bottom: 0cm">On Android 10 and Android 11 also
+<b>location </b><b>background permission</b> is needed to enable this
+scanning for devices when Juggluco is in the background. 
+</p>
+<p style="margin-bottom: 0cm">To allow Android to connect to these
+Bluetooth devices in the background, you need to select “<i>Allow
+all the time</i>” when giving Juggluco location permission. “<i>Using
+the app</i>” means having the app in the foreground.</p>
+<p style="margin-bottom: 0cm">This location permission is only used
+for finding Bluetooth devices and not for anything else.</p>
+<p style="margin-bottom: 0cm"><br/>
+
+</p>
+<p style="margin-bottom: 0cm"><br/>
 
 </p>
 ]]>
@@ -2509,7 +2527,8 @@ warming up.
 </string>
 <string name="healthpermission" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/healthpermission.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/healthpermission.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/healthpermission.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/healthpermission.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/healthpermission.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/healthpermission.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ko/healthpermission.html">ko</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/healthpermission.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/healthpermission.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/healthpermission.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/healthpermission.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/healthpermission.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/healthpermission.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/healthpermission.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/healthpermission.html?lang=en">en</a>&emsp;&emsp;</p><h1>Permission to write <i>blood glucose</i></h1>
+<p><a href="https://www.juggluco.nl/Jugglucohelp/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/healthpermission.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/healthpermission.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/healthpermission.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/healthpermission.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/healthpermission.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/healthpermission.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ko/healthpermission.html">ko</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/healthpermission.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/healthpermission.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/healthpermission.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/healthpermission.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/healthpermission.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/healthpermission.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/healthpermission.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/healthpermission.html?lang=en">en</a>&emsp;&emsp;</p><h1>Health Connect</h1>
+<h2>Write <i>blood glucose</i></h2>
 <p>To be able to write Glucose values to <b>Health Connect,</b> the
 user needs to give Juggluco permission to write <b>Blood Glucose</b>
 to Health Connect. 
@@ -2517,6 +2536,32 @@ to Health Connect.
 <p>This permission isn’t needed for anything else than receiving
 glucose values in Health Connect. In all other aspect Juggluco can
 function without this permission.</p>
+<p>When you activate left menu→Settings→<a href="https://www.juggluco.nl/Jugglucohelp/exchangehelp.html">Exchange
+data</a>→Health Connect, you are asked for this permission.</p>
+<h2>Read activity data</h2>
+<p>In left menu→Settings→Exchange data→<a href="https://www.juggluco.nl/Jugglucohelp/activities.html">Activities</a>
+you can configure Juggluco to read activity data from Health Connect.
+For every activity variable that will be displayed in Juggluco, there
+is a corresponding Health Connect permission: <i>Exercise</i> to read
+the type of activity, <i>heart rate</i> to get the average and
+maximal heart rate during an activity, <i>resting heart rate</i> to
+know how much the average heart rate during an activity is elevated
+above it etc. 
+</p>
+<p>Data received from Health Connect is displayed in Juggluco, can be
+saved to a file in left middle menu→Export and when the web server
+is turned on can be viewed in a browser on the phone with
+<a href="http://127.0.0.1:17580/x/activities?header&amp;days=30">http://127.0.0.1:17580/x/activities?header&amp;days=30</a>.
+If you make use of left menu→<a href="https://www.juggluco.nl/Jugglucohelp/chatgpthelp.html">ChatGPT</a>,
+this data will also be available to ChatGPT. You can also send a
+generated amount as a comment to <a href="https://www.juggluco.nl/Jugglucohelp/libreview.html">Libreview</a>
+or <a href="https://www.juggluco.nl/Jugglucohelp/clarityhelp.html">Dexcom
+Clarity</a>. Juggluco itself doesn’t have a server to which data is
+sent.</p>
+<p><br/>
+<br/>
+
+</p>
 ]]>
 </string>
 <string name="IOBhelp" >
@@ -2583,6 +2628,8 @@ Connect</a>. You can give other apps access to these glucose values,
 for example <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.fitness">Google
 Fit</a>. Other apps can in turn access that data from <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.fitness">Google
 Fit</a>.</p>
+<h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/activities.html">Activities</a></h2>
+<p>Configure Juggluco to read activity data from Health Connect.</p>
 <h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/libreview.html">Libreview</a></h2>
 <p>Connect with Libreview to send Freestyle Libre 2 and 3 glucose
 values and amounts to Libreview and to get the account id used during

@@ -149,7 +149,6 @@ static void config(MainActivity context, int meterIndex, View parent, BluetoothD
       MainActivity.doonback();
       MainActivity.doonback();
       Log.i(LOG_ID,"save");
-      context.finepermission();
       Natives.GlucoseMeterSetLastTime(meterIndex,newtime[0]);
       if(device!=null)
               BluetoothGlucoseMeter.addDevice(meterIndex,device);
@@ -170,5 +169,6 @@ static void config(MainActivity context, int meterIndex, View parent, BluetoothD
 
     context.addMyContentView(layout, params);
   // context.addMyContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+     context.finepermission();
    }
 }

@@ -312,7 +312,7 @@ public void onTerminate () {
     }
 }
 
-static final String[] scanpermissions=( (Build.VERSION.SDK_INT >= 31)? (new String[]{Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_ADVERTISE, Manifest.permission.BLUETOOTH_CONNECT}):((Build.VERSION.SDK_INT >= 29)?new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_BACKGROUND_LOCATION}:new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION}));
+private static final String[] scanpermissions=( (Build.VERSION.SDK_INT >= 31)? (new String[]{Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_ADVERTISE, Manifest.permission.BLUETOOTH_CONNECT}):((Build.VERSION.SDK_INT >= 29)?new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION}:new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION}));
 
 
 
@@ -545,7 +545,6 @@ void initbluetooth(boolean usebluetooth,Context context,boolean frommain) {
     }
 static boolean possiblybluetooth(Context context) {
     {if(doLog) {Log.i(LOG_ID,"possiblybluetooth");};};
-//    boolean useblue=Natives.getusebluetooth()&& hasPermissions(context, Applic.scanpermissions).length==0;
     final boolean useblue=Natives.getusebluetooth();
     ((Applic)context.getApplicationContext()).initbluetooth(useblue,context,false);
     return useblue;

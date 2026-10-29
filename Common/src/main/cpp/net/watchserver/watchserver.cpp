@@ -2555,7 +2555,7 @@ static bool jugglucos(const char * const input,int size, std::string_view hostna
             ++posptr;
             ++typelen;
             }
-         Getopts opts(posptr,size-typelen);
+         Getopts opts(posptr,size-typelen,(i>=2&&i<=4)?4*daysecs:(i==6?(7*daysecs):5*60*60));
          const int startlen=((opts.end-opts.start)/(60*60))*perhour[i];
          constexpr const int startpos=webheaderreserve;
          bool calibrated=opts.calibratedmode||opts.calibratedhistorymode||opts.calibratedscansmode;

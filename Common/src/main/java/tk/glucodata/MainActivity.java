@@ -33,7 +33,6 @@ import static tk.glucodata.Applic.app;
 import static tk.glucodata.Applic.explicit;
 import static tk.glucodata.Applic.isRelease;
 import static tk.glucodata.Applic.isWearable;
-import static tk.glucodata.Applic.scanpermissions;
 import static tk.glucodata.Applic.talkbackoff;
 import static tk.glucodata.Applic.talkbackon;
 import static tk.glucodata.Applic.useZXing;
@@ -797,6 +796,7 @@ void handleIntent(Intent intent) {
     if(intent==null)
         return;
     final Bundle extras = intent.getExtras();
+    Log.i(LOG_ID,"handleIntent "+intent.toString()+" extras="+extras);
     if(extras!=null)  {
         if(extras.getBoolean(Notify.fromnotification, false)) {
             {if(doLog) {Log.i(LOG_ID,"fromnotification");};};
@@ -819,7 +819,6 @@ void handleIntent(Intent intent) {
             }
         }
     var action= intent.getAction();
-
        if ((intent.getFlags() & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) == 0&&"android.nfc.action.TECH_DISCOVERED".intern()==action) {
            curve.waitnfc=true;
            {if(doLog) {Log.d(LOG_ID,"TECH_DISCOVERED");};};
@@ -854,6 +853,11 @@ void handleIntent(Intent intent) {
               }
               ;
               }
+           else {
+               if(intent.hasCategory("android.intent.category.HEALTH_PERMISSIONS")) {
+                          help.help(R.string.healthpermission, this);
+                        }
+                }
               }
             return;
           }
@@ -1416,76 +1420,65 @@ boolean finepermission() {
     if(Build.VERSION.SDK_INT >= 23) {
         var noperm=Applic.refreshBluetoothPermissions(act);
         if(noperm.length==0) {
-           return systemlocation() ;
+              if((Build.VERSION.SDK_INT==29||Build.VERSION.SDK_INT==30)&&ContextCompat.checkSelfPermission(this, location_background_permission[0])!= PackageManager.PERMISSION_GRANTED) {
+                    queuePermissionRequest(BACKGROUND_LOCATION_REQUEST_CODE, ()->
+                            help.help(R.string.locationpermission,act,l-> {
+                                requestPermissions(location_background_permission, BACKGROUND_LOCATION_REQUEST_CODE);
+                                if(help.whelplayout!=null&&help.whelplayout.get()!=null) {
+                                    removeContentView(help.whelplayout.get()); //setContentView makes view inaccessable
+                                    help.whelplayout=null;
+                                    }
+                                }));
+                    return false;
+                    }
+               else {
+                   return systemlocation() ;
+                   }
            }
         queuePermissionRequest(BLUETOOTH_PERMISSION_REQUEST_CODE, () -> {
-                for(var scanpermission:noperm) {
-                    if(shouldShowRequestPermissionRationale(scanpermission)) {
+                boolean giveRational=false;
+                if(Build.VERSION.SDK_INT==29||Build.VERSION.SDK_INT==30)
+                    giveRational=true;
+                else {
+                    for(var scanpermission:noperm) {
+                        if(shouldShowRequestPermissionRationale(scanpermission)) {
+                            giveRational=true;
+                            }
+                       }
+                      }
+                if(giveRational) {
                         gaverational=true;
                         help.help(Build.VERSION.SDK_INT>30?R.string.nearbypermission:R.string.locationpermission,act,l-> {
-                        if(help.whelplayout!=null&&help.whelplayout.get()!=null) {
-                            removeContentView(help.whelplayout.get()); //setContentView makes view inaccessable
-                            help.whelplayout=null;
-                            }
-                        requestPermissions(noperm, BLUETOOTH_PERMISSION_REQUEST_CODE);
-                        });
-                        break;
+                                Log.i(LOG_ID,"request permission "+noperm);
+                                requestPermissions(noperm, BLUETOOTH_PERMISSION_REQUEST_CODE);
+                                if(help.whelplayout!=null&&help.whelplayout.get()!=null) {
+                                    removeContentView(help.whelplayout.get()); //setContentView makes view inaccessable
+                                    help.whelplayout=null;
+                                    }
+                                });
                         }
                     else   {
                         requestPermissions( noperm, BLUETOOTH_PERMISSION_REQUEST_CODE);
-                        break;
                         }
-                    }
                     });
+
 
             return false;
         }
     else
         return true;
     }
-/*
-public static final String[] flashpermissions={ Manifest.permission.CAMERA};
-          
-public int flashpermission() {
-        if (Build.VERSION.SDK_INT >= 23) {
-        var noperm=Applic.hasPermissions( this, flashpermissions);
-        if(noperm.length==0) {
-                useflash(true);
-            return 1;
-            }
-        for(var flashperm:noperm) {
-            if(shouldShowRequestPermissionRationale(flashperm)) {
-                help.help(R.string.flashpermission,this,l-> {
-                if(help.whelplayout!=null&&help.whelplayout.get()!=null) {
-                    removeContentView(help.whelplayout.get()); //setContentView makes view inaccessable
-                    help.whelplayout=null;
-                    }
-                    requestPermissions(noperm, FLASH_PERMISSION_REQUEST_CODE);
-                    });
-                return 0 ;
-                }
-            else   {
-                requestPermissions( noperm, FLASH_PERMISSION_REQUEST_CODE);
-                return 0 ;
-                }
-            }
-       return 1;
-        }
-    else  {
-              useflash(true);
-            return 1;
-            }
-    }
-    */
 
 static public final int SENSOR_PERMISSION_REQUEST_CODE=0x23457;
 static final int FLASH_PERMISSION_REQUEST_CODE=0x11224;
 
 static final int BLUETOOTH_PERMISSION_REQUEST_CODE=0x942365;
+static final int BACKGROUND_LOCATION_REQUEST_CODE=0x942366;
 private static final int NOTIFICATION_PERMISSION_REQUEST_CODE=0x8878;
 
 static public final int REQ_SET_PUSHED_WATCH_FACE_ACTIVE = 1001;
 
+private static final String[] location_background_permission=new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION};
 //private final int STORAGE_PERMISSION_REQUEST_CODE=0x445533;
 private void hasLocationContinue() {
       if(Natives.getusebluetooth())  {
@@ -1528,24 +1521,25 @@ public void onRequestPermissionsResult(int requestCode, String[] permissions, in
                 }
 
              };break;
-/*
-            case FLASH_PERMISSION_REQUEST_CODE: {
-            {if(doLog) {Log.i(LOG_ID,"FLASH_PERMISSION_REQUEST_CODE");};};
-            if (granted) {
-                useflash(true);
-            } else {
-                {if(doLog) {Log.i(LOG_ID,"Flash denied");};};
-                useflash(false);
-                }
-            } return; */
+        case BACKGROUND_LOCATION_REQUEST_CODE:
+                if(systemlocation()) {
+                   hasLocationContinue();
+                   return;
+                   }
+               break;
         case BLUETOOTH_PERMISSION_REQUEST_CODE:
             {if(doLog) {Log.i(LOG_ID,"onRequestPermissionsResult(BLUETOOTH_PERMISSION_REQUEST_CODE) "+granted);};};
             // Permission callbacks are a deliberate refresh boundary. Re-read the
             // permission state once here; BLE operations use only the cached result.
             BleMirror.permissionsChanged();
             if(granted) {
-                if(systemlocation())
-                   hasLocationContinue();
+              if((Build.VERSION.SDK_INT==29||Build.VERSION.SDK_INT==30)&&ContextCompat.checkSelfPermission(this, location_background_permission[0])!= PackageManager.PERMISSION_GRANTED) {
+                        queuePermissionRequest(BACKGROUND_LOCATION_REQUEST_CODE, ()->requestPermissions(location_background_permission, BACKGROUND_LOCATION_REQUEST_CODE));
+                    }
+               else {
+                    if(systemlocation())
+                       hasLocationContinue();
+                    }
             } else {
                 {if(doLog) {Log.i(LOG_ID,"denied");};};
                 //setbluetoothmain(false);
@@ -1643,21 +1637,6 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     Log.format("Main.onActivityResult requestCode%x resultCode=%d\n",requestCode,resultCode);
     switch(requestCode) {
-   /*
-         case REQUEST_CHECK_SETTINGS:
-             switch (resultCode) {
-                 case Activity.RESULT_OK:
-                     // All required changes were successfully made
-                     {if(doLog) {Log.i(LOG_ID,"REQUEST_CHECK_SETTINGS OK");};};
-                     hasLocationContinue();
-                     break;
-                 case Activity.RESULT_CANCELED:
-                     // The user was asked to change settings, but chose not to
-                     {if(doLog) {Log.i(LOG_ID,"REQUEST_CHECK_SETTINGS CANCELLED");};};
-                     Applic.Toaster("Location is turned off, can't scan for devices");
-                     break;
-                 default: break;
-             }; break; */
         case OVERLAY_PERMISSION_REQUEST_CODE: {
             {if(doLog) {Log.i(LOG_ID, "OVERLAY_PERMISSION_REQUEST_CODE ");};};
             if(Floating.cannotoverlay()  ) {

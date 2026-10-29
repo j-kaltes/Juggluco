@@ -176,6 +176,7 @@ static public void show(MainActivity act, MeterList.MeterListViewAdapter meterad
            removeContentView(layout);
             meteradapt.notifyDataSetChanged();
         });
+      act.finepermission();
       }
 
 }

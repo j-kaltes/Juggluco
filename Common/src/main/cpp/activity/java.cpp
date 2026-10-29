@@ -98,7 +98,7 @@ bool unlinkedAmount(ja::Store &s,Numdata *d,const Num &n) {
     // ordinary Amount, but its numeric index must never select a local activity.
     return n.mealptr==0||(Num::issportref(n.mealptr)&&!ownAmount(s,d,n));
 }
-Found findNumber(ja::Store &s,uint32_t group,int metric=-1) {
+Found findNumber(ja::Store &s,uint32_t group,int metric=-1,Found skip={}) {
     group=s.groupOf(group);if(!group)return {};
     std::vector<ja::AmountBinding> bindings;
     for(uint32_t i=1;i<=s.header().count;++i)if(s.groupOf(i)==group) {
@@ -116,12 +116,21 @@ Found findNumber(ja::Store &s,uint32_t group,int metric=-1) {
         Found found;
         for(const auto &binding:bindings)if(binding.base==uint32_t(base)&&binding.database==database) {
             const auto &expected=binding.number;
-            for(auto *n=d->firstnotless(expected.time);n<d->end()&&n->time==expected.time;++n) {
-                if(d->valid(n)&&!memcmp(n,&expected,sizeof(Num))) {
-                    const auto pos=d->index(n);
-                    if(!found.data||pos<found.pos)found={d,pos};
-                    break;
-                }
+            const auto matches=[&](Num *n) {
+                if(n->time!=expected.time||!d->valid(n)||memcmp(n,&expected,sizeof(Num)))return false;
+                const auto pos=d->index(n);
+                if(skip.data&&pos==skip.pos&&base==skip.data->getindex()&&
+                        database==skip.data->getnewident())return false;
+                if(!found.data||pos<found.pos)found={d,pos};
+                return true;
+            };
+            auto *n=d->firstnotless(expected.time);
+            for(;n<d->end()&&n->time==expected.time;++n)if(matches(n))break;
+            if(n==d->end()||n->time!=expected.time) {
+                // Duplicate cleanup scans every position. Its surviving entry
+                // must remain findable even if a timestamp lookup misses it.
+                for(auto *candidate=d->begin();candidate<d->end();++candidate)
+                    if(matches(candidate))break;
             }
         }
         // Retain the original database/position preference among merged aliases.
@@ -178,6 +187,14 @@ void consolidateAmounts(ja::Store &s) {
     const auto duplicates=ja::duplicateAmounts(s,numbers);
     for(auto i:duplicates) {
         const auto group=s.groupOf(ja::indexOf(numbers[i].mealptr));
+        // Linking uses findNumber too. Never delete its only usable copy, or
+        // associate() will immediately insert the same Amount again. Another
+        // view of this database/position is still the same physical Amount.
+        if(!findNumber(s,group,-1,positions[i]).data) {
+            LOGGER("Activity: retain Amount without another searchable copy group=%u base=%d pos=%d\n",
+                   group,positions[i].data->getindex(),positions[i].pos);
+            continue;
+        }
         // Preserve the deletion/association history before removing an Amount.
         // The original source record and its reference stay available forever.
         s.get(group)->flags|=ja::Linked;

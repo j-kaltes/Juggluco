@@ -97,7 +97,11 @@ int updateactivities(crypt_t *pass,Connect *connect,changednums &numbers) {
          *chunk=activitychunk_t{.totlen=uint32_t(packet.size()),.size=uint32_t(transfer.bytes.size()),.offset=uint32_t(offset)};
          memcpy(chunk->data,transfer.bytes.data()+offset,length);
          if(!connect->sendcommand(pass,packet.data(),packet.size())) {
-            numbers.activityState={};return 0;
+            // Incomplete chunks have not changed the receiver's activity store.
+            // Retain the acknowledged base so a transport failure retries the
+            // delta instead of retransmitting the whole activity history.
+            if(offset+length==transfer.bytes.size())numbers.activityState={};
+            return 0;
          }
          offset+=length;
       }
@@ -201,7 +205,6 @@ bool numsbackupsendinit(crypt_t*pass,Connect *connect,struct changednums *nuall,
    for(auto*el:numdatas) 
       if(!el->backupsendinit(pass,connect,nuall,starttime) )
          return false;
-   nuall[1].activityState={};
    return true;
    }
 int sendlastnum(const int dbase) {
