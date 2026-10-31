@@ -788,6 +788,13 @@ static boolean enableGattDescriptornote(String note, BluetoothGatt gatt, Bluetoo
             return false;
             }
 
+        // Some OEM BluetoothGatt authentication retries use descriptor.getValue()
+        // even with the API 33+ overload. Keep that legacy cache populated.
+        // setValue stores the array, so pass a copy of the shared CCCD constant.
+        if(!descriptor.setValue(value.clone())) {
+            Log.e(LOG_ID, note + " descriptor.setValue failed");
+            return false;
+        }
         if(Build.VERSION.SDK_INT >= 33) {
             int res = gatt.writeDescriptor(descriptor, value);
             if(res != BluetoothStatusCodes.SUCCESS) {
