@@ -97,6 +97,11 @@ public final class BleMirror {
     // one hardware scan filter; these UUIDs differ in exactly bit 36 of the MSB.
     private static final ParcelUuid CURRENT_DISCOVERY_MASK=new ParcelUuid(
             new UUID(~0x1000000000L,-1L));
+    // Active discovery accepts either supported namespace and checks the peer
+    // token in foundDevice(). Keep a real UUID constraint: Android suspends
+    // scans with no filters when the screen is off, including low-latency scans.
+    private static final ParcelUuid CURRENT_DISCOVERY_NAMESPACE_MASK=new ParcelUuid(
+            new UUID(~0x1000000000L,0xffffffff00000000L));
     private static final UUID LEGACY_SERVICE_UUID=UUID.fromString("e65f6d10-3f4b-4d2a-9f75-6a7567676c75");
     private static final UUID LEGACY_RX_UUID=UUID.fromString("e65f6d11-3f4b-4d2a-9f75-6a7567676c75");
     private static final UUID LEGACY_TX_UUID=UUID.fromString("e65f6d12-3f4b-4d2a-9f75-6a7567676c75");
@@ -3805,19 +3810,21 @@ public final class BleMirror {
         final long now=monotonicMillis();
         final boolean standbySoftwareProbe=!carrierActivePending&&
                 scanSoftwareProbeUntilMillis>now;
-        // Current Juggluco versions advertise a private 128-bit discovery UUID
-        // containing the 4-byte password-derived token. Android 5.x parses 128-bit
-        // service UUID lists correctly. Active discovery remains unfiltered so it
-        // can also recognize the immediately preceding Service Data formats.
-        // Automatic standby can use an exact service-UUID filter.
+        // Current discovery uses 128-bit service UUIDs, also on Android 5.x.
+        // Use a broad namespace filter for active discovery/compatibility probes
+        // and keep exact peer-token filters for balanced Automatic standby.
+        // Never use null/empty filters here: Android suspends unfiltered scans
+        // while the screen is off. Repeated watchdog restarts do not bypass it.
         final boolean softwareMatching=carrierActivePending||standbySoftwareProbe;
         final boolean lowLatencyScan=carrierActivePending||standbySoftwareProbe;
-        // Several Android vendors register an exact 128-bit service-data
-        // filter successfully but never deliver matching results. Active
-        // discovery therefore scans without an offloaded hardware filter and
-        // performs the same password-derived token comparison in foundDevice.
-        // Balanced Automatic standby retains exact filters for battery use.
-        if(!softwareMatching)
+        // Match service UUIDs rather than the older service-data layouts that
+        // some vendor hardware filters did not deliver. The broader active
+        // filter leaves token matching to foundDevice(), which still rejects
+        // unrelated peers and stale d10 advertisements before connecting.
+        if(softwareMatching)
+            filters.add(new ScanFilter.Builder().setServiceUuid(
+                    new ParcelUuid(SERVICE_UUID),CURRENT_DISCOVERY_NAMESPACE_MASK).build());
+        else
             for(Link link:candidates)
                 filters.add(new ScanFilter.Builder().setServiceUuid(
                         discoveryParcelUuid(link.discoveryToken),CURRENT_DISCOVERY_MASK).build());
@@ -3833,7 +3840,7 @@ public final class BleMirror {
             ++scanGeneration;
             scanResultCount=0;
             scanServiceDataResultCount=0;
-            scanner.startScan(filters.isEmpty()?null:filters,settings,scanCallback);
+            scanner.startScan(filters,settings,scanCallback);
             scanRunning=true;
             scanLowLatency=lowLatencyScan;
             for(Link link:candidates)
@@ -3841,7 +3848,8 @@ public final class BleMirror {
                     link.status=waitingStatus(link);
             Log.i(LOG_ID,"startScan: candidates="+candidates.size()+
                     " filters="+filters.size()+" match="+
-                    (softwareMatching?"software token":"hardware discovery UUID")+
+                    (softwareMatching?"software token with UUID namespace filter":
+                            "hardware discovery UUID")+
                     " mode="+(carrierActivePending?"low-latency active":
                             standbySoftwareProbe?"low-latency standby compatibility probe":
                             "balanced automatic standby"));
@@ -4231,7 +4239,7 @@ public final class BleMirror {
                             SCAN_STANDBY_PROBE_MILLIS;
                     Log.i(LOG_ID,"BLE scan watchdog starting a "+
                             SCAN_STANDBY_PROBE_MILLIS+
-                            " ms unfiltered Automatic-standby compatibility probe");
+                            " ms namespace-filtered Automatic-standby compatibility probe");
                 }
                 else
                     Log.i(LOG_ID,"BLE scan watchdog restarting a silent active scan after "+

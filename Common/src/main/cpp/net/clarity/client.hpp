@@ -3,11 +3,18 @@
 #include "protocol.hpp"
 #include <functional>
 namespace clarity {
+// The bulk service has already stored this installation/sequence. Keep this
+// distinct from other HTTP failures so the worker can finish the retained post.
+class DuplicatePostSequence : public Error {
+  public:
+    using Error::Error;
+};
 struct HttpResult {
     int status;
     std::string body;
     std::string location;
 };
+bool isDuplicatePostSequence(const HttpResult &response);
 // Bounded, redacted diagnostics for failed requests only. No raw response or
 // request/token contents are logged. The returned text is safe for Status.
 std::string httpFailure(std::string_view operation, const HttpResult &response,
@@ -30,6 +37,12 @@ void refreshAccess(Json &config, const Transport &post,
 // checked account comes from the native outbox header.
 std::string uploadBytes(Json &config, std::string_view dataPost, std::string_view account,
                    const Transport &post, const std::function<void(const Json &)> &save,
+                   const std::function<void()> &checkEnabled);
+class Outbox;
+// Finish one retained batch on a verified receipt or an explicit bulk
+// DuplicatePostSequence. Other errors leave its records pending.
+void uploadPending(Json &config, Outbox &outbox, const Transport &post,
+                   const std::function<void(const Json &)> &save,
                    const std::function<void()> &checkEnabled);
 std::string upload(Json &config, const Json &dataPost, const Transport &post,
                    const std::function<void(const Json &)> &save,

@@ -1,6 +1,6 @@
 
 //#define DOTESTS
-//#define SYSGOOD 1
+#define SYSGOOD 1
 //#define FIXED_URANDOM 1
 /*#ifndef NDEBUG
 #define TESTDEBUG 1
@@ -37,7 +37,7 @@ arm64    x8        x0    x0    x1    x2    x3    x4    x5
 x86    eax        eax    ebx    ecx    edx    esi    edi    ebp
 x86_64    rax        rax    rdi    rsi    rdx    r10    r8    r9
 */
-//#define CHANGESTATUS
+#define CHANGESTATUS
 #include <sys/mman.h>
 
 #include "config.h"
@@ -903,6 +903,444 @@ static void logloffptr(slog &log,pid_t pid,const char *name,Register::type addr)
         log<<"->"<<value;
     }
 
+// Keep the raw prctl arguments: unknown options have no defined argument types.
+// All decoded strings and output parameters are read from the tracee via ptrace.
+static const char *prctloptionname(int option) {
+    switch(option) {
+#define PRCTL_CASE(name) case name: return #name;
+#ifdef PR_SET_PDEATHSIG
+        PRCTL_CASE(PR_SET_PDEATHSIG)
+#endif
+#ifdef PR_GET_PDEATHSIG
+        PRCTL_CASE(PR_GET_PDEATHSIG)
+#endif
+#ifdef PR_GET_DUMPABLE
+        PRCTL_CASE(PR_GET_DUMPABLE)
+#endif
+#ifdef PR_SET_DUMPABLE
+        PRCTL_CASE(PR_SET_DUMPABLE)
+#endif
+#ifdef PR_GET_UNALIGN
+        PRCTL_CASE(PR_GET_UNALIGN)
+#endif
+#ifdef PR_SET_UNALIGN
+        PRCTL_CASE(PR_SET_UNALIGN)
+#endif
+#ifdef PR_GET_KEEPCAPS
+        PRCTL_CASE(PR_GET_KEEPCAPS)
+#endif
+#ifdef PR_SET_KEEPCAPS
+        PRCTL_CASE(PR_SET_KEEPCAPS)
+#endif
+#ifdef PR_GET_FPEMU
+        PRCTL_CASE(PR_GET_FPEMU)
+#endif
+#ifdef PR_SET_FPEMU
+        PRCTL_CASE(PR_SET_FPEMU)
+#endif
+#ifdef PR_GET_FPEXC
+        PRCTL_CASE(PR_GET_FPEXC)
+#endif
+#ifdef PR_SET_FPEXC
+        PRCTL_CASE(PR_SET_FPEXC)
+#endif
+#ifdef PR_GET_TIMING
+        PRCTL_CASE(PR_GET_TIMING)
+#endif
+#ifdef PR_SET_TIMING
+        PRCTL_CASE(PR_SET_TIMING)
+#endif
+#ifdef PR_SET_NAME
+        PRCTL_CASE(PR_SET_NAME)
+#endif
+#ifdef PR_GET_NAME
+        PRCTL_CASE(PR_GET_NAME)
+#endif
+#ifdef PR_GET_ENDIAN
+        PRCTL_CASE(PR_GET_ENDIAN)
+#endif
+#ifdef PR_SET_ENDIAN
+        PRCTL_CASE(PR_SET_ENDIAN)
+#endif
+#ifdef PR_GET_SECCOMP
+        PRCTL_CASE(PR_GET_SECCOMP)
+#endif
+#ifdef PR_SET_SECCOMP
+        PRCTL_CASE(PR_SET_SECCOMP)
+#endif
+#ifdef PR_CAPBSET_READ
+        PRCTL_CASE(PR_CAPBSET_READ)
+#endif
+#ifdef PR_CAPBSET_DROP
+        PRCTL_CASE(PR_CAPBSET_DROP)
+#endif
+#ifdef PR_GET_TSC
+        PRCTL_CASE(PR_GET_TSC)
+#endif
+#ifdef PR_SET_TSC
+        PRCTL_CASE(PR_SET_TSC)
+#endif
+#ifdef PR_GET_SECUREBITS
+        PRCTL_CASE(PR_GET_SECUREBITS)
+#endif
+#ifdef PR_SET_SECUREBITS
+        PRCTL_CASE(PR_SET_SECUREBITS)
+#endif
+#ifdef PR_SET_TIMERSLACK
+        PRCTL_CASE(PR_SET_TIMERSLACK)
+#endif
+#ifdef PR_GET_TIMERSLACK
+        PRCTL_CASE(PR_GET_TIMERSLACK)
+#endif
+#ifdef PR_TASK_PERF_EVENTS_DISABLE
+        PRCTL_CASE(PR_TASK_PERF_EVENTS_DISABLE)
+#endif
+#ifdef PR_TASK_PERF_EVENTS_ENABLE
+        PRCTL_CASE(PR_TASK_PERF_EVENTS_ENABLE)
+#endif
+#ifdef PR_MCE_KILL
+        PRCTL_CASE(PR_MCE_KILL)
+#endif
+#ifdef PR_MCE_KILL_GET
+        PRCTL_CASE(PR_MCE_KILL_GET)
+#endif
+#ifdef PR_SET_MM
+        PRCTL_CASE(PR_SET_MM)
+#endif
+#ifdef PR_SET_PTRACER
+        PRCTL_CASE(PR_SET_PTRACER)
+#endif
+#ifdef PR_SET_CHILD_SUBREAPER
+        PRCTL_CASE(PR_SET_CHILD_SUBREAPER)
+#endif
+#ifdef PR_GET_CHILD_SUBREAPER
+        PRCTL_CASE(PR_GET_CHILD_SUBREAPER)
+#endif
+#ifdef PR_SET_NO_NEW_PRIVS
+        PRCTL_CASE(PR_SET_NO_NEW_PRIVS)
+#endif
+#ifdef PR_GET_NO_NEW_PRIVS
+        PRCTL_CASE(PR_GET_NO_NEW_PRIVS)
+#endif
+#ifdef PR_GET_TID_ADDRESS
+        PRCTL_CASE(PR_GET_TID_ADDRESS)
+#endif
+#ifdef PR_SET_THP_DISABLE
+        PRCTL_CASE(PR_SET_THP_DISABLE)
+#endif
+#ifdef PR_GET_THP_DISABLE
+        PRCTL_CASE(PR_GET_THP_DISABLE)
+#endif
+#ifdef PR_MPX_ENABLE_MANAGEMENT
+        PRCTL_CASE(PR_MPX_ENABLE_MANAGEMENT)
+#endif
+#ifdef PR_MPX_DISABLE_MANAGEMENT
+        PRCTL_CASE(PR_MPX_DISABLE_MANAGEMENT)
+#endif
+#ifdef PR_SET_FP_MODE
+        PRCTL_CASE(PR_SET_FP_MODE)
+#endif
+#ifdef PR_GET_FP_MODE
+        PRCTL_CASE(PR_GET_FP_MODE)
+#endif
+#ifdef PR_CAP_AMBIENT
+        PRCTL_CASE(PR_CAP_AMBIENT)
+#endif
+#ifdef PR_SVE_SET_VL
+        PRCTL_CASE(PR_SVE_SET_VL)
+#endif
+#ifdef PR_SVE_GET_VL
+        PRCTL_CASE(PR_SVE_GET_VL)
+#endif
+#ifdef PR_GET_SPECULATION_CTRL
+        PRCTL_CASE(PR_GET_SPECULATION_CTRL)
+#endif
+#ifdef PR_SET_SPECULATION_CTRL
+        PRCTL_CASE(PR_SET_SPECULATION_CTRL)
+#endif
+#ifdef PR_PAC_RESET_KEYS
+        PRCTL_CASE(PR_PAC_RESET_KEYS)
+#endif
+#ifdef PR_SET_TAGGED_ADDR_CTRL
+        PRCTL_CASE(PR_SET_TAGGED_ADDR_CTRL)
+#endif
+#ifdef PR_GET_TAGGED_ADDR_CTRL
+        PRCTL_CASE(PR_GET_TAGGED_ADDR_CTRL)
+#endif
+#ifdef PR_SET_IO_FLUSHER
+        PRCTL_CASE(PR_SET_IO_FLUSHER)
+#endif
+#ifdef PR_GET_IO_FLUSHER
+        PRCTL_CASE(PR_GET_IO_FLUSHER)
+#endif
+#ifdef PR_SET_SYSCALL_USER_DISPATCH
+        PRCTL_CASE(PR_SET_SYSCALL_USER_DISPATCH)
+#endif
+#ifdef PR_PAC_SET_ENABLED_KEYS
+        PRCTL_CASE(PR_PAC_SET_ENABLED_KEYS)
+#endif
+#ifdef PR_PAC_GET_ENABLED_KEYS
+        PRCTL_CASE(PR_PAC_GET_ENABLED_KEYS)
+#endif
+#ifdef PR_SCHED_CORE
+        PRCTL_CASE(PR_SCHED_CORE)
+#endif
+#ifdef PR_SME_SET_VL
+        PRCTL_CASE(PR_SME_SET_VL)
+#endif
+#ifdef PR_SME_GET_VL
+        PRCTL_CASE(PR_SME_GET_VL)
+#endif
+#ifdef PR_SET_MDWE
+        PRCTL_CASE(PR_SET_MDWE)
+#endif
+#ifdef PR_GET_MDWE
+        PRCTL_CASE(PR_GET_MDWE)
+#endif
+#ifdef PR_SET_VMA
+        PRCTL_CASE(PR_SET_VMA)
+#endif
+#ifdef PR_GET_AUXV
+        PRCTL_CASE(PR_GET_AUXV)
+#endif
+#ifdef PR_SET_MEMORY_MERGE
+        PRCTL_CASE(PR_SET_MEMORY_MERGE)
+#endif
+#ifdef PR_GET_MEMORY_MERGE
+        PRCTL_CASE(PR_GET_MEMORY_MERGE)
+#endif
+#ifdef PR_RISCV_V_SET_CONTROL
+        PRCTL_CASE(PR_RISCV_V_SET_CONTROL)
+#endif
+#ifdef PR_RISCV_V_GET_CONTROL
+        PRCTL_CASE(PR_RISCV_V_GET_CONTROL)
+#endif
+#ifdef PR_RISCV_SET_ICACHE_FLUSH_CTX
+        PRCTL_CASE(PR_RISCV_SET_ICACHE_FLUSH_CTX)
+#endif
+#ifdef PR_PPC_GET_DEXCR
+        PRCTL_CASE(PR_PPC_GET_DEXCR)
+#endif
+#ifdef PR_PPC_SET_DEXCR
+        PRCTL_CASE(PR_PPC_SET_DEXCR)
+#endif
+#undef PRCTL_CASE
+        default: return nullptr;
+        }
+    }
+
+static void logprctlstring(slog &log,pid_t pid,Register::type addr,int maxchars) {
+    logptr(log,addr);
+    if(!addr)
+        return;
+    // Read only up to the documented maximum (16 for thread names,
+    // 80 for anonymous VMA names); do not dereference tracee pointers.
+    char buf[81]{};
+    bool ended=false;
+    for(int i=0;i<maxchars;i++) {
+        char ch=0;
+        if(!ptrace_read_bytes(pid,(uintptr_t)addr+i,&ch,1)) {
+            log<<"-><unreadable>";
+            return;
+            }
+        if(!ch) {
+            ended=true;
+            break;
+            }
+        buf[i]=(ch>=32&&ch<127&&ch!='"'&&ch!='\\')?ch:'?';
+        }
+    log<<"->\""<<buf;
+    if(!ended)
+        log<<"...";
+    log<<"\"";
+    }
+
+static void logprctloutint(slog &log,pid_t pid,Register::type addr,bool success) {
+    logptr(log,addr);
+    if(success&&addr) {
+        int value=0;
+        if(ptrace_read_bytes(pid,(uintptr_t)addr,&value,sizeof(value)))
+            log<<"->"<<value;
+        else
+            log<<"-><unreadable>";
+        }
+    }
+
+static void logprctlargs(slog &log,pid_t pid,const Register::type *args,Register::type ret,bool hasret) {
+    const int option=(int)(uint32_t)args[0];
+    const char *name=prctloptionname(option);
+    log<<"option="<<(name?name:"UNKNOWN")<<"(";
+    if(!name)
+        log<<option<<"/";
+    logptr(log,(Register::type)(uint32_t)args[0]);
+    log<<")";
+    // Print all four raw argument registers, including unexpected nonzero
+    // values in slots that a particular operation does not use.
+    for(int i=1;i<5;i++) {
+        log<<", arg"<<(i+1)<<"=";
+        logptr(log,args[i]);
+        }
+    const bool success=hasret&&!syscallretiserror(ret);
+    switch(option) {
+#ifdef PR_SET_PDEATHSIG
+        case PR_SET_PDEATHSIG:
+            log<<", signal="<<(int)(uint32_t)args[1];
+            break;
+#endif
+#ifdef PR_GET_PDEATHSIG
+        case PR_GET_PDEATHSIG:
+            log<<", signal_out=";
+            logprctloutint(log,pid,args[1],success);
+            break;
+#endif
+#ifdef PR_SET_DUMPABLE
+        case PR_SET_DUMPABLE:
+            log<<", dumpable="<<(uintptr_t)args[1];
+            break;
+#endif
+#ifdef PR_SET_NAME
+        case PR_SET_NAME:
+            log<<", thread_name=";
+            logprctlstring(log,pid,args[1],16);
+            break;
+#endif
+#ifdef PR_GET_NAME
+        case PR_GET_NAME:
+            log<<", thread_name_out=";
+            if(success)
+                logprctlstring(log,pid,args[1],16);
+            else
+                logptr(log,args[1]);
+            break;
+#endif
+#ifdef PR_SET_SECCOMP
+        case PR_SET_SECCOMP:
+            log<<", mode="<<(uintptr_t)args[1];
+            if(args[1]==1)
+                log<<"(SECCOMP_MODE_STRICT)";
+            else if(args[1]==2)
+                log<<"(SECCOMP_MODE_FILTER)";
+            if(args[1]==2) {
+                log<<", sock_fprog=";
+                logptr(log,args[2]);
+                }
+            break;
+#endif
+#ifdef PR_SET_NO_NEW_PRIVS
+        case PR_SET_NO_NEW_PRIVS:
+            log<<", no_new_privs="<<(uintptr_t)args[1];
+            break;
+#endif
+#ifdef PR_SET_CHILD_SUBREAPER
+        case PR_SET_CHILD_SUBREAPER:
+            log<<", enabled="<<(uintptr_t)args[1];
+            break;
+#endif
+#ifdef PR_GET_CHILD_SUBREAPER
+        case PR_GET_CHILD_SUBREAPER:
+            log<<", enabled_out=";
+            logprctloutint(log,pid,args[1],success);
+            break;
+#endif
+#ifdef PR_SET_PTRACER
+        case PR_SET_PTRACER:
+            log<<", tracer_pid=";
+#ifdef PR_SET_PTRACER_ANY
+            if((uintptr_t)args[1]==(uintptr_t)PR_SET_PTRACER_ANY)
+                log<<"PR_SET_PTRACER_ANY";
+            else
+#endif
+                log<<(int)(uint32_t)args[1];
+            break;
+#endif
+#if defined(PR_CAPBSET_READ) && defined(PR_CAPBSET_DROP)
+        case PR_CAPBSET_READ:
+        case PR_CAPBSET_DROP:
+            log<<", capability="<<(uintptr_t)args[1];
+            break;
+#endif
+#ifdef PR_CAP_AMBIENT
+        case PR_CAP_AMBIENT:
+            log<<", command=";
+            switch((int)(uint32_t)args[1]) {
+#ifdef PR_CAP_AMBIENT_IS_SET
+                case PR_CAP_AMBIENT_IS_SET: log<<"PR_CAP_AMBIENT_IS_SET"; break;
+#endif
+#ifdef PR_CAP_AMBIENT_RAISE
+                case PR_CAP_AMBIENT_RAISE: log<<"PR_CAP_AMBIENT_RAISE"; break;
+#endif
+#ifdef PR_CAP_AMBIENT_LOWER
+                case PR_CAP_AMBIENT_LOWER: log<<"PR_CAP_AMBIENT_LOWER"; break;
+#endif
+#ifdef PR_CAP_AMBIENT_CLEAR_ALL
+                case PR_CAP_AMBIENT_CLEAR_ALL: log<<"PR_CAP_AMBIENT_CLEAR_ALL"; break;
+#endif
+                default: log<<(uintptr_t)args[1]; break;
+                }
+            log<<", capability="<<(uintptr_t)args[2];
+            break;
+#endif
+#ifdef PR_SET_TIMERSLACK
+        case PR_SET_TIMERSLACK:
+            log<<", timer_slack_ns="<<(uintptr_t)args[1];
+            break;
+#endif
+#ifdef PR_SET_VMA
+        case PR_SET_VMA:
+            log<<", attribute=";
+#ifdef PR_SET_VMA_ANON_NAME
+            if(args[1]==PR_SET_VMA_ANON_NAME)
+                log<<"PR_SET_VMA_ANON_NAME";
+            else
+#endif
+                log<<(uintptr_t)args[1];
+            log<<", address=";
+            logptr(log,args[2]);
+            log<<", length="<<(uintptr_t)args[3];
+            log<<", value=";
+#ifdef PR_SET_VMA_ANON_NAME
+            if(args[1]==PR_SET_VMA_ANON_NAME)
+                logprctlstring(log,pid,args[4],80);
+            else
+#endif
+                logptr(log,args[4]);
+            break;
+#endif
+#ifdef PR_SET_SYSCALL_USER_DISPATCH
+        case PR_SET_SYSCALL_USER_DISPATCH:
+            log<<", mode="<<(uintptr_t)args[1];
+            log<<", allowed_region_start=";
+            logptr(log,args[2]);
+            log<<", allowed_region_size="<<(uintptr_t)args[3];
+            log<<", selector=";
+            logptr(log,args[4]);
+            break;
+#endif
+#ifdef PR_GET_AUXV
+        case PR_GET_AUXV:
+            log<<", auxv_buffer=";
+            logptr(log,args[1]);
+            log<<", buffer_size="<<(uintptr_t)args[2];
+            break;
+#endif
+        default:
+            break;
+        }
+    }
+
+static const char *prctlerrorname(Register::type ret) {
+    if(!syscallretiserror(ret))
+        return nullptr;
+    switch(-(intptr_t)ret) {
+        case ENOSYS: return "ENOSYS";
+        case EINVAL: return "EINVAL";
+        case EFAULT: return "EFAULT";
+        case EPERM: return "EPERM";
+        case EACCES: return "EACCES";
+        default: return nullptr;
+        }
+    }
+
 static void lograwargs(slog &log,const Register::type *args) {
     for(int pos=0;pos<6;pos++) {
         if(pos)
@@ -912,7 +1350,7 @@ static void lograwargs(slog &log,const Register::type *args) {
         }
     }
 
-static bool lognamedargs(slog &log,pid_t pid,int syscallnr,const Register::type *args,const char *patharg,const char *path) {
+static bool lognamedargs(slog &log,pid_t pid,int syscallnr,const Register::type *args,Register::type ret,bool hasret,const char *patharg,const char *path) {
     switch(syscallnr) {
         case __NR_read:
             log<<"fd="<<(int)(intptr_t)args[0]<<", buf=";
@@ -1049,14 +1487,7 @@ static bool lognamedargs(slog &log,pid_t pid,int syscallnr,const Register::type 
             log<<"status="<<(int)(intptr_t)args[0];
             return true;
         case __NR_prctl:
-            log<<"option="<<(int)(intptr_t)args[0]<<", arg2=";
-            logptr(log,args[1]);
-            log<<", arg3=";
-            logptr(log,args[2]);
-            log<<", arg4=";
-            logptr(log,args[3]);
-            log<<", arg5=";
-            logptr(log,args[4]);
+            logprctlargs(log,pid,args,ret,hasret);
             return true;
 #ifdef __NR_open
         case __NR_open:
@@ -1206,7 +1637,7 @@ static bool lognamedargs(slog &log,pid_t pid,int syscallnr,const Register::type 
 static void logsyscall(pid_t pid,int syscallnr,const char *callstr,const Register::type *args,Register::type ret,bool hasret,const char *patharg,const char *path,const char *action,const char *replacement,const char *bytes) {
     slog log;
     log<<pid<<" syscallnr "<<syscallnr<<" "<<validcallstr(callstr)<<"(";
-    const bool namedargs=lognamedargs(log,pid,syscallnr,args,patharg,path);
+    const bool namedargs=lognamedargs(log,pid,syscallnr,args,ret,hasret,patharg,path);
     if(!namedargs) {
         lograwargs(log,args);
         if(patharg)
@@ -1218,6 +1649,10 @@ static void logsyscall(pid_t pid,int syscallnr,const char *callstr,const Registe
     if(hasret) {
         log<<"=";
         logret(log,syscallnr,ret);
+        if(syscallnr==__NR_prctl) {
+            if(const char *err=prctlerrorname(ret))
+                log<<"("<<err<<")";
+            }
         }
     if(action)
         log<<" "<<action;
@@ -1300,20 +1735,20 @@ int syscallwait(pid_t pid,pid_t *has_debugger) {
 #ifndef NOLOG
     {
     slog log;
-        log<<"non-syscall stop status "<<status<<" signal "<<sign<< " debugs="<<*has_debugger<<endl;;
+        log<<"non-syscall stop status "<<status<<" signal "<<sign
+           <<" debugs="<<*has_debugger;
+        siginfo_t si{};
+        if(ptrace(PTRACE_GETSIGINFO, pid, nullptr, &si)==0) {
+            log<<" si_code="<<si.si_code;
+            if(sign==SIGSEGV || sign==SIGBUS || sign==SIGILL || sign==SIGTRAP)
+                log<<" si_addr="<<si.si_addr;
+        }
+        log<<endl;
     }
 #endif
-   if(sign==SIGSEGV) {
-
-     *has_debugger=0;
-#ifndef NOLOG
-    {
-    slog log;
-        log<<"set has_debugger=0"<<endl;;
-    }
-#endif
-      return 11;
-      }
+    // Do not interpret a signal-delivery stop as a syscall stop.
+    // Forward SIGSEGV too: the traced code may have a signal handler.
+    // Returning without resuming/detaching would leave it stopped forever.
     /*
      * With PTRACE_O_TRACESYSGOOD set, syscall-stops are reported as
      * SIGTRAP|0x80.  A plain signal-delivery stop (for example the
@@ -1375,8 +1810,20 @@ if(waitpid(pid, 0, 0)==-1) {
         return 1;
         }
         }
-#ifdef SYSGOOD 
-ptrace(PTRACE_SETOPTIONS, pid, 0, PTRACE_O_TRACESYSGOOD);
+#ifdef SYSGOOD
+if(ptrace(PTRACE_SETOPTIONS, pid, 0, PTRACE_O_TRACESYSGOOD) == -1) {
+#ifndef NOLOG
+    {
+    int waserrno=errno;
+    slog log;
+    log << "PTRACE_SETOPTIONS(PTRACE_O_TRACESYSGOOD) " << pid
+        << " failed: " << strerror(waserrno) << endl;
+    }
+#endif
+    ptrace(PTRACE_DETACH, pid, 0, 0);
+    notify(com);
+    return 16;
+}
 #endif
 
 #ifdef LIBRE3

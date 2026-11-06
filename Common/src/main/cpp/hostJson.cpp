@@ -208,8 +208,8 @@ int makeICEsender() {
     const int passlen=16;
     char passstr[passlen+1];
     makepass(passstr,passlen);
-    char label[17]="ICE";
-    makepass(label+3,13);
+    char label[17];
+    makepass(label,16);
     label[16]='\0';
     char ICElabel[33];
     makepass(ICElabel,32);
@@ -219,14 +219,15 @@ int makeICEsender() {
     bool receive=false;
     uint32_t  starttime=0L;
     bool side=0;
-    return backup->changeICEhost(ICElabel,pos,nums,stream,scans,receive,string_view(passstr,passlen), starttime,label,side,true);
+    return backup->changeICEhost(ICElabel,pos,nums,stream,scans,receive,string_view(passstr,passlen), starttime,label,side,true,passhost_t::transport_tcp,0);
+
     }
 int makeICEreceiver() {
     const int passlen=16;
     char passstr[passlen+1];
     makepass(passstr,passlen);
-    char label[17]="ICE";
-    makepass(label+3,13);
+    char label[17];
+    makepass(label,16);
     label[16]='\0';
     char ICElabel[33];
     makepass(ICElabel,32);
@@ -236,7 +237,8 @@ int makeICEreceiver() {
     bool receive=true;
     uint32_t  starttime=0L;
     bool side=1;
-    return backup->changeICEhost(ICElabel,pos,nums,stream,scans,receive,string_view(passstr,passlen), starttime,label,side,true);
+    return backup->changeICEhost(ICElabel,pos,nums,stream,scans,receive,string_view(passstr,passlen), starttime,label,side,true,passhost_t::transport_tcp,0);
+
     }
 #endif
 

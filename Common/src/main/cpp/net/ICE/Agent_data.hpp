@@ -27,8 +27,7 @@ struct Agent_data {
     int descriptionsize;
     char side;
     char label[];
-    public:
- static   Agent_data* newAgent(char side,const std::string_view label,const std::span<const char> descrip) {
+ static   Agent_data* newBackAgent(char side,const std::string_view label,const std::span<const char> descrip) {
         int labelsize= label.size();
         int datalen =labelsize+1+descrip.size()+1+sizeof(Agent_data);
         Agent_data *agent=reinterpret_cast<Agent_data *>(new(std::align_val_t(alignof(Agent_data)),std::nothrow) char[datalen]);
@@ -42,6 +41,10 @@ struct Agent_data {
         agent->label[labelsize+1+descrip.size()]='\0';
         return agent;
         }
+    public:
+ static   Agent_data* newAgent(std::string_view commonLabel,bool side,const char *sdp,int sdplen=-1) {
+            return newBackAgent('0'+side,commonLabel,{sdp,(sdplen==-1?strlen(sdp):sdplen)});
+            }
  static void deleteAgent(Agent_data *agent) {
     ::operator delete[] (reinterpret_cast<char*>(agent),std::align_val_t(alignof(Agent_data)));
     }

@@ -328,8 +328,7 @@ boolean makeQR(MainActivity act,int pos) {
           else {
                 hostadapt.notifyItemInserted(pos);
                 final int transport=Natives.getbackuptransport(pos);
-                if(transport==BleMirror.TRANSPORT_BLUETOOTH||
-                        (transport==BleMirror.TRANSPORT_AUTOMATIC&&!isWearable&&!Natives.isWearOS(pos)))
+                if(transport==BleMirror.TRANSPORT_BLUETOOTH||(transport==BleMirror.TRANSPORT_AUTOMATIC&&!isWearable&&!Natives.isWearOS(pos)))
                    // Refresh/cache permission state before configurationChanged()
                    // is allowed to start BLE scanning or advertising.
                    act.finepermission();
@@ -695,8 +694,8 @@ CheckDirectionBox ICE;
             Applic.argToaster(act,R.string.notalldata ,Toast.LENGTH_LONG);
             }        
          configchanged=true;
-         final boolean needsBlePermission=selectedTransport==BleMirror.TRANSPORT_BLUETOOTH||
-                 (selectedTransport==BleMirror.TRANSPORT_AUTOMATIC&&!isWearable&&!Natives.isWearOS(pos));
+         final boolean needsBlePermission=!ice&&(selectedTransport==BleMirror.TRANSPORT_BLUETOOTH||
+                 (selectedTransport==BleMirror.TRANSPORT_AUTOMATIC&&!isWearable&&!Natives.isWearOS(pos)));
          if(needsBlePermission)
             // Refresh/cache permission state before configurationChanged() can
             // start BLE work for a newly enabled mirror.
@@ -1419,22 +1418,7 @@ private int getMirrorListColor(MainActivity act) {
             sb.append(label);
             sb.append(" ");
             }
-       if(isWearable&&transport==BleMirror.TRANSPORT_BLUETOOTH)
-          sb.append("[Bluetooth] ");
-       else if(isWearable&&transport==BleMirror.TRANSPORT_MESSAGES)
-          sb.append("[Messages] ");
-       else if(isWearable&&transport==BleMirror.TRANSPORT_TCP)
-          sb.append("[TCP only] ");
        if(!isWearable) {
-          if(transport==BleMirror.TRANSPORT_BLUETOOTH) {
-               sb.append("[Bluetooth] ");
-               }
-          else if(transport==BleMirror.TRANSPORT_MESSAGES) {
-               sb.append("[Messages] ");
-               }
-          else if(transport==BleMirror.TRANSPORT_TCP) {
-               sb.append("[TCP only] ");
-               }
           if(transport==BleMirror.TRANSPORT_AUTOMATIC||transport==BleMirror.TRANSPORT_TCP) {
              if(ICElabelstr==null) {
                   sb.append((names!=null&&names.length!=0)?names[0]:(Natives.detectIP(pos)?"Detect":"---"));

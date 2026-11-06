@@ -100,6 +100,23 @@ void errorFields(const Json &j, std::string &out, unsigned depth = 0) {
     }
 }
 } // namespace
+bool isDuplicatePostSequence(const HttpResult &r) {
+    // Match the structured bulk error code, not a substring in a diagnostic or
+    // its nested exception text. Other 500 responses must retain the batch.
+    if (r.status != 500 || r.body.empty() || r.body.size() > 64 * 1024)
+        return false;
+    const auto body = Json::parse(r.body, nullptr, false);
+    if (!body.is_object())
+        return false;
+    bool found = false;
+    for (auto it = body.begin(); it != body.end(); ++it)
+        if (lower(it.key()) == "code") {
+            if (!it->is_string() || it->get_ref<const std::string &>() != "DuplicatePostSequence")
+                return false;
+            found = true;
+        }
+    return found;
+}
 std::string httpFailure(std::string_view operation, const HttpResult &r, const Json &config) {
     auto message = std::string(operation) + " failed (HTTP " + std::to_string(r.status) + ")";
     std::string detail, format = "empty";

@@ -25,6 +25,8 @@ struct Session {
     bool authenticated=false;
     bool historyDone=false;
     uint32_t anchor=0;
+    uint32_t liveTime=0;
+    uint16_t liveIndex=0;
     uint32_t historyRequestedAt=0;
     uint16_t savedIndex=0;
     uint16_t cachedIndex=0;
@@ -36,6 +38,26 @@ struct Session {
     void restore(uint16_t index,uint32_t time) {
         savedIndex=index;
         if(time>uint32_t(index)*60) anchor=time-uint32_t(index)*60;
+    }
+    void observeLive(uint16_t index,uint32_t now) {
+        const uint32_t elapsed=uint32_t(index)*60;
+        if(now<=elapsed||(liveTime&&index<=liveIndex)) return;
+        const uint32_t candidate=now-elapsed;
+        if(!anchor) anchor=candidate;
+        // A restored clock can already be wrong. Confirm it against two
+        // consecutive minute records, including records without a display value.
+        // Reject bursts and use the earlier estimate to limit delivery jitter.
+        constexpr int64_t tolerance=15;
+        if(liveTime&&uint32_t(index)==uint32_t(liveIndex)+1) {
+            const int64_t spacingError=int64_t(now)-liveTime-60;
+            if(spacingError>=-tolerance&&spacingError<=tolerance) {
+                const uint32_t confirmed=std::min(candidate,liveTime-uint32_t(liveIndex)*60);
+                const int64_t correction=int64_t(confirmed)-anchor;
+                if(correction>tolerance||correction<-tolerance) anchor=confirmed;
+            }
+        }
+        liveTime=now;
+        liveIndex=index;
     }
     Bytes encrypt(const Bytes &plain,EncryptBlock aes) const {
         Bytes out;
@@ -140,12 +162,10 @@ struct Session {
         if(!parse_records(p,records,aes)) {
             out.message="GS3 V3 malformed glucose packet";return out;
         }
-        // Only a single live record with no remaining backlog establishes time.
+        // Only a single live record with no remaining backlog establishes/corrects time.
         // Neither the cached 36 record nor an arriving history burst may do this.
-        if(cmd==0x32&&records.size()==1&&!records[0].remaining&&!anchor) {
-            const uint32_t elapsed=uint32_t(records[0].index)*60;
-            if(now>elapsed) anchor=now-elapsed;
-        }
+        if(cmd==0x32&&records.size()==1&&!records[0].remaining)
+            observeLive(records[0].index,now);
         for(const auto &r:records) {
             if(cmd==0x36) cachedIndex=std::max(cachedIndex,r.index);
             if(r.index>savedIndex&&displayPresent(r)) pending[r.index]=r;

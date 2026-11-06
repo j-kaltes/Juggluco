@@ -85,7 +85,7 @@ public class Libre2GattCallback extends SuperGattCallback {
 		byte[] bArr = new byte[1];
 		bArr[0] = 32;
 		try {
-			{if(doLog) {Log.i(LOG_ID, "Sent read security challenge");};};
+			if(doLog) {Log.i(LOG_ID, "Sent read security challenge");};
 			if(!BLELogincharacteristic.setValue(bArr)) {
 				var mess="BLELogincharacteristic.setValue";
 				wrotepass[1] = System.currentTimeMillis();
@@ -117,7 +117,7 @@ public class Libre2GattCallback extends SuperGattCallback {
 	}
 static void showCharacter(String label, BluetoothGattCharacteristic characteristic) {
 	byte[] value=characteristic.getValue();
-        {if(doLog){Log.showbytes(label + " UUID: " + characteristic.getUuid().toString(), value);};}
+        if(doLog){Log.showbytes(label + " UUID: " + characteristic.getUuid().toString(), value);};
     }
 @Override // android.bluetooth.BluetoothGattCallback
 	public void onDescriptorWrite(BluetoothGatt bluetoothGatt, BluetoothGattDescriptor bluetoothGattDescriptor, int status) {
@@ -144,15 +144,15 @@ private PendingIntent onalarm=null;
             return;
 		endBLEHandler();
 		if(stop) {
-			{if(doLog) {Log.i(LOG_ID,"onConnectionStateChange stop==true");};};
-                        close();
+			if(doLog) {Log.i(LOG_ID,"onConnectionStateChange stop==true");};
+            close();
 			return;
 			}
 		long tim = System.currentTimeMillis();
 		try {
 			if (doLog) {
 				final String[] state = {"DISCONNECTED", "CONNECTING", "CONNECTED", "DISCONNECTING"};
-				{if(doLog) {Log.i(LOG_ID, SerialNumber + " onConnectionStateChange, status:" + status + ", state: " + (newState < state.length ? state[newState] : newState));};};
+				Log.i(LOG_ID, SerialNumber + " onConnectionStateChange, status:" + status + ", state: " + (newState < state.length ? state[newState] : newState));
 				}
 			if (newState == BluetoothProfile.STATE_CONNECTED) {
                connected=true;
@@ -327,7 +327,9 @@ private	boolean justenablednotification = false;
 private   boolean failedbefore=false;
 	@Override
 	public void onCharacteristicWrite(BluetoothGatt bluetoothGatt, BluetoothGattCharacteristic bluetoothGattCharacteristic, int status) {
-		{if(doLog) {Log.d(LOG_ID, bluetoothGatt.getDevice().getAddress() + " onCharacteristicWrite, status:" + status + " UUID:" + bluetoothGattCharacteristic.getUuid().toString());};};
+		if(doLog) {
+             showCharacter(LOG_ID + " "+ bluetoothGatt.getDevice().getAddress() + " onCharacteristicWrite, status:" + status ,bluetoothGattCharacteristic);
+            };
 		if (sensorgen == 2)
 			return;
 		try {
@@ -402,7 +404,7 @@ private static PowerManager.WakeLock getwakelock() {
 		return wakeLock;
 		}
 		*/
-
+/*
 private boolean setDescriptor(BluetoothGattCharacteristic ch, byte[] type) {
        var gatt=mBluetoothGatt;
         BluetoothGattDescriptor descriptor = ch.getDescriptor(mCharacteristicConfigDescriptor);
@@ -412,6 +414,7 @@ private boolean setDescriptor(BluetoothGattCharacteristic ch, byte[] type) {
         }
         return gatt.writeDescriptor(descriptor);
         }
+        */
 private long datatime=0L;
 private	void oldonCharacteristicChanged(byte[] value) {
 		justenablednotification = false;
@@ -716,6 +719,8 @@ public void onCharacteristicChanged(BluetoothGatt bluetoothGatt, BluetoothGattCh
 	byte[] value = bluetoothGattCharacteristic.getValue();
 	var uuid=bluetoothGattCharacteristic.getUuid();
 	var uuidstr=uuid.toString();
+    if(doLog)
+	  Log.showbytes(LOG_ID+ " "+SerialNumber + " onCharacteristicChanged " + uuidstr,value);
 	if(sensorgen != 2) {
 		if (!uuid.equals(mCharacteristicUUID_CompositeRawData)) {
 			if(doLog) {
@@ -730,9 +735,9 @@ public void onCharacteristicChanged(BluetoothGatt bluetoothGatt, BluetoothGattCh
 	if(doLog) {
 //      boolean str=uuidstr.equals(mCharacteristicUUID_CompositeRawData.toString());
       final boolean isRawData=uuid.equals(mCharacteristicUUID_CompositeRawData);
-      {if(doLog) {Log.i(LOG_ID, "UUID: "+(isRawData?"CompositeRawData, ":"")+ " conphase=" + conphase);};};
-		{if(doLog) {Log.i(LOG_ID, "onCharacteristicChanged " + uuidstr);};};
-	     }
+      Log.i(LOG_ID, "UUID: "+(isRawData?"CompositeRawData, ":"")+ " conphase=" + conphase);
+	  Log.i(LOG_ID, "onCharacteristicChanged " + uuidstr);
+     }
 	if (!mCharacteristicUUID_BLELogin.equals(uuid)) {
 		if (uuid.equals(mCharacteristicUUID_CompositeRawData) && conphase == 4) {
 			oldonCharacteristicChanged(value);

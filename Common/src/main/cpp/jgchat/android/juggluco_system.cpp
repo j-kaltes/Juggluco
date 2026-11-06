@@ -364,7 +364,7 @@ Json activity_configuration(const std::string& section, const std::atomic_bool* 
     if (section == "sensors") {
         result["bluetooth_settings"] = settings_configuration("bluetooth", cancel);
         result["source"] = "The SensorBluetooth/SuperGattCallback fields shown in bluediag, including connection, handshake, glucose and scan timestamps.";
-        result["interpretation"] = "Compare success/failure timestamps: older failures do not describe the current state. A callback object or attempted connection does not establish a live link. glucose_failure_at is the callback's last invalid/failed glucose observation, not a reconstruction of historical sensor-error periods. protocol_generation is internal, not the marketed model number; use juggluco_sensor for type. Present glucose without Rate is not a sensor error.";
+        result["interpretation"] = "Compare success/failure timestamps: older failures do not describe the current state. A callback object or attempted connection does not establish a live link. glucose_failure_at is the callback's last invalid/failed glucose observation, not a reconstruction of historical sensor-error periods. protocol_generation is internal, not the marketed model number; use juggluco_sensor for type. For Libre 3, present glucose without Rate belongs to reception/backfill, including app downtime, restart or connection interruption.";
     } else {
         result["settings"] = settings_configuration("garmin", cancel);
         result["source"] = "AllData.getGarminDeviceInfos(), the cached phone-side view used by GarminStatus.";

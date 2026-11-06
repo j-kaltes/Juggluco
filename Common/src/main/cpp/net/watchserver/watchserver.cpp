@@ -21,9 +21,6 @@
 
 #ifndef WEAROS
 #include "settings/settings.hpp"
-#if defined(__ANDROID__) && !defined(WEAROS)
-#include "jgchat/web_auth_path.hpp"
-#endif
 #include <charconv>
 #include <cmath>
 #include <inttypes.h>
@@ -2796,6 +2793,28 @@ static bool giveaddition(std::string_view toget,bool headonly,std::string_view o
    return true;
    }
 
+static  bool consume_encoded_secret(std::string_view& target, std::string_view secret) {
+    if (secret.empty()) return false;
+    const auto slash = target.find('/');
+    if (slash == std::string_view::npos || slash > secret.size() * 3 || slash + 1 >= target.size() ||
+        target[slash + 1] <= ' ' || target.substr(0, slash).find('%') == std::string_view::npos) return false;
+    auto hex = [](char c) { return c >= '0' && c <= '9' ? c - '0' : c >= 'a' && c <= 'f' ? c - 'a' + 10 : c >= 'A' && c <= 'F' ? c - 'A' + 10 : -1; };
+    std::string decoded;
+    for (std::size_t i = 0; i < slash; ++i) {
+        char c = target[i];
+        if (c == '%') {
+            if (i + 2 >= slash) return false;
+            const int a = hex(target[i + 1]), b = hex(target[i + 2]);
+            if (a < 0 || b < 0) return false;
+            c = static_cast<char>((a << 4) | b); i += 2;
+        }
+        decoded += c;
+        if (decoded.size() > secret.size()) return false;
+    }
+    if (decoded != secret) return false;
+    target.remove_prefix(slash + 1);
+    return true;
+   }
 bool watchcommands(char *rbuf,int len,recdata *outdata,bool secure) {
    LOGGERWEB("watchcommands len=%d %.*s",len,len,rbuf);
    const char *start=rbuf;
@@ -2926,9 +2945,7 @@ extern uint16_t choose_language( std::string_view accept_language, const std::un
       }
    size_t seclen=settings->data()->apisecretlength;
    bool encoded_secret_path=false;
-#if defined(__ANDROID__) && !defined(WEAROS)
-   encoded_secret_path=jgchat::consume_encoded_secret(toget,{settings->data()->apisecret,seclen});
-#endif
+   encoded_secret_path=consume_encoded_secret(toget,{settings->data()->apisecret,seclen});
    if(seclen&&!encoded_secret_path) {
 
             static constexpr const char token[]="token=";

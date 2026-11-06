@@ -638,7 +638,8 @@
 <string name="clarity_labels_changed">Labels gewijzigd; open Categorieën opnieuw</string>
 <string name="clarity_save_categories_error">Kan categorieën niet opslaan</string>
 <string name="clarity_login_success">Ingelogd. Gebruik \'Terug\' om naar de Clarity-instellingen te gaan.</string>
-
+<string name="dexcomG7NFCtitle">Foto</string>
+<string name="dexcomG7NFCmessage">De datamatrix op de applicator van Dexcom G7/ONE+-sensoren moet worden gescand via het linkermenu -> Foto</string>
 
 </resources>
 

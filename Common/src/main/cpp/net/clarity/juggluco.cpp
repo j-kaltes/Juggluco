@@ -276,8 +276,7 @@ class Worker {
                                     const std::string &headers) {
                         return nativeAccountPost(current, url, body, headers);
                     };
-                    auto receipt = uploadBytes(current, outbox->pendingBody(), outbox->account(), post, save, check);
-                    outbox->acknowledge(receipt);
+                    uploadPending(current, *outbox, post, save, check);
                     idleLogged = false;
                     lock.lock();
                     if (generation == revision) {

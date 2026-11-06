@@ -32,10 +32,10 @@ char *name;
 int namelen;
 public:
 template<typename T,typename ...Ts> char *	nstrconcat(int len,string_view sep,  T &&one,  Ts &&... args) {
-
 	char *ptr;
 	int en=sizear(one);
-	const char *asstr=reinterpret_cast<const char *>( &one[0]);
+    const char *asstr=en?reinterpret_cast<const char *>( &one[0]) : "";
+
 	//LOGGER("len=%d %s size=%d\n",len,asstr,en);
 	if constexpr(sizeof...(Ts)==0) {
 		namelen=len+en+1;

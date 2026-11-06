@@ -159,7 +159,7 @@ Json make_stream_gaps(const Json& glucose, uint32_t minimum, const std::atomic_b
                 {"local_previous", local_time(previous)}, {"local_next", local_time(next)},
                 {"glucose_records_between", 0}, {"meets_threshold", gap && elapsed >= minimum},
                 {"estimated_missing_samples", cadence ? Json(gap ? (elapsed + cadence / 2) / cadence - 1 : 0) : Json(nullptr)},
-                {"sensor_error_assessment", cadence && !gap ? "no_missing_glucose_evidence" : "missing_glucose_cause_undetermined"}};
+                {"glucose_gap_assessment", cadence && !gap ? "no_missing_glucose_evidence" : "missing_glucose_cause_undetermined"}};
         };
         unsigned missing = 0; uint32_t largest_interval = 0;
         Json largest_spacing = nullptr, largest_glucose_gap = nullptr;
@@ -195,8 +195,8 @@ Json make_stream_gaps(const Json& glucose, uint32_t minimum, const std::atomic_b
                 {"sensor_id", id}, {"kind", "no_finite_rate"},
                 {"event_id", event_id("no_finite_rate", values[first].at, values[last].at)},
                 {"observation", "glucose_present_rate_unavailable"}, {"glucose_records_present", i - first},
-                {"sensor_error_assessment", "not_supported_by_rate_absence"},
                 {"connection_assessment", libre3 ? "consistent_with_backfill_not_an_exact_connection_log" : "not_classified_for_this_sensor_family"},
+                {"possible_reception_interruptions", libre3 ? Json::array({"app_stopped", "app_restart", "connection_interruption"}) : Json::array()},
                 {"first_no_rate_at", values[first].at}, {"last_no_rate_at", values[last].at},
                 {"local_first_no_rate", local_time(values[first].at)}, {"local_last_no_rate", local_time(values[last].at)},
                 {"no_rate_records", i - first}, {"observed_no_rate_span_seconds", span},
@@ -220,15 +220,15 @@ Json make_stream_gaps(const Json& glucose, uint32_t minimum, const std::atomic_b
             {"largest_between_records_interval", std::move(largest_spacing)},
             {"largest_glucose_gap", std::move(largest_glucose_gap)}});
     }
-    Json result{{"status", "ok"}, {"schema_version", 2}, {"source", "stream"}, {"start", start}, {"end", end},
+    Json result{{"status", "ok"}, {"schema_version", 3}, {"source", "stream"}, {"start", start}, {"end", end},
         {"local_start", local_time(start)}, {"local_end", local_time(end)}, {"duration_seconds", end - start}, {"end_exclusive", true},
         {"minimum_seconds", minimum}, {"exported_records", count}, {"truncated", false},
         {"coverage", count ? "complete_requested_export" : "no_records"},
         {"sensor_summaries", std::move(summaries)}, {"intervals", std::move(intervals)},
-        {"historical_sensor_error_codes_available", false},
+        {"historical_diagnostic_codes_available", false},
         {"search_scope", "Only the requested time window and exported sensors were analyzed. Sensor metadata lookup across the entire index does not mean all historical glucose was analyzed. There is no per-call date or record cap; inspect the full requested period. No records in this window does not establish absence of events elsewhere."},
         {"method", "Complete valid-glucose export, per sensor, sorted by timestamp; finite rate wins duplicate timestamps and zero rate is valid. A glucose gap exceeds 1.5 times the native expected stream interval (jitter heuristic). Unknown/ambiguous metadata leaves cadence unknown. Largest glucose gaps include timestamps even below the requested threshold. No-rate runs split at glucose gaps. Open window edges are not confirmed gaps; query adjacent windows."},
-        {"interpretation", "no_finite_rate means glucose IS PRESENT; unavailable Rate is not unavailable glucose or evidence of a sensor error. In Libre 3 a sustained run is consistent with backfilled readings after interrupted live reception. Isolated unavailable rates are insufficient evidence. no_stream_records means no valid glucose BETWEEN the given endpoints; sensor unavailability is possible but connection loss without recovered data or incomplete local storage can also explain it. The valid-glucose export cannot confirm historical sensor-error codes or exact Bluetooth event times. Normal sampling intervals, including 60-62 seconds at a 60-second cadence, are NOT missing minutes. For 'when was that gap', use that event's ID and endpoints, never another no-rate run. Duration is the observed no-rate span or spacing between glucose endpoints; the finite-rate bracket is separately labelled and cannot turn a shorter observed span into a confirmed minimum-duration event."}};
+        {"interpretation", "no_finite_rate contains valid glucose with unavailable Rate. For Libre 3, discuss sustained runs as backfill following interrupted live reception: possible causes include the app being stopped, restarting, or a connection interruption. The saved records do not identify which happened; isolated unavailable rates do not establish a long interruption. no_stream_records is a separate observation: no valid glucose BETWEEN its endpoints, with the cause undetermined from this export. Historical diagnostic codes and exact app/Bluetooth event times are unavailable. Normal sampling intervals, including 60-62 seconds at a 60-second cadence, are NOT missing minutes. For 'when was that gap', use that event's ID and endpoints, never another no-rate run. Duration is the observed no-rate span or spacing between glucose endpoints; the finite-rate bracket is separately labelled and cannot turn a shorter observed span into a confirmed minimum-duration event."}};
     for (const auto* key : {"sensor_metadata", "missing_sensor_metadata_ids", "unavailable_sensor_metadata_ids",
                             "ambiguous_sensor_metadata_ids", "sensor_metadata_lookup"})
         if (glucose.contains(key)) result[key] = glucose.at(key);

@@ -602,6 +602,7 @@
 <string name="clarity_labels_changed">Etiketten geändert; Kategorien erneut öffnen</string>
 <string name="clarity_save_categories_error">Kategorien können nicht gespeichert werden</string>
 <string name="clarity_login_success">Angemeldet. Verwenden Sie „Zurück“, um zu den Clarity-Einstellungen zurückzukehren.</string>
-
+<string name="dexcomG7NFCtitle">Foto</string>
+<string name="dexcomG7NFCmessage">Der Data-Matrix-Code auf dem Applikator von Dexcom G7/ONE+-Sensoren sollte über das linke Menü -> Foto gescannt werden.</string>
 </resources>
 

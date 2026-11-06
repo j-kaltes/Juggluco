@@ -32,6 +32,7 @@
 #include <algorithm>
 #include <cmath>
 #include <vector>
+#include <string>
 #include <jni.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -1413,6 +1414,40 @@ extern "C"  jbyteArray JNICALL fromjava(V2)(JNIEnv *env, jobject obj, jint i1, j
     return  abbottcall(P2)(env,obj,i1,i2,ar1,ar2);
     }*/
 
+// Save the actual JNI byte-array values, rather than opaque JNI reference addresses.
+// V1/V2 are wrappers for Abbott's P1/P2. Only the real Java-facing JNIEnv
+// is used here; the fake JNI environment used by processScan/Stream is different.
+#ifndef NOLOG
+static std::string replayJNIBytes(JNIEnv *env,jbyteArray ar) {
+    if(!ar) return "null";
+    const jsize n=env->GetArrayLength(ar);
+    if(n<0) return "invalid_length";
+    std::string result;
+    result.reserve(size_t(n)*2);
+    constexpr char hex[]="0123456789ABCDEF";
+    jbyte buffer[256];
+    for(jsize off=0;off<n;) {
+        jsize count=std::min<jsize>(n-off,jsize(std::size(buffer)));
+        env->GetByteArrayRegion(ar,off,count,buffer);
+        for(jsize i=0;i<count;++i) {
+            unsigned char b=static_cast<unsigned char>(buffer[i]);
+            result.push_back(hex[b>>4]);
+            result.push_back(hex[b&15]);
+            }
+        off+=count;
+        }
+    return result;
+    }
+// logprint() has a 4096-byte formatting buffer. Split long records explicitly.
+static void replayJNILine(const std::string &line) {
+    constexpr size_t chunk=1800;
+    if(line.empty()) { LOGSTRING("REPLAY_JNI <empty>\n"); return; }
+    for(size_t offset=0;offset<line.size();offset+=chunk)
+        LOGGER("REPLAY_JNI[%zu/%zu] %.*s\n",offset,line.size(),
+               int(std::min(chunk,line.size()-offset)),line.data()+offset);
+    }
+#endif
+
 int  abbottreinit();
 bool resetwrong();
 bool setgen2() {
@@ -1461,7 +1496,17 @@ int p1funcit=0;
 FILE *funcfp;
 extern "C"   JNIEXPORT jint JNICALL   fromjava(V1)(JNIEnv *env, jobject obj, jint i, jint i2,jbyteArray  bArr,jbyteArray  bArr2) {
     setgen2();
+#ifndef NOLOG
+    const auto before1=replayJNIBytes(env,bArr),before2=replayJNIBytes(env,bArr2);
+#endif
     jint res=abbottcall(P1)(env,obj,i,i2,bArr,bArr2,getjtoken(env));
+#ifndef NOLOG
+    replayJNILine("P1("+std::to_string(i)+","+std::to_string(i2)+","+
+                  before1+","+before2+")="+std::to_string(res));
+    const auto after1=replayJNIBytes(env,bArr),after2=replayJNIBytes(env,bArr2);
+    if(after1!=before1) replayJNILine("P1 arg3.after="+after1);
+    if(after2!=before2) replayJNILine("P1 arg4.after="+after2);
+#endif
     fprintf(funcfp,"p1struct p1_%d={%d,%d", p1funcit++,i,i2);
     writearray(env,bArr,funcfp);
     writearray(env,bArr2,funcfp);
@@ -1472,7 +1517,17 @@ extern "C"   JNIEXPORT jint JNICALL   fromjava(V1)(JNIEnv *env, jobject obj, jin
 int p2funcit=0;
 extern "C"  JNIEXPORT  jbyteArray JNICALL fromjava(V2) (JNIEnv *env, jobject obj, jint i1, jint i2, jbyteArray jar1, jbyteArray jar2) {
     setgen2();
+#ifndef NOLOG
+    const auto before1=replayJNIBytes(env,jar1),before2=replayJNIBytes(env,jar2);
+#endif
     jbyteArray jres=abbottcall(P2)(env, obj,  i1,  i2, jar1,  jar2,getjtoken(env)) ;
+#ifndef NOLOG
+    replayJNILine("P2("+std::to_string(i1)+","+std::to_string(i2)+","+
+                  before1+","+before2+")="+replayJNIBytes(env,jres));
+    const auto after1=replayJNIBytes(env,jar1),after2=replayJNIBytes(env,jar2);
+    if(after1!=before1) replayJNILine("P2 arg3.after="+after1);
+    if(after2!=before2) replayJNILine("P2 arg4.after="+after2);
+#endif
     fprintf(funcfp,"p2struct p2_%d={%d,%d",p2funcit++,i1,i2);
     writearray(env,jar1,funcfp);
     writearray(env,jar2,funcfp);
@@ -1485,15 +1540,33 @@ extern "C"  JNIEXPORT  jbyteArray JNICALL fromjava(V2) (JNIEnv *env, jobject obj
 
 extern "C"  JNIEXPORT  jint JNICALL   fromjava(V1)(JNIEnv *env, jclass obj, jint i, jint i2,jbyteArray  bArr,jbyteArray  bArr2) {
     setgen2();
+#ifndef NOLOG
+    const auto before1=replayJNIBytes(env,bArr),before2=replayJNIBytes(env,bArr2);
+#endif
     jint res=abbottcall(P1)(env,obj,i,i2,bArr,bArr2,getjtoken(env));
-     LOGGER("V1(%i,%i,%p,%p)=%i\n",i,i2,bArr,bArr2,res);
+#ifndef NOLOG
+    replayJNILine("P1("+std::to_string(i)+","+std::to_string(i2)+","+
+                  before1+","+before2+")="+std::to_string(res));
+    const auto after1=replayJNIBytes(env,bArr),after2=replayJNIBytes(env,bArr2);
+    if(after1!=before1) replayJNILine("P1 arg3.after="+after1);
+    if(after2!=before2) replayJNILine("P1 arg4.after="+after2);
+#endif
     return res;
     }
 int p2funcit=0;
 extern "C"  JNIEXPORT  jbyteArray JNICALL fromjava(V2) (JNIEnv *env, jclass obj, jint i1, jint i2, jbyteArray jar1, jbyteArray jar2) {
     setgen2();
+#ifndef NOLOG
+    const auto before1=replayJNIBytes(env,jar1),before2=replayJNIBytes(env,jar2);
+#endif
     jbyteArray jres=abbottcall(P2)(env, obj,  i1,  i2, jar1,  jar2,getjtoken(env)) ;
-    LOGGER("V2(%d,%d,%p,%p)=%p\n",i1,i2,jar1,jar2,jres);
+#ifndef NOLOG
+    replayJNILine("P2("+std::to_string(i1)+","+std::to_string(i2)+","+
+                  before1+","+before2+")="+replayJNIBytes(env,jres));
+    const auto after1=replayJNIBytes(env,jar1),after2=replayJNIBytes(env,jar2);
+    if(after1!=before1) replayJNILine("P2 arg3.after="+after1);
+    if(after2!=before2) replayJNILine("P2 arg4.after="+after2);
+#endif
     return jres;
     }
 #endif

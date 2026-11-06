@@ -411,9 +411,25 @@ struct Outbox::Impl {
                    (unsigned long long)r.end);
         log("pending",p); logGlucose("pending glucose",bounds); return true;
     }
-    void acknowledge(const std::string &receipt) {
+    void acknowledge(const std::string &receipt, bool alreadyStored = false) {
         healthy(); auto r=state.get();
-        if(!isUuid(receipt) || !r.pending) throw Error("Invalid Clarity acknowledgment");
+        if((!alreadyStored && !isUuid(receipt)) || !r.pending) throw Error("Invalid Clarity acknowledgment");
+        if (alreadyStored) {
+            // A duplicate confirms our retained post, not a newly selected
+            // batch. Check its protocol identity before advancing native state.
+            const auto saved = Json::parse(pendingBody());
+            const auto &post = saved.at("DataPost");
+            const auto envelope = Json::parse(post.at("PostHeader").get<std::string>());
+            const auto &content = envelope.at("Content").get_ref<const std::string &>();
+            auto mac = hmac256(bytes("DxDs" + account), bytes(content));
+            mac.resize(16);
+            const auto header = Json::parse(content);
+            if (post.at("AccountID") != account || post.at("SequenceID") != r.sequence ||
+                envelope.at("IsZip") != false || envelope.at("Hmac") != base64(mac) ||
+                header.at("PatientId") != account || header.at("InstallationId") != installation ||
+                header.at("SequenceNumber") != r.sequence)
+                throw Error("Clarity duplicate confirmation does not match the retained post identity");
+        }
         const auto p=pending();
         const auto node=data.get<PendingNode>(r.pending,r.end); // Copy before any remap.
         MappedIndexView before(data, r.end);
@@ -436,9 +452,14 @@ struct Outbox::Impl {
         r.times=node.times; r.events=node.events; r.sessions=node.sessions;
         r.count+=node.count;
         if(node.count) { if(!r.first || node.first<r.first) r.first=node.first; r.last=std::max(r.last,node.last); }
-        uuidField(r.receipt,receipt); r.pending=0;
+        if (!alreadyStored) uuidField(r.receipt,receipt);
+        r.pending=0;
         commit(r,&edit);
-        diagnostic("batch acknowledgment saved: batch=%s receipt=%s; pending batch cleared",p.id.c_str(),receipt.c_str());
+        if (alreadyStored)
+            diagnostic("duplicate post confirmation saved: batch=%s sequence=%d; pending batch cleared; previous signed receipt retained",
+                       p.id.c_str(), r.sequence);
+        else
+            diagnostic("batch acknowledgment saved: batch=%s receipt=%s; pending batch cleared",p.id.c_str(),receipt.c_str());
         log("acknowledged",p,&previousValues); logGlucose("acknowledged batch glucose",range(p.times));
         diagnostic("acknowledged glucose total: count=%lld",(long long)state.get().count);
     }
@@ -454,6 +475,7 @@ bool Outbox::prepare(const Snapshot &s,int64_t since,int64_t now,bool numbers) {
 PendingBatch Outbox::pending() const {return impl->pending();}
 std::string_view Outbox::pendingBody() const {return impl->pendingBody();}
 void Outbox::acknowledge(const std::string &receipt) {impl->acknowledge(receipt);}
+void Outbox::acknowledgeAlreadyStored() {impl->acknowledge({},true);}
 size_t Outbox::sentGlucose() const {return impl->state.get().count;}
 const std::string &Outbox::account() const {return impl->account;}
 const std::string &Outbox::installation() const {return impl->installation;}

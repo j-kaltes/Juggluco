@@ -29,6 +29,7 @@
 #include <limits.h>
 #include <array>
 #include <alloca.h>
+#include <mutex>
 
 #include "inout.hpp"
 #include "SensorGlucoseData.hpp"
@@ -98,6 +99,8 @@ extern void   sendKAuth(SensorGlucoseData *hist);
 extern void sendsiScan(SensorGlucoseData *hist) ;
 extern void  setstreaming(SensorGlucoseData *hist);
 class Sensoren {
+   // List readers can rebuild the links, and list operations call each other.
+   mutable std::recursive_mutex sensorlistMutex;
    string inbasedir;
    pathconcat mapfile;
    typedef Mmap<struct sensor> MapType;
@@ -131,6 +134,7 @@ public:
    }
 
    int32_t last() const {
+      std::lock_guard<std::recursive_mutex> lock(sensorlistMutex);
       auto l= reinterpret_cast<const infoblock *>(map.data())->last;
       /*
       for(;l>=0&&!sensorlist()[l].starttime; --l)  {
@@ -236,6 +240,7 @@ public:
    }
 
    uint32_t timefirstdata()  {
+      std::lock_guard<std::recursive_mutex> lock(sensorlistMutex);
       static uint32_t first = UINT32_MAX;
      if(last()>=0) {
          int i=getstartindex();
@@ -270,6 +275,7 @@ public:
        }
 
    void extend(int newcap) {
+      std::lock_guard<std::recursive_mutex> lock(sensorlistMutex);
       map.extend(mapfile, 1 + newcap);
 //   infoblockptr()=reinterpret_cast<infoblock*>(map.data());
 //   sensorlist()=map.data()+1;
@@ -290,6 +296,7 @@ private:
    }
 
 void   removeunused() {
+  std::lock_guard<std::recursive_mutex> lock(sensorlistMutex);
   if(const int l=last();l>=0&&l<maxhist) {
          SensorGlucoseData *hist = getSensorData(l);
          if(hist&&hist->unused()) {
@@ -306,6 +313,7 @@ public:
 static int  deletedit;
 static SensorGlucoseData *isdeleted;
 void   deletelast() {
+  std::lock_guard<std::recursive_mutex> lock(sensorlistMutex);
   if(const int l=last();l>=0&&l<maxhist) {
       auto *old=hist[l];
       LOGGER("maxhist=%d deletelast %d %p\n",maxhist,l,old);
@@ -326,15 +334,15 @@ void   deletelast() {
          return addsensor(std::string_view(name.data(),name.size()));
         }
    int addsensor(const string_view name) {
+      std::lock_guard<std::recursive_mutex> lock(sensorlistMutex);
       LOGGER("addsensor(%.16s)\n", name.data());
       removeunused();
       int endindex=getendindex();
-      infoblockptr()->last++;
+      const int32_t lastpos=last()+1;
       sensorlistmap();
-      if (last() >= getmaxhistory()) {
-         setmaxhistory(last() * 2);
+      if (lastpos >= getmaxhistory()) {
+         setmaxhistory(lastpos * 2);
       }
-      const int32_t lastpos=infoblockptr()->last;
       SensorGlucoseData *histel = new SensorGlucoseData(pathconcat(inbasedir, name),lastpos);
         
       hist[lastpos] = histel;
@@ -348,6 +356,8 @@ void   deletelast() {
       sensorlist()[lastpos].initialized=false;
       infoblockptr()->current = lastpos;
       makelinks(lastpos,endindex);
+      // Publish only after the new entry and its links are initialized.
+      infoblockptr()->last = lastpos;
       #ifndef NOLOG
       time_t tim=sensorlist()[lastpos].starttime;
       LOGGER("add sensor %.16s starttime=%ld %s", name.data(),tim,ctime(&tim));
@@ -1076,6 +1086,7 @@ SensorGlucoseData *makelibre3sensor(std::string_view shortname,uint32_t starttim
    static constexpr const uint32_t maxageseconds = 24 * 24 * 60 * 60u;
 template <typename F>
    void sensorsInPeriod(vector<int> &out,uint32_t starttime, uint32_t endtime,F dont) {
+      std::lock_guard<std::recursive_mutex> lock(sensorlistMutex);
       const uint32_t nu = time(nullptr);
       constexpr const int maxage=maxSIhours*60*60;
       const uint32_t oldsecs=maxage>=starttime?0:starttime-maxage;
@@ -1147,6 +1158,7 @@ template <typename F>
    }
 
 int firstafter(uint32_t starttime)  {
+   std::lock_guard<std::recursive_mutex> lock(sensorlistMutex);
    int started=starttime-60*60;
    int i=getendindex();
    if(i<0)
@@ -1201,6 +1213,7 @@ vector<SensorGlucoseData *> sensorsInPeriod(uint32_t starttime,uint32_t endtime)
    }
    */
     void  sensorlistmap() {
+      std::lock_guard<std::recursive_mutex> lock(sensorlistMutex);
       const auto minsize= last()+100;
       if (minsize >= capacity())
          extend(minsize * 2);
@@ -1210,6 +1223,7 @@ vector<SensorGlucoseData *> sensorsInPeriod(uint32_t starttime,uint32_t endtime)
            return  const_cast<const SensorGlucoseData *>(const_cast<Sensoren*>(this)->getSensorData(ind));
         }
    SensorGlucoseData *getSensorData(int ind = -1) {
+      std::lock_guard<std::recursive_mutex> lock(sensorlistMutex);
       if(ind < 0) {
         ind = last();
         if(ind < 0) {
@@ -1373,6 +1387,7 @@ template <typename F>
       }
 
    vector<int> bluetoothactive(uint32_t tim, uint32_t nu) {
+      std::lock_guard<std::recursive_mutex> lock(sensorlistMutex);
       LOGSTRING("bluetoothactive\n");
       vector<int> out;
       const uint32_t oldsecs=nu-maxSIhours*60*60;
@@ -1442,6 +1457,7 @@ template <typename F>
       return out;
    }
 std::pair<int, uint32_t> lastused(uint32_t (SensorGlucoseData::*proc)(void) const) {
+   std::lock_guard<std::recursive_mutex> lock(sensorlistMutex);
    uint32_t lasttime=0;
    int newst =-1;
    int i = getendindex();
@@ -1482,6 +1498,7 @@ std::pair<int, uint32_t> lastused(uint32_t (SensorGlucoseData::*proc)(void) cons
 
 
    auto firstpolltime() {
+      std::lock_guard<std::recursive_mutex> lock(sensorlistMutex);
       int i=getstartindex(); 
       if(i>=0) {
           do {
@@ -1502,6 +1519,7 @@ std::pair<int, uint32_t> lastused(uint32_t (SensorGlucoseData::*proc)(void) cons
    }
 
    auto firsthistorytime() {
+      std::lock_guard<std::recursive_mutex> lock(sensorlistMutex);
       int i=getstartindex(); 
       if(i>=0) {
           do {
@@ -1523,6 +1541,7 @@ std::pair<int, uint32_t> lastused(uint32_t (SensorGlucoseData::*proc)(void) cons
 
 
    const SensorGlucoseData *laststreamsensor() {
+    std::lock_guard<std::recursive_mutex> lock(sensorlistMutex);
     int i=getendindex();
     if(i>=0) {
           do {
@@ -1811,6 +1830,7 @@ bool knownDex(const char *name,const char *address) const {
    }
 public:
 void makelinks(const int index,int previndex) {
+    std::lock_guard<std::recursive_mutex> lock(sensorlistMutex);
     LOGGER("makelinks(%d,%d)\n",index,previndex);
     sensor *sens=getsensor(index);
     if(previndex<0) {
@@ -1820,6 +1840,7 @@ void makelinks(const int index,int previndex) {
         placesensorinlist(sens,index,previndex);
     }
 void setindices() {
+    std::lock_guard<std::recursive_mutex> lock(sensorlistMutex);
     const int lastpos=last();
     LOGGER("setindices %d\n",lastpos);
     if(lastpos<0)
@@ -1835,6 +1856,7 @@ void setindices() {
     }
 private:
 bool removelinks(int index) {
+    std::lock_guard<std::recursive_mutex> lock(sensorlistMutex);
     sensor *sens=getsensor(index);
     int wasprev=sens->prev;
     int wasnext=sens->next;
@@ -1880,6 +1902,7 @@ int placesensorinlist(sensor *sens,int index,int prev) {
     return prev;
     }
 sensor * getend() {
+    std::lock_guard<std::recursive_mutex> lock(sensorlistMutex);
     int i=last();
     sensor *sens=getsensor(i);
     if(sens->next==0&&sens->prev==0) {
@@ -1891,6 +1914,7 @@ sensor * getend() {
     return sens;         
     }
 int getendindex()  {
+    std::lock_guard<std::recursive_mutex> lock(sensorlistMutex);
     int index=last();
     if(index<0)
         return -1;
@@ -1907,6 +1931,7 @@ int getendindex()  {
 
 
 sensor * getstart()  {
+        std::lock_guard<std::recursive_mutex> lock(sensorlistMutex);
         int i=0;
         sensor *sens=getsensor(i);
         if(sens->next==0&&sens->prev==0) {
@@ -1918,6 +1943,7 @@ sensor * getstart()  {
         return sens;         
         }
 int getstartindex()  {
+        std::lock_guard<std::recursive_mutex> lock(sensorlistMutex);
         const int lastindex=last();
         if(lastindex<0)
             return -1;
@@ -1943,6 +1969,7 @@ int getprevindex(int index)  {
     } */
 template <typename F>
 void intersens(F func) {
+    std::lock_guard<std::recursive_mutex> lock(sensorlistMutex);
     if(last()<0) 
             return;
      for(sensor *sens=getend();;sens=getsensor(sens->prev)) {
@@ -1954,6 +1981,7 @@ void intersens(F func) {
     }
 template <typename F>
 void fromstart(F func) {
+        std::lock_guard<std::recursive_mutex> lock(sensorlistMutex);
         if(last()<0) 
                 return;
          for(sensor *sens=getstart();;sens=getsensor(sens->next)) {

@@ -536,7 +536,7 @@ int  startjuggluco(std::string_view dirfiles,const char *country) {
     return 0;
      }
 #endif
-static void initinjuggluco(std::string_view dirfiles,const char *country) {
+ void initinjuggluco(std::string_view dirfiles,const char *country) {
         extern bool networkpresent;
         networkpresent=true;
         mkdir(dirfiles.data(),0700);

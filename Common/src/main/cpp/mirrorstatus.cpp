@@ -20,6 +20,9 @@
 
 #include <memory>
 #include <array>
+#include <string.h>
+#include <stdio.h>
+#include <string_view>
 #include "datbackup.hpp"
 #include "mirrorstatus.hpp"
 #include "net/netstuff.hpp"
@@ -43,6 +46,43 @@ extern char *getmirrorerrorsettime(const passhost_t *pass);
 extern bool mirrorLocalTcpAvailable();
 extern std::pair<std::unique_ptr<const char[],deleter>,int> ICEstatus(int allindex) ;
 //extern std::unique_ptr<const char[],deleter> ICEstatus(int allindex);
+
+
+
+
+int mkescape(const char *input,char *output) {
+    struct  {
+            char ch;
+            std::string_view repl;
+            } 
+            repar[]{
+            {'&',"&amp;"},
+            {'<',"&lt;"},
+            {'>',"&gt;"},
+            {'"',"&quot;"},
+            {'\'',"&#39;"}};
+        int outlen=0;
+        for(const char *ptr=input;*ptr;++ptr) {
+                char ch=*ptr;
+                for(auto &el:repar) {
+                        if(el.ch==ch) {
+                                int replen=el.repl.size();
+                                memcpy(output+outlen,el.repl.data(),replen);
+                                outlen+=replen;
+                                goto nextel;
+                                }
+                        }
+                output[outlen++]=ch;
+                nextel:
+                }
+        output[outlen]='\0';
+        return outlen;
+        }
+
+
+
+
+
 static std::pair<std::unique_ptr<const char[],deleter>,int> getnetstatus(int allindex)  {
 
 	if(allindex<0||allindex>=backup->getupdatedata()->hostnr) {
@@ -137,7 +177,8 @@ extern bool getactive(int pos);
 			runtimecarrier="No active carrier";
 
 
-		static constexpr char baseformat[]=R"(<h1>Connection %d: %s</h1><p>%s <i>%s</i><br>Send to: %s%s%s running=%s socket=%d locked=%s<br>Receive from: %s %d %s socket=%d wait for commands: %s, interpret: %s<br><b>Transport</b>: configured=%s, selected=%s<br><b>Alternate carrier requested</b>: %s<br><b>Local TCP/IP endpoint</b>: %s<br><b>TCP/IP live socket</b>: %s (send=%s fd=%d, receive=%s fd=%d)</p>)";
+		static constexpr char connectionformat[]=R"(<h1>Connection %d: )";
+		static constexpr char baseformat[]=R"(</h1><p>%s <i>%s</i><br>Send to: %s%s%s running=%s socket=%d locked=%s<br>Receive from: %s %d %s socket=%d wait for commands: %s, interpret: %s<br><b>Transport</b>: configured=%s, selected=%s<br><b>Alternate carrier requested</b>: %s<br><b>Local TCP/IP endpoint</b>: %s<br><b>TCP/IP live socket</b>: %s (send=%s fd=%d, receive=%s fd=%d)</p>)";
 		static constexpr char carrierformat[]=R"(<p><b>Carrier details</b><br>Direct Bluetooth (BLE GATT)=%s<br>Messages (Wear OS MessageClient)=%s<br>message bridge=%s<br>Sender:<br>to bluetooth running=%d received=%s  sendmessage: %s<br>messagesendersocket=%d<br>Receiver:<br>to bluetooth running=%d received=%s  sendmessage: %s<br>messagereceiversocket=%d<br>otherside index=%d</p>)";
 		constexpr const int maxbuf=2048+passhost_t::maxip*46+
 			passhost_t::maxnamelen+maxmirrortext+RELEASEEXTRA;
@@ -148,8 +189,9 @@ extern bool getactive(int pos);
 	//		return std::unique_ptr<const char[],deleter>((char *)errormessage,deleter(errormessage));
 
 
-		int buflen=snprintf(buf,maxbuf,baseformat,
-			allindex,host.getnameif(),ips,connect,
+		int buflen=snprintf(buf,maxbuf,connectionformat,allindex);
+                buflen+=mkescape(host.getnameif(),buf+buflen);
+		buflen+=snprintf(buf+buflen,maxbuf-buflen,baseformat,ips,connect,
 			sendnums?"Amounts ":"",sendscans?"Scans ":"",sendstream?"Stream ":"",
 			boolstr[status.sender.running],sendsock,boolstr[status.sender.locked],
 			boolstr[receives],status.receive.tid,receivethread,receivesock,

@@ -2,6 +2,7 @@
 #include "client.hpp"
 #include "auth.hpp"
 #include "certificate.hpp"
+#include "outbox.hpp"
 #include <ctime>
 namespace clarity {
 void validateDexcomUrl(const std::string &s) {
@@ -175,14 +176,29 @@ std::string uploadBytes(Json &c, std::string_view data, std::string_view dataAcc
         refreshAccess(c, post, save, true);
         throw Error("Access token refreshed; retry pending batch");
     }
-    if (r.status != 200)
-        throw Error(httpFailure("Clarity upload", r, c));
+    if (r.status != 200) {
+        const auto failure = httpFailure("Clarity upload", r, c);
+        if (isDuplicatePostSequence(r))
+            throw DuplicatePostSequence(failure);
+        throw Error(failure);
+    }
     response = openResponse(provider, r.body, h.at("RequestId"), account);
     auto ack = text(response.plain);
     if (!isUuid(ack))
         throw Error("Unrecognized Clarity acknowledgment");
     diagnostic("bulk response signature, account, request and acknowledgment verified");
     return ack;
+}
+void uploadPending(Json &c, Outbox &outbox, const Transport &post,
+                   const std::function<void(const Json &)> &save,
+                   const std::function<void()> &checkEnabled) {
+    try {
+        auto receipt = uploadBytes(c, outbox.pendingBody(), outbox.account(), post, save, checkEnabled);
+        outbox.acknowledge(receipt);
+    } catch (const DuplicatePostSequence &) {
+        diagnostic("bulk service already stored the retained post; saving its local progress without resending records");
+        outbox.acknowledgeAlreadyStored();
+    }
 }
 std::string upload(Json &c, const Json &data, const Transport &post,
                    const std::function<void(const Json &)> &save,

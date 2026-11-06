@@ -238,7 +238,9 @@ Json data_tool_definitions() {
             {{"source", {{"type", "string"}, {"enum", Json::array({"stream", "history", "scans"})}}},
              {"start", timestamp_schema()}, {"end", timestamp_schema()},
              {"unit", glucose_unit_schema()},
-             {"calibrated", {{"type", "boolean"}}}, {"pastvalues", {{"type", "boolean"},
+             {"calibrated", {{"type", "boolean"},
+                {"description", "false: original sensor glucose without Juggluco calibration. true: request Juggluco adjustment. In calibrated stream/scans TSV the unit-named column is adjusted, Raw is original glucose in the same unit, and diff is adjusted minus original before rounding. State the basis used; for sensor comparisons also inspect calibrated=false and report when calibration changes agreement."}}},
+             {"pastvalues", {{"type", "boolean"},
                 {"description", "Requires calibrated=true; apply Juggluco's past-values calibration option."}}},
              {"limit", limit_schema()}},
             Json::array({"source", "start", "end", "unit", "calibrated", "pastvalues", "limit"})),
@@ -365,7 +367,7 @@ Json data_tool_definitions() {
     parameters["required"] = Json::array({"source", "start", "end", "unit", "calibrated", "pastvalues", "step_minutes"});
     definitions.push_back(std::move(timeline));
     definitions.push_back(definition("juggluco_stream_gaps",
-        "Analyze complete stream data for two DIFFERENT observations: absent glucose records, and PRESENT glucose with unavailable Rate (Libre 3 backfill evidence, NOT sensor-error evidence). Uses native sensor cadence: normal one-minute Libre 3 intervals are not missing minutes. Includes stable event references and each sensor's largest actual glucose gap with timestamps even below the requested threshold. For sensor-error questions inspect no_stream_records/largest_glucose_gap, never relabel no_finite_rate. This valid-glucose export has no historical error codes, so missing glucose alone does not prove its cause. No date, row or finding-count cap. For the most recent half-hour event use minimum_minutes=30 and search backward across all relevant sensors/windows. Resolve open edges and inspect the full requested period. Distinguish observed duration from finite-rate brackets and state coverage.",
+        "Analyze complete stream data for two observations: absent glucose records, and PRESENT glucose with unavailable Rate. For Libre 3, discuss present-glucose/no-rate runs as reception/backfill: the app may have been stopped, restarting, or disconnected at measurement time. Saved readings alone do not select the cause. Uses native sensor cadence: normal one-minute Libre 3 intervals are not missing minutes. Includes stable event references and each sensor's largest actual glucose gap with timestamps even below the requested threshold. For questions about absent glucose inspect no_stream_records/largest_glucose_gap; no_finite_rate contains actual glucose. Historical diagnostic codes are unavailable. No date, row or finding-count cap. For the most recent half-hour event use minimum_minutes=30 and search backward across all relevant sensors/windows. Resolve open edges and inspect the full requested period. Distinguish observed duration from finite-rate brackets and state coverage.",
         {{"start", timestamp_schema()}, {"end", timestamp_schema()},
          {"minimum_minutes", {{"type", "integer"}, {"minimum", 1}, {"maximum", UINT32_MAX / 60}}}},
         Json::array({"start", "end", "minimum_minutes"})));

@@ -54,8 +54,10 @@ public class T4Transceiver extends MyByteBuffer {
     public T4Reply t4Transceive(byte[] bytes, final T4Reply reply) {
         if (bytes == null) return null;
         try {
-	    byte[] res=tag.transceive(bytes);
-	     {if(doLog) {Log.i(TAG,"transceive(" +HexDump.toHexString(bytes)+")="+HexDump.toHexString(res));};};
+            byte[] res=tag.transceive(bytes);
+             if(doLog) {
+                Log.i(TAG,"transceive(" +HexDump.toHexString(bytes)+")="+HexDump.toHexString(res));
+                };
             return T4Reply.parse(res, reply);
         } catch (TagLostException e) {
             {if(doLog) {Log.d(TAG, "Tag was lost");};};
@@ -273,6 +275,23 @@ static   private byte[] getT4read(int offset, int len) {
     }
 
     public boolean doNeededSelection() {
+    /*
+        var result = t4Transceive(SA);
+        if(re
+        var okay = result != null && result.isOkay();
+        if(!okay) {
+            if(doLog) {
+                Log.d(TAG, failureMsg);
+                }
+        }
+	else {
+		{if(doLog) {Log.i(TAG,"transceiveOkay");};};
+		}
+        return okay;
+        return (transceiveOkay(SA, "Failed to select application")
+    } */
+
+
         return (transceiveOkay(SA, "Failed to select application")
                 && transceiveOkay(SC, "Failed to select container")
                 && readContainerData()

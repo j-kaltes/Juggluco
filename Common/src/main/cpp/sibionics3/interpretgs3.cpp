@@ -809,6 +809,7 @@ jlong gs3Glucose(si3stream &stream,std::vector<uint8_t> &vect,std::string &messa
     const int sensorindex=sens->sensorIndex;
     auto *sensor=sensors->getsensor(sensorindex);
     if(state.anchor&&sens->getinfo()->starttime!=state.anchor) {
+        LOGGER("gs3 V3 clock anchor=%u previous=%u\n",state.anchor,sens->getinfo()->starttime);
         sens->getinfo()->starttime=state.anchor;
         sensor->starttime=state.anchor;
         sensors->setindices();
@@ -839,7 +840,9 @@ jlong gs3Glucose(si3stream &stream,std::vector<uint8_t> &vect,std::string &messa
         if(record.index<=sens->getinfo()->manualwarmup)
             sens->getinfo()->warmupstartpos=std::min(sens->pollcount(),255);
         state.savedIndex=record.index;
-        eventTime=item.time;mgdL=value;change=rate;
+        eventTime=item.time;
+        mgdL=value;
+        change=rate;
         LOGGER("gs3 V3 index=%u time=%u display=%u mgdL=%d trend=%u cstate=%u/%u tstate=%u dstate=%u remaining=%u\n",record.index,item.time,record.display_glucose,value,record.trend,record.present_cstate,record.algorithm_cstate,record.tstate,record.dstate,record.remaining);
     }
     if(!eventTime) return reply.authenticated?3LL:1LL;

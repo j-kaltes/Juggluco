@@ -28,11 +28,13 @@
 #include <sys/socket.h>
 #include <atomic>
 #include <time.h>
+#include <deque>
 #include "phase.h"
 #include "net/netstuff.hpp"
 #include "myfdsan.h"
 #include "net/Connect.hpp"
 #include "ICE_data.hpp"
+#include "Agent_data.hpp"
 #define LOGGERICE(...) LOGGER("ICE: " __VA_ARGS__)
 #define LOGARICE(...) LOGAR("ICE: " __VA_ARGS__)
 extern bool initAgent(juice_agent *agent,int allindex);
@@ -80,12 +82,17 @@ char sdp[JUICE_MAX_SDP_STRING_LEN];
 int sdplen;
 int hostindex;
 
-ICEConnect(int allindex,const passhost_t &host):Connect(allindex),side(host.side),hostindex(hostselect(host.getICEname())) {
+ICEConnect(int allindex,const passhost_t &host):Connect(allindex),side(host.side),hostindex(hostselect(host.getICEname())),threadCand(&ICEConnect::handleCandidates,this) { 
         agent.store(nullptr);
         }
 ~ICEConnect() {
         finish=true;
+        noCandidates.clear();
+        noCandidates.notify_all();
         endConnectionHere();
+        if(threadCand.joinable())
+            threadCand.join();
+        clearCandidates();
         }
 void endConnectionHere() {
        LOGGERICE("%d: endConnectionHere\n",side);
@@ -101,7 +108,16 @@ void endConnectionHere() {
 private:
 //uint32_t initrunning=0;
 std::atomic_flag initrunning{};
+
+void processCandidate(Agent_data *sdpDataptr);
+void handleCandidates();
 public:
+void clearCandidates();
+
+   std::deque<Agent_data *> candidates;
+   std::mutex candidate_mutex;
+   std::atomic_flag noCandidates{true};
+
 virtual int setindex(int in) override{
         LOGGER("setindex(%d)\n",in);
         icedata[1].allindex=in;
@@ -231,6 +247,7 @@ void endConnection() override{
 #endif
         }
 int  connect(const passhost_t *pass) {
+        clearCandidates();
         icedata[0].reStarted();
         icedata[1].reStarted();
         int index=gethostindex(pass);
@@ -434,5 +451,7 @@ void setConnected() {
     icedata[1].shutdown=false;
     }
     void receiverThread(int allindex);
+
+std::thread threadCand;
  };
 

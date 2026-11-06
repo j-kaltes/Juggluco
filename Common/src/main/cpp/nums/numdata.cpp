@@ -145,7 +145,7 @@ void makenightswitch() {
             }
 
      //prunenums();
-#if !defined(NOLOG) && defined( __ANDROID_API__)
+#if !defined(NOLOG) && defined(JUGGLUCO_APP) 
 extern void checker();
    checker();
 #endif

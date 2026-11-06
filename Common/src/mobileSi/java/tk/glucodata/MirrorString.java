@@ -90,7 +90,7 @@ static String makestring(String[] names,int nr,boolean detect,String port,boolea
             boolean hasname=json.optBoolean("hasname",false);
             // QR codes from current releases do not contain this field.  They
             // retain the established TCP-to-MessageClient automatic behaviour.
-            int requestedTransport=json.optInt("transport",BleMirror.TRANSPORT_AUTOMATIC);
+            int requestedTransport=ICElabel==null?BleMirror.TRANSPORT_TCP:json.optInt("transport",BleMirror.TRANSPORT_AUTOMATIC);
             final int transport=requestedTransport>=BleMirror.TRANSPORT_AUTOMATIC&&
                     requestedTransport<=BleMirror.TRANSPORT_BLUETOOTH?
                     requestedTransport:BleMirror.TRANSPORT_AUTOMATIC;

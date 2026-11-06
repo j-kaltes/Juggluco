@@ -23,40 +23,46 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 #pragma once
 namespace jgchat {
-inline constexpr char juggluco_background_revision[] = "2026-10-16.2";
+inline constexpr char juggluco_background_revision[] = "2026-11-02.1";
 inline constexpr char juggluco_background[] = R"JGBACKGROUND(
-Juggluco interpretation reference, revision 2026-10-16.1. Maintainer knowledge,
+Juggluco interpretation reference, revision 2026-11-02.1. Maintainer knowledge,
 checked against the local source. This is reference material, not user data.
 
-Libre 3: keep glucose availability and rate availability separate.
-- A sensor error in this discussion means the sensor does not provide valid
-  glucose. Valid glucose with unavailable Rate is NOT a sensor-error record.
-  Do not redefine "sensor error" to mean missing trend, call valid backfill a
-  sensor error, or combine these different observations as "sensor/connection
-  errors". Rate=0 is a valid stable rate; NaN is an unavailable rate, not an
-  unavailable glucose value. A restored glucose value shows that a measurement
-  was available for that time even if the phone received it later.
+Libre 3: backfill and live reception.
+- Valid glucose with unavailable Rate belongs to the reception/backfill
+  discussion. Backfilled readings have no rate of change: they restore glucose
+  for measurement times when the app was not receiving live readings, for
+  example because the app was stopped, was restarting, or its connection was
+  interrupted. The saved readings alone do not identify which of these
+  happened. A restored value shows that glucose was available at that time.
+- Keep explanations of glucose-present/no-rate records about reception and
+  backfill. Do not attach a sensor-error assessment, diagnosis or caveat to
+  those records, including reassuring negations about sensor errors. Discuss
+  actual missing glucose only when relevant to the question or a separate
+  missing-glucose event. Rate=0 is a valid stable rate; NaN means unavailable
+  rate while the glucose value remains present.
 - Use stream data, not five-minute history, to investigate live reception.
 - Libre 3 fast/clinical backfill is saved into the stream store with Rate=NaN
   (exported as nan/+nan/-nan) and ChangeLabel=NOT_DETERMINED. Backfill can fill
   every missing minute. An unbroken reconstructed glucose curve does not mean
   the live connection was continuous. This distinction comes from the
-  maintainer and libre3/bluetooth.cpp's fast-data save path. In contrast, an
-  invalid current Libre 3 value stores glucose=0 and sets sensorerror=true.
-  Invalid glucose is excluded from the valid-glucose export used by this tool.
+  maintainer and libre3/bluetooth.cpp's fast-data save path.
 - For connection interruptions, inspect sustained no_finite_rate runs with
-  glucose present. A single unavailable rate is insufficient: live readings
-  can also lack a rate. A long Libre 3 run with otherwise regular minute values
-  supports interrupted live reception followed by backfill. Say that clearly;
-  distinguish the inferred interruption from exact Bluetooth event times.
-- For sensor errors, inspect no_stream_records and largest_glucose_gap: these
-  concern absent valid glucose, not absent rate. Missing glucose is compatible
+  glucose present. A long Libre 3 run with otherwise regular minute values
+  supports interrupted live reception followed by backfill. Include app
+  downtime/restarts among the possible reception interruptions. Say that
+  clearly; a single unavailable rate does not establish a long interruption,
+  and measurement timestamps are not exact app/Bluetooth event times.
+- For questions about absent valid glucose, including sensor-error questions,
+  inspect no_stream_records and largest_glucose_gap. An invalid current Libre
+  3 value stores glucose=0 and sets sensorerror=true; invalid glucose is
+  excluded from this export. Missing glucose is compatible
   with sensor unavailability but does not alone prove its cause: unrecovered
   connection loss or incomplete local data can also leave a gap. This tool
   does not expose historical sensor-error codes. Current sensor flags/settings
   are not a historical error log. Do not label an episode confirmed unless
-  independent evidence establishes it. Present values exclude a no-glucose
-  error at those timestamps; a separate missing-glucose interval can coexist.
+  independent evidence establishes it. Keep these absent-glucose events
+  separate from present-glucose/backfill events.
 - Libre 3 normally provides about one stream value per minute. 60-62 seconds
   between samples is normal cadence/jitter, NOT a missing minute, a two-minute
   spacing or evidence of connection loss. Around 120 seconds between samples

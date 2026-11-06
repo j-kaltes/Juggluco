@@ -61,36 +61,10 @@ static final String TAG="OpenNov";
                 r.bytes = new byte[blen];
             }
             arraycopy(bytes,0,r.bytes,xlen,blen);
-//            b.get(r.bytes, xlen, blen);
         }
- //       r.lastShort = getUnsignedShort(b);
         return r;
     }
 
-/*
-    public static T4Reply parse(final byte[] bytes, T4Reply r) {
-        if (bytes == null) return null;
-        var b = ByteBuffer.wrap(bytes);
-        if (r == null) {
-            r = new T4Reply();
-        }
-        var blen = b.remaining() - 2;
-        if (blen < 0) return null;
-        if (blen > 0) {
-            int xlen = 0;
-            if (r.bytes != null) {
-                final byte[] holding = r.bytes;
-                xlen = holding.length;
-                r.bytes = new byte[blen + xlen];
-                System.arraycopy(holding, 0, r.bytes, 0, xlen);
-            } else {
-                r.bytes = new byte[blen];
-            }
-            b.get(r.bytes, xlen, blen);
-        }
-        r.lastShort = getUnsignedShort(b);
-        return r;
-    } */
 
     public static T4Reply parse(final byte[] bytes) {
         return parse(bytes, null);

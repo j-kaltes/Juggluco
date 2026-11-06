@@ -1081,6 +1081,19 @@ long nexttime= 0L;
 
 
 
+private static boolean isDexcomNfc(Tag tag) {
+    var b = android.nfc.tech.NfcB.get(tag);
+    if (b == null || android.nfc.tech.IsoDep.get(tag) == null)
+        return false;
+
+    return java.util.Arrays.equals(tag.getId(),
+                new byte[]{0x31, 0x41, 0x59, 0x27})
+        && java.util.Arrays.equals(b.getApplicationData(),
+                new byte[]{0x50, 0x59, 0x2D, 0x00})
+        && java.util.Arrays.equals(b.getProtocolInfo(),
+                new byte[]{0x00, 0x21, (byte)0x81});
+     }
+
 
 synchronized void   startnfc(Tag tag) {
     
@@ -1116,7 +1129,34 @@ synchronized void   startnfc(Tag tag) {
 
         if(!isWearable) {
             if(hasTech(techs,"android.nfc.tech.IsoDep")) {
-               if(doLog){showbytes("tag", tag.getId());};
+               if(doLog){
+                   showbytes("NFC tag", tag.getId());
+                   var b = android.nfc.tech.NfcB.get(tag);
+                   if (b != null) {
+                        var appData = b.getApplicationData();
+                        var protocol = b.getProtocolInfo();
+
+                        if (appData != null)
+                            showbytes("NfcB applicationData", appData);
+                        if (protocol != null)
+                            showbytes("NfcB protocolInfo", protocol);
+
+                        var iso = android.nfc.tech.IsoDep.get(tag);
+                        if (iso != null) {
+                            var high = iso.getHiLayerResponse();
+                            if (high != null)
+                                showbytes("NfcB higherLayerResponse", high);
+                        }
+                       }
+                    }
+                if(isDexcomNfc(tag)) {
+                   ScanNfcV.failure(ScanNfcV.getvibrator(this) );
+                   // Applic.argToasterWait(this,"The data matrix on the applicator of Dexcom G7/ONE+ sensors should be scanned with left menu->Photo");
+RunOnUiThread(() ->
+                   Confirm.message(this,R.string.dexcomG7NFCtitle,R.string.dexcomG7NFCmessage,()->{}));
+                    return;
+                    }
+
                tk.glucodata.NovoPen.Scan.onTag(this,tag);
                return;
                }

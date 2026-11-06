@@ -42,6 +42,9 @@ class Outbox {
     PendingBatch pending() const;
     std::string_view pendingBody() const;
     void acknowledge(const std::string &receipt);
+    // Only after the bulk service explicitly returns DuplicatePostSequence.
+    // No new receipt is invented; retain the previous signed receipt.
+    void acknowledgeAlreadyStored();
     size_t sentGlucose() const;
     GlucoseProgress glucoseProgress() const;
     const std::string &account() const;

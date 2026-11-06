@@ -38,10 +38,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef QR_H
 #define QR_H
 #include <assert.h>
+#include <stdlib.h>
 #include <cstdint>
 #include <cstring>
 #include <cmath>
 #include <stdexcept>
+
 
 namespace qr {
 

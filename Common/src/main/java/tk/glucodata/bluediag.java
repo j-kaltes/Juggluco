@@ -56,8 +56,9 @@ import java.util.concurrent.TimeUnit;
 import static android.bluetooth.BluetoothGatt.CONNECTION_PRIORITY_BALANCED;
 import static android.bluetooth.BluetoothGatt.CONNECTION_PRIORITY_HIGH;
 import static android.graphics.Color.BLACK;
-import static android.graphics.Color.BLUE;
-import static android.graphics.Color.GREEN;
+//import static android.graphics.Color.BLUE;
+//import static android.graphics.Color.GREEN;
+import static android.graphics.Color.LTGRAY;
 import static android.graphics.Color.MAGENTA;
 import static android.graphics.Color.CYAN;
 import static android.graphics.Color.RED;
@@ -249,6 +250,7 @@ void showinfo(final SuperGattCallback gatt,MainActivity act) {
                     case 0:address.setTextColor(RED);break;
                     case 1: address.setTextColor(CYAN);break;
                     case 2: address.setTextColor(MAGENTA);break;
+                    default: address.setTextColor(LTGRAY);break;
                     };
                   }
              else {

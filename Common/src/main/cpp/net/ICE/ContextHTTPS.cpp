@@ -38,9 +38,14 @@
 #include <poll.h>
 #include <chrono>
 #include <atomic>
+#include <climits>
+#include <cstring>
+#include <cstdio>
 #include "HttpResponse.hpp"
 
 #include <openssl/ssl.h>
+#include <openssl/bio.h>
+#include <openssl/pem.h>
 #include <openssl/x509.h>
 #include <openssl/x509_vfy.h>
 #ifndef __ANDROID_API__
@@ -161,6 +166,44 @@ static bool doinitcryptofuncs() {
 #include "ssldefs.h"
 #endif
 
+// ISRG Root X1 (self-signed). Add other explicitly trusted root PEMs here if needed.
+// Source: https://letsencrypt.org/certificates/
+#ifdef READ_CACERTS
+static constexpr char trustedRootPem[] = R"PEM(
+-----BEGIN CERTIFICATE-----
+MIIFazCCA1OgAwIBAgIRAIIQz7DSQONZRGPgu2OCiwAwDQYJKoZIhvcNAQELBQAw
+TzELMAkGA1UEBhMCVVMxKTAnBgNVBAoTIEludGVybmV0IFNlY3VyaXR5IFJlc2Vh
+cmNoIEdyb3VwMRUwEwYDVQQDEwxJU1JHIFJvb3QgWDEwHhcNMTUwNjA0MTEwNDM4
+WhcNMzUwNjA0MTEwNDM4WjBPMQswCQYDVQQGEwJVUzEpMCcGA1UEChMgSW50ZXJu
+ZXQgU2VjdXJpdHkgUmVzZWFyY2ggR3JvdXAxFTATBgNVBAMTDElTUkcgUm9vdCBY
+MTCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBAK3oJHP0FDfzm54rVygc
+h77ct984kIxuPOZXoHj3dcKi/vVqbvYATyjb3miGbESTtrFj/RQSa78f0uoxmyF+
+0TM8ukj13Xnfs7j/EvEhmkvBioZxaUpmZmyPfjxwv60pIgbz5MDmgK7iS4+3mX6U
+A5/TR5d8mUgjU+g4rk8Kb4Mu0UlXjIB0ttov0DiNewNwIRt18jA8+o+u3dpjq+sW
+T8KOEUt+zwvo/7V3LvSye0rgTBIlDHCNAymg4VMk7BPZ7hm/ELNKjD+Jo2FR3qyH
+B5T0Y3HsLuJvW5iB4YlcNHlsdu87kGJ55tukmi8mxdAQ4Q7e2RCOFvu396j3x+UC
+B5iPNgiV5+I3lg02dZ77DnKxHZu8A/lJBdiB3QW0KtZB6awBdpUKD9jf1b0SHzUv
+KBds0pjBqAlkd25HN7rOrFleaJ1/ctaJxQZBKT5ZPt0m9STJEadao0xAH0ahmbWn
+OlFuhjuefXKnEgV4We0+UXgVCwOPjdAvBbI+e0ocS3MFEvzG6uBQE3xDk3SzynTn
+jh8BCNAw1FtxNrQHusEwMFxIt4I7mKZ9YIqioymCzLq9gwQbooMDQaHWBfEbwrbw
+qHyGO0aoSCqI3Haadr8faqU9GY/rOPNk3sgrDQoo//fb4hVC1CLQJ13hef4Y53CI
+rU7m2Ys6xt0nUW7/vGT1M0NPAgMBAAGjQjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNV
+HRMBAf8EBTADAQH/MB0GA1UdDgQWBBR5tFnme7bl5AFzgAiIyBpY9umbbjANBgkq
+hkiG9w0BAQsFAAOCAgEAVR9YqbyyqFDQDLHYGmkgJykIrGF1XIpu+ILlaS/V9lZL
+ubhzEFnTIZd+50xx+7LSYK05qAvqFyFWhfFQDlnrzuBZ6brJFe+GnY+EgPbk6ZGQ
+3BebYhtF8GaV0nxvwuo77x/Py9auJ/GpsMiu/X1+mvoiBOv/2X/qkSsisRcOj/KK
+NFtY2PwByVS5uCbMiogziUwthDyC3+6WVwW6LLv3xLfHTjuCvjHIInNzktHCgKQ5
+ORAzI4JMPJ+GslWYHb4phowim57iaztXOoJwTdwJx4nLCgdNbOhdjsnvzqvHu7Ur
+TkXWStAmzOVyyghqpZXjFaH3pO3JLF+l+/+sKAIuvtd7u+Nxe5AW0wdeRlN8NwdC
+jNPElpzVmbUq4JUagEiuTDkHzsxHpFKVK7q4+63SM1N95R1NbdWhscdCb+ZAJzVc
+oyi3B43njTOQ5yOf+1CceWxG1bQVs5ZufpsMljq4Ui0/1lvh+wjChP4kqKOJ2qxq
+4RgqsahDYVvTH9w7jXbyLeiNdd8XM2w9U/t7y0Ff/9yi0GE44Za4rF2LN9d11TPA
+mRGunUHBcnWEvgJBQl9nJEiU0Zsnvgc/ubhPgXRR4Xq37Z0j4r7g1SgEEzwxA57d
+emyPxgcYxn/eR44/KJ4EBs+lVDR3veyJm+kXQ99b21/+jh5Xos1AnX5iItreGCc=
+-----END CERTIFICATE-----
+)PEM";
+#endif
+
 static int logcallback(const char *str, size_t len, void *u) {
     LOGGERHTTPS("TLS error queue: %.*s",static_cast<int>(len),str);
     std::string *uit=(std::string *)u;
@@ -179,7 +222,69 @@ std::string get_openssl_error_string() {
     ERR_print_errors_cb(logcallback,&uit);
     return uit;
     }
-// Load Android system CA certs (DER format) into the given X509_STORE
+// Add a PEM-encoded CA from a buffer without opening a file.
+#ifdef READ_CACERTS
+static bool load_embedded_cacert(SSL_CTX *ctx, const char *pem, int len) {
+#ifdef DLSYMS_SSL
+    // Android's libcrypto/libssl are loaded with dlopen, not linked directly.
+    static auto bioFromMemory = reinterpret_cast<decltype(&BIO_new_mem_buf)>(
+        dlsym(opencrypto(), "BIO_new_mem_buf"));
+    static auto parsePem = reinterpret_cast<decltype(&PEM_read_bio_X509)>(
+        dlsym(opencrypto(), "PEM_read_bio_X509"));
+    static auto freeBio = reinterpret_cast<decltype(&BIO_free)>(
+        dlsym(opencrypto(), "BIO_free"));
+    if (!bioFromMemory || !parsePem || !freeBio || !SSL_CTX_get_cert_storeptr ||
+        !X509_STORE_add_certptr || !X509_freeptr) {
+        LOGARHTTPSERROR("Functions to load embedded CA unavailable");
+        return false;
+    }
+#else
+    auto bioFromMemory = BIO_new_mem_buf;
+    auto parsePem = PEM_read_bio_X509;
+    auto freeBio = BIO_free;
+#endif
+    // BIO_new_mem_buf does not modify the supplied buffer. OpenSSL 1.0.1's
+    // parameter is void *, whereas recent versions accept const void *.
+    BIO *bio = bioFromMemory(const_cast<char *>(pem), len);
+    if (!bio) {
+        LOGARHTTPSERROR("BIO_new_mem_buf failed");
+        return false;
+    }
+    X509 *cert = parsePem(bio, nullptr, nullptr, nullptr);
+    freeBio(bio);
+    if (!cert) {
+        LOGGERHTTPSERROR("Could not parse embedded CA: %s\n",
+                         get_openssl_error_string().c_str());
+        return false;
+    }
+    X509_STORE *store = SSL_CTX_get_cert_store(ctx);
+    const bool added = store && X509_STORE_add_cert(store, cert) == 1;
+    X509_free(cert);
+    if (!added)
+        LOGGERHTTPSERROR("Could not add embedded CA: %s\n",
+                         get_openssl_error_string().c_str());
+    return added;
+}
+#endif
+
+static int verify_debug(int ok, X509_STORE_CTX *store) {
+    if (!ok) {
+#ifdef DLSYMS_SSL
+        if (!X509_STORE_CTX_get_errorptr || !X509_STORE_CTX_get_error_depthptr ||
+            !X509_verify_cert_error_stringptr) {
+            LOGARHTTPSERROR("Certificate verification failed (error details unavailable)");
+            return ok;
+        }
+#endif
+        int err = X509_STORE_CTX_get_error(store);
+        LOGGERHTTPSERROR("Verify depth=%d error=%d: %s\n",
+                         X509_STORE_CTX_get_error_depth(store), err,
+                         X509_verify_cert_error_string(err));
+    }
+    return ok;
+}
+
+// Load Android system CA certificates (PEM format) into the SSL_CTX trust store.
 static bool load_android_cacerts(SSL_CTX* ctx) {
 #ifndef READ_CACERTS
      if(SSL_CTX_set_default_verify_paths(ctx)) {
@@ -192,18 +297,49 @@ static bool load_android_cacerts(SSL_CTX* ctx) {
         return false;
         }
 #else
-    bool loaded=false;
+    // Android CA filenames use X509_NAME_hash_old (MD5), but OpenSSL 1.0.1's
+    // CApath lookup uses X509_NAME_hash (SHA1). Load each file as a CAfile
+    // instead, so that verification does not depend on the filename hash.
     for(const char *dir:{"/apex/com.android.conscrypt/cacerts","/system/etc/security/cacerts"}) {
         if(access(dir,R_OK|X_OK)) {
             // One CA location is normally absent on older/newer Android releases.
             if(errno!=ENOENT) flerrorHTTPS("access CA directory %s",dir);
             continue;
         }
-        if(SSL_CTX_load_verify_locations(ctx,nullptr,dir)) loaded=true;
-        else LOGGERHTTPSERROR("load CA directory %s failed: %s\n",dir,get_openssl_error_string().c_str());
+        DIR *d=opendir(dir);
+        if(!d) {
+            flerrorHTTPS("opendir CA directory %s",dir);
+            continue;
+        }
+        unsigned loaded=0;
+        unsigned failed=0;
+        while(auto *entry=readdir(d)) {
+            std::string_view name(entry->d_name);
+            // Only Android's system CA names: 8 hexadecimal digits, '.', number.
+            if(name.size()<10 || name[8]!='.' ||
+               !std::all_of(name.begin(),name.begin()+8,[](char c) {
+                   return (c>='0'&&c<='9') || (c>='a'&&c<='f') || (c>='A'&&c<='F');
+               }) ||
+               !std::all_of(name.begin()+9,name.end(),[](char c) {
+                   return c>='0'&&c<='9';
+               }))
+                continue;
+            std::string path=std::string(dir)+'/'+entry->d_name;
+            if(SSL_CTX_load_verify_locations(ctx,path.c_str(),nullptr))
+                ++loaded;
+            else {
+                ++failed;
+                LOGGERHTTPSERROR("load CA file %s failed: %s\n",path.c_str(),
+                                 get_openssl_error_string().c_str());
+            }
+        }
+        closedir(d);
+        LOGGERHTTPS("Android CA directory %s: loaded %u certificates, failed %u\n",
+                    dir,loaded,failed);
+        if(loaded) return true;
     }
-    if(!loaded) LOGARHTTPSERROR("No Android system CA directory could be loaded");
-    return loaded;
+    LOGARHTTPSERROR("No Android system CA directory could be loaded");
+    return false;
 #endif
 }
 #ifdef DLSYMS_SSL 
@@ -237,8 +373,15 @@ static int SSL_set_tlsext_host_name2(const SSL *s, const char *name) {
             error=true;
             return;
             }
-        error=!load_android_cacerts(ctx);
-        SSL_CTX_set_verify(ctx, SSL_VERIFY_PEER, nullptr);
+        const bool systemCAs = load_android_cacerts(ctx);
+#ifdef READ_CACERTS
+        const bool embeddedCA = load_embedded_cacert(ctx, trustedRootPem,
+                                                      sizeof(trustedRootPem) - 1);
+        error = !(systemCAs || embeddedCA);
+#else
+        error = !systemCAs;
+#endif
+        SSL_CTX_set_verify(ctx, SSL_VERIFY_PEER, verify_debug);
         }
  ContextHTTPS &ContextHTTPS::getContext() {
             static ContextHTTPS contex;
@@ -397,21 +540,193 @@ static int httpsConnect(const std::string &host, int port, HttpsClock::time_poin
 #ifndef DLSYMS_SSL
 extern  "C" X509 *SSL_get1_peer_certificate(const SSL *ssl);
 #endif
+// Legacy OpenSSL (Android 5.1) does not provide X509_check_host/ip_asc.
+// Read the DER subjectAltName extension through APIs already in OpenSSL 1.0.1.
+// Parsing the two relevant GeneralName types directly avoids x509v3.h, which
+// is not part of Juggluco's bundled OpenSSL declarations.
+#ifdef DLSYMS_SSL
+struct LegacyNameApi {
+    int (*extByNid)(const X509 *, int, int);
+    X509_EXTENSION *(*getExt)(const X509 *, int);
+    ASN1_OCTET_STRING *(*extData)(X509_EXTENSION *);
+    int (*stringLength)(const ASN1_STRING *);
+    const unsigned char *(*stringGet0Data)(const ASN1_STRING *);
+    unsigned char *(*stringData)(ASN1_STRING *);
+    X509_NAME *(*subjectName)(const X509 *);
+    int (*nameIndex)(const X509_NAME *, int, int);
+    X509_NAME_ENTRY *(*nameEntry)(const X509_NAME *, int);
+    ASN1_STRING *(*entryData)(const X509_NAME_ENTRY *);
+};
+
+static const LegacyNameApi &legacyNameApi() {
+    static const LegacyNameApi api = [] {
+        void *lib = opencrypto();
+        LegacyNameApi a{};
+        if (!lib) return a;
+        a.extByNid = reinterpret_cast<decltype(a.extByNid)>(dlsym(lib,"X509_get_ext_by_NID"));
+        a.getExt = reinterpret_cast<decltype(a.getExt)>(dlsym(lib,"X509_get_ext"));
+        a.extData = reinterpret_cast<decltype(a.extData)>(dlsym(lib,"X509_EXTENSION_get_data"));
+        a.stringLength = reinterpret_cast<decltype(a.stringLength)>(dlsym(lib,"ASN1_STRING_length"));
+        a.stringGet0Data = reinterpret_cast<decltype(a.stringGet0Data)>(dlsym(lib,"ASN1_STRING_get0_data"));
+        a.stringData = reinterpret_cast<decltype(a.stringData)>(dlsym(lib,"ASN1_STRING_data"));
+        a.subjectName = reinterpret_cast<decltype(a.subjectName)>(dlsym(lib,"X509_get_subject_name"));
+        a.nameIndex = reinterpret_cast<decltype(a.nameIndex)>(dlsym(lib,"X509_NAME_get_index_by_NID"));
+        a.nameEntry = reinterpret_cast<decltype(a.nameEntry)>(dlsym(lib,"X509_NAME_get_entry"));
+        a.entryData = reinterpret_cast<decltype(a.entryData)>(dlsym(lib,"X509_NAME_ENTRY_get_data"));
+        return a;
+    }();
+    return api;
+}
+
+static const unsigned char *legacyStringData(const LegacyNameApi &api,
+                                              ASN1_STRING *str) {
+    if (api.stringGet0Data) return api.stringGet0Data(str);
+    return api.stringData ? api.stringData(str) : nullptr;
+}
+
+// Read one definite-length DER TLV; reject indefinite, non-minimal and
+// out-of-bounds lengths. Returned 'value' is bounded by 'length'.
+static bool readDer(const unsigned char *&p, const unsigned char *end,
+                    unsigned char &tag, const unsigned char *&value, size_t &length) {
+    if (end - p < 2) return false;
+    tag = *p++;
+    const unsigned char first = *p++;
+    if (!(first & 0x80)) {
+        length = first;
+    } else {
+        const unsigned n = first & 0x7f;
+        if (!n || n > sizeof(size_t) || size_t(end - p) < n || !*p)
+            return false;
+        length = 0;
+        for (unsigned i = 0; i < n; ++i)
+            length = (length << 8) | *p++;
+        if (length < 128) return false;
+    }
+    if (length > size_t(end - p)) return false;
+    value = p;
+    p += length;
+    return true;
+}
+
+static unsigned char asciiLower(unsigned char c) {
+    return c >= 'A' && c <= 'Z' ? c + ('a' - 'A') : c;
+}
+
+// Accept DNS labels only. Permit a wildcard solely as the complete leftmost
+// label and only when the suffix contains at least two labels.
+static bool validDns(const unsigned char *s, size_t n, bool allowWildcard) {
+    if (!s || n == 0 || n > 253) return false;
+    size_t i = 0;
+    if (allowWildcard && n > 2 && s[0] == '*' && s[1] == '.') {
+        i = 2;
+        if (!memchr(s + i, '.', n - i)) return false;
+    }
+    size_t labelStart = i;
+    for (; i <= n; ++i) {
+        if (i == n || s[i] == '.') {
+            if (i == labelStart || i - labelStart > 63 ||
+                s[labelStart] == '-' || s[i - 1] == '-') return false;
+            labelStart = i + 1;
+        } else {
+            const unsigned char c = asciiLower(s[i]);
+            if (!(c >= 'a' && c <= 'z') && !(c >= '0' && c <= '9') && c != '-')
+                return false;
+        }
+    }
+    return true;
+}
+
+static bool matchesDns(const unsigned char *pattern, size_t plen,
+                       const std::string &host) {
+    const auto *h = reinterpret_cast<const unsigned char *>(host.data());
+    if (!validDns(pattern, plen, true) || !validDns(h, host.size(), false))
+        return false;
+    size_t patternOffset = 0, hostOffset = 0;
+    if (plen >= 2 && pattern[0] == '*' && pattern[1] == '.') {
+        const auto dot = host.find('.');
+        if (dot == std::string::npos || dot == 0 ||
+            (dot >= 4 && asciiLower(h[0]) == 'x' && asciiLower(h[1]) == 'n' &&
+             h[2] == '-' && h[3] == '-')) return false;
+        patternOffset = 2;
+        hostOffset = dot + 1;
+    }
+    if (host.size() - hostOffset != plen - patternOffset) return false;
+    for (size_t i = patternOffset; i < plen; ++i)
+        if (asciiLower(pattern[i]) != asciiLower(h[hostOffset + i - patternOffset]))
+            return false;
+    return true;
+}
+
+static bool legacyPeerName(X509 *cert, const std::string &host,
+                           const unsigned char *ip, size_t ipLength) {
+    const LegacyNameApi &a = legacyNameApi();
+    if (!a.extByNid || !a.getExt || !a.extData || !a.stringLength ||
+        (!a.stringGet0Data && !a.stringData)) {
+        LOGARHTTPSERROR("OpenSSL 1.0.1 certificate-name functions unavailable");
+        return false;
+    }
+    const int index = a.extByNid(cert, NID_subject_alt_name, -1);
+    if (index >= 0) {
+        // Multiple SAN extensions are invalid/ambiguous; do not accept one.
+        if (a.extByNid(cert, NID_subject_alt_name, index) >= 0) return false;
+        X509_EXTENSION *ext = a.getExt(cert, index);
+        ASN1_OCTET_STRING *octets = ext ? a.extData(ext) : nullptr;
+        int size = octets ? a.stringLength(octets) : -1;
+        const unsigned char *der = octets ? legacyStringData(a, octets) : nullptr;
+        if (!der || size < 2) return false;
+        const unsigned char *p = der, *end = der + size, *value;
+        unsigned char tag;
+        size_t length;
+        if (!readDer(p, end, tag, value, length) || tag != 0x30 || p != end)
+            return false;
+        p = value;
+        end = value + length;
+        bool found = false;
+        if (p == end) return false;
+        while (p < end) {
+            if (!readDer(p, end, tag, value, length) ||
+                (tag & 0xc0) != 0x80 || (tag & 0x1f) > 8)
+                return false;
+            if (ipLength) {
+                // iPAddress SAN is exactly 4 or 16 raw bytes.
+                if (tag == 0x87 && length == ipLength &&
+                    memcmp(value, ip, ipLength) == 0) found = true;
+            } else if (tag == 0x82 && matchesDns(value, length, host)) {
+                found = true;
+            }
+        }
+        return found;
+    }
+    // IP literals must have an iPAddress SAN, never a DNS CN.
+    // For DNS, accept the legacy Common Name only if SAN is wholly absent.
+    if (index != -1 || ipLength || !a.subjectName || !a.nameIndex ||
+        !a.nameEntry || !a.entryData) return false;
+    X509_NAME *subject = a.subjectName(cert);
+    if (!subject) return false;
+    const int cn = a.nameIndex(subject, NID_commonName, -1);
+    if (cn < 0 || a.nameIndex(subject, NID_commonName, cn) >= 0) return false;
+    X509_NAME_ENTRY *entry = a.nameEntry(subject, cn);
+    ASN1_STRING *name = entry ? a.entryData(entry) : nullptr;
+    const int len = name ? a.stringLength(name) : -1;
+    const unsigned char *data = name ? legacyStringData(a, name) : nullptr;
+    return data && len > 0 && matchesDns(data, size_t(len), host);
+}
+#endif
+
 static bool httpsPeerName(SSL *ssl, const std::string &host) {
 #ifdef DLSYMS_SSL
     using CheckHost = int (*)(X509 *, const char *, size_t, unsigned int, char **);
     using CheckIp = int (*)(X509 *, const char *, unsigned int);
     static auto hostCheck = reinterpret_cast<CheckHost>(dlsym(opencrypto(), "X509_check_host"));
     static auto ipCheck = reinterpret_cast<CheckIp>(dlsym(opencrypto(), "X509_check_ip_asc"));
-    if (!SSL_get_peer_certificateptr || !X509_freeptr || !hostCheck || !ipCheck) {
-        LOGARHTTPSERROR("Peer-name verification functions unavailable");
+    if (!SSL_get_peer_certificateptr || !X509_freeptr) {
+        LOGARHTTPSERROR("Peer certificate functions unavailable");
         return false;
     }
 #else
-            auto hostCheck = X509_check_host;
-            auto ipCheck = X509_check_ip_asc;
-#define SSL_get_peer_certificate SSL_get1_peer_certificate 
-
+    auto hostCheck = X509_check_host;
+    auto ipCheck = X509_check_ip_asc;
+#define SSL_get_peer_certificate SSL_get1_peer_certificate
 #endif
     X509 *cert = SSL_get_peer_certificate(ssl);
     if (!cert) {
@@ -420,11 +735,20 @@ static bool httpsPeerName(SSL *ssl, const std::string &host) {
     }
     destruct release{[cert] { X509_free(cert); }};
     unsigned char ip[16];
-    bool numeric =
-        inet_pton(AF_INET, host.c_str(), ip) == 1 || inet_pton(AF_INET6, host.c_str(), ip) == 1;
-    return numeric ? ipCheck(cert, host.c_str(), 0) == 1
-                   : hostCheck(cert, host.c_str(), host.size(), 0, nullptr) == 1;
+    const int v4 = inet_pton(AF_INET, host.c_str(), ip);
+    const int v6 = v4 == 1 ? 0 : inet_pton(AF_INET6, host.c_str(), ip);
+    const size_t ipLength = v4 == 1 ? 4 : (v6 == 1 ? 16 : 0);
+    if (ipLength && ipCheck) return ipCheck(cert, host.c_str(), 0) == 1;
+    if (!ipLength && hostCheck)
+        return hostCheck(cert, host.c_str(), host.size(), 0, nullptr) == 1;
+#ifdef DLSYMS_SSL
+    // OpenSSL 1.0.1 (Android 5.1.1) has neither X509_check_* function.
+    return legacyPeerName(cert, host, ip, ipLength);
+#else
+    return false;
+#endif
 }
+
 } // namespace
 std::pair<std::vector<char>, int> ContextHTTPS::request(const std::string_view host, int port,
                                                         const std::string_view path,
@@ -445,7 +769,7 @@ std::pair<std::vector<char>, int> ContextHTTPS::request(const std::string_view h
             return trace.fail("Invalid host");
         if (port < 1 || port > 65535)
             return trace.fail("Invalid port");
-        if (path.empty() || path.front() != '/' ||
+        if (path.empty() || (path.front() != '/' && !path.starts_with("https://")) ||
             std::any_of(path.begin(), path.end(),
                         [](unsigned char c) { return c <= 32 || c == 127; }))
             return trace.fail("Invalid request path");
@@ -464,7 +788,7 @@ std::pair<std::vector<char>, int> ContextHTTPS::request(const std::string_view h
                static_cast<int>(std::min<size_t>(logPath.size(), 180)), logPath.data(),
                input.size());
         const std::string hostname(host);
-        const auto deadline = trace.start + std::chrono::seconds(45);
+        const auto deadline = trace.start + std::chrono::seconds(450);
         trace.stage = "TCP connect";
         int sock = httpsConnect(hostname, port, deadline, trace);
         if (sock < 0)
@@ -548,25 +872,39 @@ std::pair<std::vector<char>, int> ContextHTTPS::request(const std::string_view h
         if (!httpsPeerName(ssl, hostname))
             return trace.fail("Certificate host name rejected");
         LOGGERHTTPS("request #%llu TLS handshake and peer verification complete\n", trace.id);
-        std::string request = std::string(TYPE) + " " + std::string(path) +
-                              " HTTP/1.1\r\nHost: " + hostname +
-                              (port == 443 ? "" : ":" + std::to_string(port)) +
-                              "\r\nContent-Length: " + std::to_string(input.size()) +
-                              std::string(header) + "\r\nConnection: close\r\n\r\n";
+        char portSuffix[7]{};  // colon, at most five decimal digits, NUL
+        if (port != 443)
+            std::snprintf(portSuffix, sizeof(portSuffix), ":%d", port);
+        strsepconcat req{""sv, TYPE, " "sv, path, " HTTP/1.1\r\nHost: "sv, host,
+                         portSuffix, "\r\nContent-Length: "sv, std::to_string(input.size()),
+                         header, "\r\nConnection: close\r\n\r\n"sv};
+        // Keep the header and binary body contiguous in the first TLS write.
+        // The signalling server's request parser currently assumes this.
+        const size_t requestsize = size_t(req.size()) + input.size();
+        if (requestsize > size_t(INT_MAX))
+            return trace.fail("Request too large for SSL_write");
+        Mmap<char> data(std::max(int(requestsize), 16 * 1024));
+        char *dataptr = data.data();
+        memcpy(dataptr, req.data(), req.size());
         if (!input.empty())
-            request.append(input.data(), input.size());
+            memcpy(dataptr + req.size(), input.data(), input.size());
         trace.stage = "TLS write";
-        for (size_t at = 0; at < request.size();) {
+        for (size_t at = 0; at < requestsize;) {
             if (HttpsClock::now() >= deadline)
                 return trace.fail("Write deadline reached");
             errno = 0;
-            int r = SSL_write(ssl, request.data() + at, request.size() - at), saved = errno;
+            int r = SSL_write(ssl, dataptr + at, int(requestsize - at)), saved = errno;
             if (r > 0)
                 at += r;
             else if (!again(SSL_get_error(ssl, r), saved))
                 return trace.fail("SSL_write");
         }
-        LOGGERHTTPS("request #%llu wrote %zu bytes\n", trace.id, request.size());
+#if defined(OPENSSL_IS_BORINGSSL)
+        // Preserve the former BoringSSL zero-length write (flushes pending
+        // control data). OpenSSL does not support this operation.
+        SSL_write(ssl, "", 0);
+#endif
+        LOGGERHTTPS("request #%llu wrote %zu bytes\n", trace.id, requestsize);
         std::string raw;
         trace.stage = "TLS read";
         for (;;) {

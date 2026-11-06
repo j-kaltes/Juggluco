@@ -36,6 +36,9 @@ static public void    message(Context context, String title, String mess, Runnab
                     }
                 }) .show().setCanceledOnTouchOutside(false);
     }
+static public void    message(Context context, int title, int message, Runnable okproc) {
+        message(context,context.getString(title),context.getString(message),okproc);
+        }
 static public void    ask(Context context, String title, String mess, Runnable okproc) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(title).

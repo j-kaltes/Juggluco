@@ -681,4 +681,10 @@
     <string name="clarity_labels_changed">Labels changed; reopen Categories</string>
     <string name="clarity_save_categories_error">Cannot save categories</string>
     <string name="clarity_login_success">Signed in. Use Back to return to Clarity settings.</string>
+
+    <string name="dexcomG7NFCtitle">Photo</string>
+    <string name="dexcomG7NFCmessage">The data matrix on the applicator of Dexcom G7/ONE+ sensors should be scanned with left menu->Photo</string>
+
+
 </resources>
+

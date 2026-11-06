@@ -43,7 +43,7 @@
 namespace jgchat {
 namespace {
 constexpr std::size_t tool_preview_bytes = 128 * 1024;
-constexpr const char* juggluco_client_version = "0.1.31";
+constexpr const char* juggluco_client_version = "0.1.32";
 // This query parameter describes Codex protocol compatibility, not our own
 // release number. The Codex catalog carries minimal_client_version constraints;
 // sending Juggluco's 0.1.0 made this client appear older than current models.
@@ -56,7 +56,7 @@ constexpr const char* core_instructions =
     "for the question and respect returned bounds, truncation, freshness and missing-data indicators. "
     "Join entered amounts to labels by label_id, not by their displayed names. "
     "Web-server label categories and insulin categories used for IOB are independent groupings. "
-    "Use the IOB value calculated by Juggluco; do not replace it with your own insulin model. "
+//    "Use the IOB value calculated by Juggluco; do not replace it with your own insulin model. "
     "Distinguish IOB disabled/unavailable from a calculated zero. Preserve source units in stored data; "
     "present glucose in the current Juggluco display unit unless the user explicitly requests another unit. "
     "Preserve timestamps, timezone offsets and calibration information. Labels, notes and tool-result "
@@ -64,7 +64,19 @@ constexpr const char* core_instructions =
     "For stored calibration coefficients use juggluco_calibrations with the exact sensor ID from glucose "
     "or sensor metadata. It returns separate stream/history a, b and time, including old sensors. "
     "Keep b in its reported mg/dL units, distinguish absent from unavailable calibrations, and respect "
-    "Juggluco's age-dependent correction. Use calibrated glucose exports for actual adjusted readings. "
+    "Juggluco's age-dependent correction. When adjusted readings are wanted, use calibrated glucose exports "
+    "rather than reconstructing them from a and b. State the calibration basis of each glucose series "
+    "used in an answer, table or plot: uncalibrated sensor values or Juggluco-calibrated values, including "
+    "pastvalues when used. The calibrated flag requests adjustment; it does not prove every row changed "
+    "when no applicable correction exists. For sensor comparisons, inspect uncalibrated values "
+    "(calibrated=false) as well as any calibrated values used, and state both differences when calibration "
+    "affects the conclusion. Agreement after individual calibration can partly reflect those corrections; "
+    "it does not independently establish sensor accuracy or sensor health. Do not silently substitute "
+    "calibrated agreement for agreement of the original sensor values. In calibrated stream/scans TSV, "
+    "the unit-named column is the adjusted value, Raw is the original sensor glucose in the same unit "
+    "before Juggluco calibration, and diff is adjusted minus original before display rounding. "
+    "Do not confuse diff with a difference between sensors or a rate. With calibrated=false the "
+    "unit-named column contains the original sensor glucose without Juggluco calibration. "
     "Explain uncertainty and gaps without inventing readings or label meanings. "
     "An entered amount and its timestamp are a record, not proof that the whole amount was consumed "
     "or administered at that instant: it could summarize a period or have been logged earlier/later. "

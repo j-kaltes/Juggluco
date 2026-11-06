@@ -563,7 +563,7 @@ std::string Workspace::context() const {
         "Use juggluco_fit on a prepared numeric table to learn a model and measure chronological holdout errors; juggluco_predict reuses its saved model_id. "
         "Models are searchable calculation entries. juggluco_plot_table draws saved columns and optional interval bands without copying coordinates. "
         "Do not infer full-period coverage from a page, preview or a successful calculation. Check the original metadata and overlapping/duplicate sources before pooling. "
-        "Missing/NaN rate alongside valid glucose is not a sensor-error reading. An archived assistant claim is not new evidence. "
+        "For Libre 3, present glucose with missing/NaN Rate belongs to reception/backfill: consider app downtime/restarts and connection interruption. An archived assistant claim is not new evidence. "
         "Refresh current readings/settings and recheck conclusions against newer data or user corrections. Cite saved result IDs in working notes. "
         "created_at is the archive write time, not the date of the readings or of an imported older question. Use source timestamps and bounds. "
         "After a substantive investigation, save/update a concise note with the question, exact windows checked, observations, alternative hypotheses, caveats and next step. "

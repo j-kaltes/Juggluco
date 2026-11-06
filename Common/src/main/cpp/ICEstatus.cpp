@@ -22,6 +22,7 @@ inline void    addstrview(char *&uitptr,const std::string_view indata) {
     }
 extern std::pair<std::unique_ptr<const char[],deleter>,int> ICEstatus(int allindex) ;
 
+extern int mkescape(const char *input,char *output);
 #define  phasesel(x,str) case x: {\
         char name[]=str;\
         memcpy(buf,name,sizeof(name)-1);\
@@ -64,8 +65,16 @@ std::pair<std::unique_ptr<const char[],deleter>,int> ICEstatus(int allindex) {
                 return {std::unique_ptr<const char[],deleter>(errormessage,deleter(errormessage)),(int)sizeof(errormessage)-1};
              }
 
-    static char format[]=R"(<h1>ICE Connection %d: %s</h1><p><b>ICElabel</b>: "%s" <b>Side</b>=%d<br><b>Send to</b>: %s%s%s <b>Running</b>=%s <b>Locked</b>=%s  %s<br><b>Receive from</b>: %s    %d wait for commands: %s    <b>interpret</b>: %s %s</p><p><b>Phase</b>: )";
-        char *bufptr=buf+snprintf(buf,maxbuf,format,allindex,host.getnameif(),host.getICEname().data(),host.side,sendnums?"Amounts ":"",sendscans?"Scans ":"",sendstream?"Stream ":"",boolstr[status.sender.running],boolstr[status.sender.locked],con->icedata[0].shutdown?"shutdown":"",
+    static char iceconnect[]=R"(<h1>ICE Connection %d: )";
+        static char icelabellabel[]=R"(</h1><p><b>ICElabel</b>: ")";
+        static char format[]=R"(" <b>Side</b>=%d<br><b>Send to</b>: %s%s%s <b>Running</b>=%s <b>Locked</b>=%s  %s<br><b>Receive from</b>: %s    %d wait for commands: %s    <b>interpret</b>: %s %s</p><p><b>Phase</b>: )";
+        int bufiter=snprintf(buf,maxbuf,iceconnect,allindex);
+        bufiter+=mkescape(host.getnameif(),buf+bufiter);
+        constexpr const int  labellabellen= sizeof(icelabellabel)-1;
+        memcpy(buf+bufiter,icelabellabel,labellabellen);
+        bufiter+=labellabellen;
+        bufiter+=mkescape(host.getICEname().data(),buf+bufiter);
+        char *bufptr=buf+bufiter+snprintf(buf+bufiter,maxbuf-bufiter,format, host.side,sendnums?"Amounts ":"",sendscans?"Scans ":"",sendstream?"Stream ":"",boolstr[status.sender.running],boolstr[status.sender.locked],con->icedata[0].shutdown?"shutdown":"",
         boolstr[receives],status.receive.tid,boolstr[status.receive.ingetcom()],boolstr[status.receive.ininterpret],con->icedata[1].shutdown?"shutdown":"");
     juice_agent *agent=con->agent.load();
     char remoteAddr[JUICE_MAX_ADDRESS_STRING_LEN+10];
