@@ -102,7 +102,7 @@
     <string name="stage">Bosqich</string>
     <string name="use_bluetooth">Bluetoothni ishlatish</string>
     <string name="connection">Ulanish</string>
-    <string name="unlock_key">Handshake</string>
+    <string name="handshake">Handshake</string>
     <string name="glucose_value">Glyukoza qiymati</string>
     <string name="info">Ma\'lumot</string>
     <string name="devicespecific">Qurilmaga xos sozlamani qo\'ying</string>

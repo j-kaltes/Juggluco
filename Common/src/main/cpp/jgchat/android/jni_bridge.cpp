@@ -33,6 +33,7 @@ struct State {
     Json models = Json::array(), messages = Json::array();
     Json activity = Json::array();
     Json pending_browser = nullptr;
+    std::optional<uint32_t> pending_curve_start;
     uint64_t operation_id = 0;
     std::string operation, pending_question;
     std::chrono::steady_clock::time_point started{};
@@ -225,6 +226,7 @@ Json work_snapshot() {
     const auto elapsed = state.busy ? std::chrono::duration_cast<std::chrono::milliseconds>(
         std::chrono::steady_clock::now() - state.started).count() : state.elapsed_ms;
     return {{"busy", state.busy}, {"operation_id", state.operation_id}, {"operation", state.operation},
+        {"curve_navigation_pending", state.pending_curve_start.has_value()},
         {"pending_question", state.pending_question}, {"elapsed_ms", elapsed},
         {"status", ui_json(state.status)}, {"error", ui_json(state.error)}, {"logged_in", state.logged_in}};
 }
@@ -296,6 +298,7 @@ extern "C" JNIEXPORT jobject JNICALL Java_tk_glucodata_JugglucoChat_nativeStartL
         {
             std::lock_guard lock(state.mutex);
             state.logged_in = true; state.messages = Json::array(); state.models = Json::array();
+            state.pending_curve_start.reset();
             state.login_url.clear(); state.user_code.clear(); state.status = UiCode::signed_in;
             state.completed_status = state.status;
         }
@@ -364,6 +367,7 @@ extern "C" JNIEXPORT jobject JNICALL Java_tk_glucodata_JugglucoChat_nativeSendWi
                 state.messages = std::move(messages); state.status = UiCode::ready;
                 state.pending_question.clear();
                 state.pending_browser = std::move(open_file);
+                state.pending_curve_start = state.client->curve_start();
                 state.completed_status = state.status;
                 diagnostic("conversation saved messages=%zu", state.messages.size());
             } catch (...) {
@@ -396,6 +400,7 @@ extern "C" JNIEXPORT jobject JNICALL Java_tk_glucodata_JugglucoChat_nativeNewCha
         std::lock_guard lock(state.mutex);
         state.messages = Json::array(); state.activity = Json::array(); state.error.clear();
         state.pending_browser = nullptr;
+        state.pending_curve_start.reset();
         state.pending_question.clear();
         state.status = state.logged_in ? UiCode::ready : UiCode::sign_in_to_ask_a_question;
         trace.success();
@@ -415,6 +420,7 @@ extern "C" JNIEXPORT jobject JNICALL Java_tk_glucodata_JugglucoChat_nativeClearA
         std::lock_guard lock(state.mutex);
         state.messages = Json::array(); state.activity = Json::array(); state.error.clear();
         state.pending_question.clear(); state.pending_browser = nullptr; state.status = UiCode::analysis_memory_cleared;
+        state.pending_curve_start.reset();
         diagnostic("analysis memory cleared");
     });
 }
@@ -429,6 +435,7 @@ extern "C" JNIEXPORT jobject JNICALL Java_tk_glucodata_JugglucoChat_nativeLogout
             std::lock_guard lock(state.mutex);
             state.logged_in = false; state.messages = Json::array(); state.models = Json::array(); state.activity = Json::array();
             state.pending_browser = nullptr;
+            state.pending_curve_start.reset();
             state.pending_question.clear();
             state.error.clear(); state.login_url.clear(); state.user_code.clear();
             state.status = UiCode::signed_out;
@@ -511,6 +518,16 @@ extern "C" JNIEXPORT jstring JNICALL Java_tk_glucodata_JugglucoChat_nativeTakeBr
         state.pending_browser = nullptr;
         return out;
     } catch (...) { return nullptr; }
+}
+
+extern "C" JNIEXPORT jlong JNICALL Java_tk_glucodata_JugglucoChat_nativeTakeCurveStartTime(JNIEnv*, jclass) {
+    try {
+        std::lock_guard lock(state.mutex);
+        if (state.busy || !state.pending_curve_start) return -1;
+        const jlong millis = static_cast<jlong>(*state.pending_curve_start) * 1000;
+        state.pending_curve_start.reset();
+        return millis;
+    } catch (...) { return -1; }
 }
 
 extern "C" JNIEXPORT jobject JNICALL Java_tk_glucodata_JugglucoChat_nativeExportFileMessages(

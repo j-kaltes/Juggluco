@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+    <string name="activity_import">Activiteiten</string>
+    <string name="activity_export_extended">Uitgebreid</string>
+    <string name="activity_details">Activiteit</string>
+    <string name="activity_retrieve">Gegevens ophalen</string>
+    <string name="activity_permissions">Toestemmingen</string>
+    <string name="activity_history_granted">Toegang tot historische gegevens verleend.</string>
+    <string name="activity_history_missing">Geen toegang tot historische gegevens verleend.</string>
+    <string name="activity_history_unavailable">Toegang tot historische gegevens niet beschikbaar.</string>
+    <string name="activity_measure_existing">Bestaande geïmporteerde hoeveelheden gebruiken indien beschikbaar het geselecteerde label, de meting en de afronding. Individuele wijzigingen blijven behouden.</string>
+    <string name="activity_round_to">Afronden op:</string>
+    <string name="activity_round_to_invalid">Voer een positieve afrondingsstap in, bijvoorbeeld 1 of 0.1</string>
+    <string name="activity_from">Ophalen vanaf</string>
+    <string name="activity_interval">Automatische gegevensopvraging</string>
+    <string name="activity_create_amounts">Hoeveelheden genereren uit activiteiten</string>
+    <string name="activity_units">Eenheden voor afstand en snelheid</string>
+    <string-array name="activity_units">
+        <item>km en km/h</item><item>mi en mi/h</item>
+    </string-array>
+    <string name="activity_last">Laatst opgehaald:</string>
+    <string name="activity_never">Nooit</string>
+    <string name="activity_retrieving">Activiteiten ophalen…</string>
+    <string name="activity_retrieving_details">Activiteitsdetails ophalen: %1$d van %2$d</string>
+    <string name="activity_quota_wait">Limiet voor verzoeken aan Health Connect bereikt. Wachten op een nieuwe poging…</string>
+    <string name="activity_retrieved">Activiteiten opgehaald</string>
+    <string name="activity_labels">Labels</string>
+    <string name="activity_saved">Opgeslagen activiteiten</string>
+    <string name="activity_default">Algemeen activiteitslabel</string>
+    <string name="activity_update_existing">Wijzig ook bestaande automatisch gegenereerde hoeveelheden</string>
+    <string name="activity_new_label">Nieuw label</string>
+    <string name="activity_choose_label">Kies of maak een activiteitslabel</string>
+    <string name="activity_none">Geen opgeslagen activiteiten</string>
+    <string name="activity_unavailable">Activiteitsdetails zijn niet beschikbaar op dit apparaat</string>
+    <string name="activity_delete_confirm">Deze activiteit uit Juggluco verwijderen en voorkomen dat deze opnieuw wordt geïmporteerd? De automatisch gegenereerde hoeveelheden worden verwijderd. Handmatig ingevoerde of gewijzigde hoeveelheden blijven behouden, maar zonder koppeling aan de activiteit. De gegevens in Health Connect blijven ongewijzigd.</string>
+    <string name="activity_remove_source">Bron verwijderen</string>
+    <string name="activity_remove_source_confirm">%1$s als bron van deze activiteit in Juggluco verwijderen? De activiteits- en hartslaggegevens van deze bron worden bij toekomstige ophaalacties uitgesloten. De overige bronnen en de gegevens in Health Connect blijven behouden.</string>
+    <string name="activity_mirrored">Ophalen uit Health Connect is uitgeschakeld omdat hoeveelheden via de mirror worden ontvangen.</string>
+    <string name="activity_source">Bron</string>
+    <string name="activity_heart_source">Hartslagbron</string>
+    <string name="activity_heart_used">Hartslagbron gebruikt voor de samenvatting</string>
+    <string name="activity_source_deleted">Deze bron is verwijderd uit Health Connect</string>
+    <string name="activity_not_returned">Niet aanwezig in de huidige gegevensopvraging uit Health Connect</string>
+    <string name="activity_excess">Gemiddelde hartslag − rusthartslag</string>
+    <string name="activity_period_duration">%1$s – %2$s (tijdsduur: %3$s)</string>
+    <string name="activity_link">Koppelen aan hoeveelheid</string>
+    <string name="activity_no_match">Geen ongekoppelde activiteitshoeveelheden in dit tijdsinterval</string>
+    <string name="activity_distance_miles">Afstand (mi)</string>
+    <string name="activity_speed_miles">Gemiddelde snelheid (mi/h)</string>
+    <string-array name="activity_intervals">
+        <item>Uit</item><item>15 minuten</item><item>30 minuten</item><item>1 uur</item>
+        <item>3 uur</item><item>6 uur</item><item>24 uur</item>
+    </string-array>
+    <string-array name="activity_measures">
+        <item>Tijdsduur (min)</item><item>Afstand (km)</item><item>Gemiddelde hartslag − rusthartslag (bpm)</item>
+        <item>Gemiddelde hartslag (bpm)</item><item>Standaardafwijking hartslag (bpm)</item><item>Actieve energie (kcal)</item>
+        <item>Gemiddelde snelheid (km/h)</item><item>Stappen</item><item>Hoogtewinst (m)</item>
+        <item>Gemiddeld vermogen (W)</item><item>Gemiddelde trapfrequentie (rpm)</item>
+        <item>@string/activity_distance_miles</item><item>@string/activity_speed_miles</item>
+        <item>Maximale hartslag (bpm)</item>
+    </string-array>
+    <string-array name="activity_fields">
+        <item>Tijdsduur</item><item>Afstand</item><item>Rusthartslag</item>
+        <item>Gemiddelde hartslag</item><item>Standaardafwijking hartslag</item><item>Dekking hartslagmetingen</item>
+        <item>Actieve energie</item><item>Gemiddelde snelheid</item><item>Stappen</item>
+        <item>Hoogtewinst</item><item>Gemiddeld vermogen</item><item>Trapfrequentie</item>
+        <item>Maximale hartslag</item><item>Maximale snelheid</item>
+    </string-array>
+</resources>

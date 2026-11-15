@@ -19,4 +19,6 @@
    <locale android:name="hi"/>
    <locale android:name="ja"/>
    <locale android:name="ko"/>
+   <locale android:name="fa"/>
+   <locale android:name="az"/>
 </locale-config>

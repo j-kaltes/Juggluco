@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+    <string name="activity_import">활동</string>
+    <string name="activity_export_extended">확장</string>
+    <string name="activity_details">활동</string>
+    <string name="activity_retrieve">가져오기</string>
+    <string name="activity_permissions">권한</string>
+    <string name="activity_history_granted">과거 데이터 접근 권한이 허용되었습니다.</string>
+    <string name="activity_history_missing">과거 데이터 접근 권한이 허용되지 않았습니다.</string>
+    <string name="activity_history_unavailable">과거 데이터 접근을 사용할 수 없습니다.</string>
+    <string name="activity_measure_existing">기존에 가져온 값에는 사용 가능한 경우 선택한 라벨, 측정 항목 및 반올림 설정이 적용됩니다. 개별 수정 사항은 유지됩니다.</string>
+    <string name="activity_round_to">반올림 단위:</string>
+    <string name="activity_round_to_invalid">1 또는 0.1과 같은 양수 반올림 간격을 입력하세요</string>
+    <string name="activity_from">가져올 시작 시점</string>
+    <string name="activity_interval">자동 가져오기</string>
+    <string name="activity_create_amounts">활동에서 입력값 생성</string>
+    <string name="activity_units">거리 및 속도 단위</string>
+    <string-array name="activity_units">
+        <item>km 및 km/h</item><item>mi 및 mi/h</item>
+    </string-array>
+    <string name="activity_last">마지막 가져오기:</string>
+    <string name="activity_never">없음</string>
+    <string name="activity_retrieving">활동을 가져오는 중…</string>
+    <string name="activity_retrieving_details">활동 세부정보 가져오는 중: %1$d/%2$d</string>
+    <string name="activity_quota_wait">Health Connect 요청 한도에 도달했습니다. 재시도 대기 중…</string>
+    <string name="activity_retrieved">활동을 가져왔습니다</string>
+    <string name="activity_labels">라벨</string>
+    <string name="activity_saved">저장된 활동</string>
+    <string name="activity_default">기본 활동 라벨</string>
+    <string name="activity_update_existing">이전에 자동 생성된 입력값도 변경</string>
+    <string name="activity_new_label">새 라벨</string>
+    <string name="activity_choose_label">활동 라벨 선택 또는 만들기</string>
+    <string name="activity_none">저장된 활동이 없습니다</string>
+    <string name="activity_unavailable">이 기기에서는 활동 세부정보를 사용할 수 없습니다</string>
+    <string name="activity_delete_confirm">이 활동을 Juggluco에서 삭제하고 다시 가져오지 않도록 하시겠습니까? 자동 생성된 입력값는 삭제됩니다. 직접 입력하거나 수정한 입력값는 활동과의 연결만 해제되고 유지됩니다. Health Connect 데이터는 변경되지 않습니다.</string>
+    <string name="activity_remove_source">데이터 출처 제거</string>
+    <string name="activity_remove_source_confirm">이 활동의 데이터 출처 %1$s을(를) Juggluco에서 제거하시겠습니까? 이 출처의 활동 및 심박수 데이터는 이후 가져오기에서 제외됩니다. 다른 출처 및 Health Connect 데이터는 유지됩니다.</string>
+    <string name="activity_mirrored">미러링을 통해 입력값를 받고 있으므로 Health Connect에서 가져오기가 비활성화되었습니다.</string>
+    <string name="activity_source">출처</string>
+    <string name="activity_heart_source">심박수 데이터 출처</string>
+    <string name="activity_heart_used">요약에 사용된 심박수 데이터 출처</string>
+    <string name="activity_source_deleted">Health Connect에서 이 출처가 삭제되었습니다</string>
+    <string name="activity_not_returned">현재 Health Connect 가져오기 결과에 없음</string>
+    <string name="activity_excess">평균 심박수 − 안정 시 심박수</string>
+    <string name="activity_period_duration">%1$s – %2$s (지속 시간: %3$s)</string>
+    <string name="activity_link">입력값에 연결</string>
+    <string name="activity_no_match">이 시간 구간에 연결되지 않은 활동 입력값가 없습니다</string>
+    <string name="activity_distance_miles">거리 (mi)</string>
+    <string name="activity_speed_miles">평균 속도 (mi/h)</string>
+    <string-array name="activity_intervals">
+        <item>끔</item><item>15분</item><item>30분</item><item>1시간</item>
+        <item>3시간</item><item>6시간</item><item>24시간</item>
+    </string-array>
+    <string-array name="activity_measures">
+        <item>경과 시간 (min)</item><item>거리 (km)</item><item>평균 심박수 − 안정 시 심박수 (bpm)</item>
+        <item>평균 심박수 (bpm)</item><item>심박수 표준편차 (bpm)</item><item>활동 에너지 (kcal)</item>
+        <item>평균 속도 (km/h)</item><item>걸음 수</item><item>획득 고도 (m)</item>
+        <item>평균 파워 (W)</item><item>평균 페달 회전수 (rpm)</item>
+        <item>@string/activity_distance_miles</item><item>@string/activity_speed_miles</item>
+        <item>최대 심박수 (bpm)</item>
+    </string-array>
+    <string-array name="activity_fields">
+        <item>지속 시간</item><item>거리</item><item>안정 시 심박수</item>
+        <item>평균 심박수</item><item>심박수 표준편차</item><item>심박수 데이터 범위</item>
+        <item>활동 에너지</item><item>평균 속도</item><item>걸음 수</item>
+        <item>획득 고도</item><item>평균 파워</item><item>페달 회전수</item>
+        <item>최대 심박수</item><item>최고 속도</item>
+    </string-array>
+</resources>

@@ -173,6 +173,7 @@ bool hebrew() ;
 extern jugglucotext zhtext; 
 extern jugglucotext jatext; 
 extern jugglucotext artext; 
+extern jugglucotext fatext; 
 extern jugglucotext kotext; 
 
 
@@ -432,7 +433,7 @@ if(usedtext==&hitext) {
      chfontset=HINDI;
       }
 else
-if(usedtext==&artext) {
+if(usedtext==&artext||usedtext==&fatext) {
 
 //    nvgAddFallbackFontId(avg, blackfont,getArabicBold(avg)); 
 

@@ -108,7 +108,7 @@
  <string name="stage">Etap</string>
  <string name="use_bluetooth">Użyj Bluetooth</string>
  <string name="connection">Połączenie</string>
- <string name="unlock_key">Uzgadnianie</string>
+ <string name="handshake">Uzgadnianie</string>
  <string name="glucose_value">Wartość glukozy</string>
  <string name="info">Informacje</string>
  <string name="devicespecific">Ustawienie specyficzne dla urządzenia</string>

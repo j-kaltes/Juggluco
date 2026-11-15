@@ -28,9 +28,10 @@ extern bool hasnetwork();
 
 struct jugglucotext;
 extern jugglucotext artext;
+extern jugglucotext fatext;
 bool isRTL() {
-    return usedtext==&artext;
-}
+    return usedtext==&artext||usedtext==&fatext;
+    }
 bool bluetoothEnabled();
 #include "numdisplay.hpp"
 extern vector<NumDisplay*> numdatas;
@@ -2812,15 +2813,21 @@ int getglucosestr(double nonconvert,char *glucosestr,int maxglucosestr,int gluco
    float right=dleft+dwidth-statusbarright;
     float x=right; 
     constexpr int maxbuf=50;
-    char buf[maxbuf*2];
+    char fullbuf[maxbuf*2+14];
+    const auto sensorname=hist->othershortsensorname();
+    int senslen= sensorname.size();
+    memcpy(fullbuf,sensorname.data(),senslen);
+    fullbuf[senslen++]=' ';
+    fullbuf[senslen++]=' ';
+    char *buf=fullbuf+senslen;
     time_t tim=last.t;
     struct tm tmbuf;
      struct tm *tms=localtime_r(&tim,&tmbuf);
 //    int len=snprintf(buf,maxbuf,"%02d:%02d ", tms->tm_hour,mktmmin(tms));
-   int len=mktime(tms->tm_hour,mktmmin(tms),buf);
-   buf[len++]=' ';
-    char *buf1=buf+len;
-    --len;
+   int timelen=mktime(tms->tm_hour,mktmmin(tms),buf);
+   buf[timelen++]=' ';
+    char *buf1=buf+timelen;
+    --timelen;
    int32_t  gluval=last.getmgdL() ;
    if(calibrate) {
         auto cali= make_calibrator<ScanData>(hist);
@@ -2868,11 +2875,13 @@ int getglucosestr(double nonconvert,char *glucosestr,int maxglucosestr,int gluco
     const float yunder=y+(showabove?-1:1)*headsize/2.0;
 //    nvgFontSize(avg,smallsize );
     nvgFontSize(avg,headsize*.134f );
-    drawText(avg, endtime,yunder, buf, buf+len);
+    drawText(avg, endtime,yunder, fullbuf, fullbuf+timelen+senslen);
+    /*
     const auto sensorname=hist->othershortsensorname();
     nvgTextAlign(avg,NVG_ALIGN_LEFT|NVG_ALIGN_MIDDLE);
     const auto sensorx=bounds[0] -sensleft;
     drawText(avg,sensorx,yunder, sensorname.begin(), sensorname.end());
+    */
     const bool showdate=(nu-last.t)>=60*60*12;
     constexpr const int maxdatebuf=30;
     int datelen;
@@ -2907,8 +2916,8 @@ int getglucosestr(double nonconvert,char *glucosestr,int maxglucosestr,int gluco
                 *ptr++='\n';
                 *ptr++='\n';
                 }
-            memcpy(ptr,buf,len);
-            ptr+=len;
+            memcpy(ptr,buf,timelen);
+            ptr+=timelen;
             *ptr++='\n';
             }
 //        auto trend=usedtext->trends[last.tr];
@@ -2922,7 +2931,7 @@ int getglucosestr(double nonconvert,char *glucosestr,int maxglucosestr,int gluco
         }
 #endif
 
-    showok( avg,(gluval>700&&gluval<=1400), ((y-dtop)<(dheight/2))?false:true);
+    showok( avg,(gluval>70&&gluval<=140), ((y-dtop)<(dheight/2))?false:true);
     }
 
 

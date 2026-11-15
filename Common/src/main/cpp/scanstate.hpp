@@ -71,8 +71,15 @@ class multimmap {
         if(!map.data())
             return nullptr;
         int pos=datpos(datnr);
+#ifdef LIBRE2_EU_INDEPENDENT
+        // An absent blob has offset zero, which points at the offset table.
+        if(pos<datastart()||std::size_t(pos)>map.size()||map.size()-std::size_t(pos)<sizeof(data_t))return nullptr;
+#endif
 //        if(pos<datastart()) return nullptr;
         data_t *dat=reinterpret_cast<data_t*>(map.data()+pos);
+#ifdef LIBRE2_EU_INDEPENDENT
+        if(dat->len<=0||std::size_t(dat->len)>map.size()-std::size_t(pos)-sizeof(data_t))return nullptr;
+#endif
         if(dat->len>0)
             return dat;    
         return nullptr;

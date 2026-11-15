@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+    <string name="activity_import">الأنشطة</string>
+    <string name="activity_export_extended">موسّع</string>
+    <string name="activity_details">النشاط</string>
+    <string name="activity_retrieve">استرداد</string>
+    <string name="activity_permissions">الأذونات</string>
+    <string name="activity_history_granted">تم منح إذن الوصول إلى السجل السابق.</string>
+    <string name="activity_history_missing">لم يُمنح إذن الوصول إلى السجل السابق.</string>
+    <string name="activity_history_unavailable">الوصول إلى السجل السابق غير متاح.</string>
+    <string name="activity_measure_existing">تستخدم الكميات المستوردة الحالية التسمية والمقياس والتقريب المحددة عند توفرها. وتُحفظ التعديلات الفردية.</string>
+    <string name="activity_round_to">التقريب إلى:</string>
+    <string name="activity_round_to_invalid">أدخل كمية موجبة لخطوة التقريب، مثل 1 أو 0.1</string>
+    <string name="activity_from">الاسترداد بدءًا من</string>
+    <string name="activity_interval">الاسترداد التلقائي</string>
+    <string name="activity_create_amounts">إنشاء كميات من الأنشطة</string>
+    <string name="activity_units">وحدات المسافة والسرعة</string>
+    <string-array name="activity_units">
+        <item>km و km/h</item><item>mi و mi/h</item>
+    </string-array>
+    <string name="activity_last">آخر استرداد:</string>
+    <string name="activity_never">أبدًا</string>
+    <string name="activity_retrieving">جارٍ استرداد الأنشطة…</string>
+    <string name="activity_retrieving_details">جارٍ استرداد تفاصيل الأنشطة: %1$d من %2$d</string>
+    <string name="activity_quota_wait">تم بلوغ حد طلبات Health Connect. انتظار إعادة المحاولة…</string>
+    <string name="activity_retrieved">تم استرداد الأنشطة</string>
+    <string name="activity_labels">التسميات</string>
+    <string name="activity_saved">الأنشطة المحفوظة</string>
+    <string name="activity_default">تسمية النشاط العامة</string>
+    <string name="activity_update_existing">تغيير الكميات التي أُنشئت تلقائيًا من قبل أيضًا</string>
+    <string name="activity_new_label">تسمية جديدة</string>
+    <string name="activity_choose_label">اختر تسمية للنشاط أو أنشئ واحدة</string>
+    <string name="activity_none">لا توجد أنشطة محفوظة</string>
+    <string name="activity_unavailable">تفاصيل النشاط غير متاحة على هذا الجهاز</string>
+    <string name="activity_delete_confirm">هل تريد حذف هذا النشاط من Juggluco ومنع استيراده مجددًا؟ ستُحذف الكميات المُنشأة منه تلقائيًا. ستظل الكميات المُدخلة أو المُعدّلة يدويًا محفوظة دون ارتباط بالنشاط. لن تتغير بيانات Health Connect.</string>
+    <string name="activity_remove_source">إزالة المصدر</string>
+    <string name="activity_remove_source_confirm">هل تريد إزالة %1$s كمصدر لهذا النشاط في Juggluco؟ ستُستبعد بيانات النشاط ومعدل ضربات القلب الخاصة بهذا المصدر من عمليات الاسترداد اللاحقة. ستبقى المصادر الأخرى وبيانات Health Connect دون تغيير.</string>
+    <string name="activity_mirrored">تم تعطيل الاسترداد من Health Connect لأن الكميات تُستقبل عبر المزامنة مع جهاز آخر.</string>
+    <string name="activity_source">المصدر</string>
+    <string name="activity_heart_source">مصدر معدل ضربات القلب</string>
+    <string name="activity_heart_used">مصدر معدل ضربات القلب المستخدم في الملخص</string>
+    <string name="activity_source_deleted">حُذف هذا المصدر من Health Connect</string>
+    <string name="activity_not_returned">غير موجود في عملية الاسترداد الحالية من Health Connect</string>
+    <string name="activity_excess">متوسط النبض − نبض الراحة</string>
+    <string name="activity_period_duration">%1$s – %2$s (المدة: %3$s)</string>
+    <string name="activity_link">ربط بالكمية</string>
+    <string name="activity_no_match">لا توجد كميات أنشطة غير مرتبطة خلال هذه الفترة</string>
+    <string name="activity_distance_miles">المسافة (mi)</string>
+    <string name="activity_speed_miles">متوسط السرعة (mi/h)</string>
+    <string-array name="activity_intervals">
+        <item>إيقاف</item><item>15 دقيقة</item><item>30 دقيقة</item><item>ساعة واحدة</item>
+        <item>3 ساعات</item><item>6 ساعات</item><item>24 ساعة</item>
+    </string-array>
+    <string-array name="activity_measures">
+        <item>المدة المنقضية (min)</item><item>المسافة (km)</item><item>متوسط النبض − نبض الراحة (نبضة/دقيقة)</item>
+        <item>متوسط معدل ضربات القلب (نبضة/دقيقة)</item><item>الانحراف المعياري لمعدل ضربات القلب (نبضة/دقيقة)</item><item>الطاقة النشطة (kcal)</item>
+        <item>متوسط السرعة (km/h)</item><item>الخطوات</item><item>الارتفاع المكتسب (m)</item>
+        <item>متوسط القدرة (W)</item><item>متوسط وتيرة تدوير الدواسات (دورة/دقيقة)</item>
+        <item>@string/activity_distance_miles</item><item>@string/activity_speed_miles</item>
+        <item>الحد الأقصى لمعدل ضربات القلب (نبضة/دقيقة)</item>
+    </string-array>
+    <string-array name="activity_fields">
+        <item>المدة</item><item>المسافة</item><item>معدل ضربات القلب أثناء الراحة</item>
+        <item>متوسط معدل ضربات القلب</item><item>الانحراف المعياري لمعدل ضربات القلب</item><item>تغطية قياسات معدل ضربات القلب</item>
+        <item>الطاقة النشطة</item><item>متوسط السرعة</item><item>الخطوات</item>
+        <item>الارتفاع المكتسب</item><item>متوسط القدرة</item><item>وتيرة تدوير الدواسات</item>
+        <item>الحد الأقصى لمعدل ضربات القلب</item><item>السرعة القصوى</item>
+    </string-array>
+</resources>

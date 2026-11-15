@@ -109,7 +109,7 @@
  <string name="stage">Stadium</string>
  <string name="use_bluetooth">Gebruik Bluetooth</string>
  <string name="connection">Verbinding</string>
- <string name="unlock_key">Handshake</string>
+ <string name="handshake">Handshake</string>
  <string name="glucose_value">Glucose waarde</string>
  <string name="info">Info</string>
  <string name="devicespecific">Apparaat specifieke instelling</string>

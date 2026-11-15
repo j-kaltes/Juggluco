@@ -48,8 +48,9 @@ import androidx.appcompat.app.AlertDialog;
 import com.garmin.android.connectiq.IQDevice;
 import com.garmin.android.connectiq.ConnectIQ.IQMessageStatus;
 
-import java.text.DateFormat;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import tk.glucodata.nums.AllData;
 import tk.glucodata.settings.Shortcuts;
@@ -62,7 +63,6 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
-import static tk.glucodata.Log.doLog;
 import static tk.glucodata.NumberView.avoidSpinnerDropdownFocus;
 import static tk.glucodata.RingTones.EnableControls;
 import static tk.glucodata.help.help;
@@ -85,8 +85,7 @@ class GarminStatus {
 	TextView restview,connection;
 	//	TextView GarminStatusstr;
 	CheckDirectionBox glucose;
-//	CheckDirectionBox libre3Direct;
-    RadioGroup l3connection;
+	RadioGroup sensorConnection;
 	CheckDirectionBox active;
 	RadioButton automaticTransport;
 	RadioButton garminConnectTransport;
@@ -98,29 +97,32 @@ class GarminStatus {
 	long selectedPeerId=-1L;
 	boolean updatingSpinner=false;
 	boolean closed=false;
-	java.util.List<AllData.GarminDeviceInfo> shownPeers=java.util.Collections.emptyList();
+	List<AppRow> shownApps=Collections.emptyList();
 	private final Runnable refreshStatus=new Runnable() {
 		@Override public void run() {
 			if(closed || layout==null || layout.getParent()==null) return;
-			refreshDetails();
+			show();
 			layout.postDelayed(this,1000L);
 		}
 	};
 	Layout layout;
 	private static final String LOG_ID = "GarminStatus";
 
-	static String displaystr(Context context,AllData.GarminDeviceInfo device) {
-		String name=device.name;
-		int status=device.connected?R.string.isconnected:R.string.isdisconnected;
-		return context.getString(R.string.garmin_device_row,name,context.getString(status));
-	   }
+	private record AppRow(long peerId, String appId, String name, boolean connected, boolean installed) {}
 
+	private static String displaystr(Context context,AppRow app) {
+		int label=R.string.garmin_app_kerfstok;
+/*		if(AllData.LIBRE2_GARMIN_APP_ID.equals(app.appId)) label=R.string.garmin_app_libre2;
+		else */if(AllData.LIBRE3_GARMIN_APP_ID.equals(app.appId)) label=R.string.garmin_app_libre3;
+		int status=app.connected?R.string.isconnected:R.string.isdisconnected;
+		String appName=context.getString(label);
+		if(!app.installed) appName=context.getString(R.string.garmin_app_unconfirmed,appName);
+		return context.getString(R.string.garmin_app_device_row,appName,app.name,context.getString(status));
+	}
 
-
-
-	private String numbersDeviceName(java.util.List<AllData.GarminDeviceInfo> infos) {
-		for(AllData.GarminDeviceInfo info:infos) if(info.numbers) return info.name;
-		return spinner.getContext().getString(R.string.garmin_none);
+	private AllData.GarminDeviceInfo selectedDevice(List<AllData.GarminDeviceInfo> devices) {
+		for(var device:devices) if(device.id==selectedPeerId) return device;
+		return null;
 	}
 
 	// AllData's English state values are lookup keys here, not displayed text.
@@ -298,23 +300,23 @@ class GarminStatus {
 		spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-				{if(doLog) {Log.i(LOG_ID, "onItemSelected");};};
-				if(updatingSpinner) return;
-				var infos=alldata.getGarminDeviceInfos();
-				if(position>=0 && position<infos.size()) {
-					selectedPeerId=infos.get(position).id;
-					refreshDetails();
+				if(updatingSpinner || closed || position!=spinner.getSelectedItemPosition() ||
+						position<0 || position>=shownApps.size()) return;
+				var row=shownApps.get(position);
+				selectedPeerId=row.peerId;
+				if(!alldata.selectGarminStatusApp(context,row.peerId,row.appId)) {
+					var current=selectedDevice(alldata.getGarminDeviceInfos());
+//					if(current!=null && (current.libre3Direct || GarminLibre2.ownsPeer(row.peerId)))
+					if(current!=null && current.libre3Direct)
+						Applic.argToaster(context,context.getString(R.string.garmin_app_sensor_assigned),Toast.LENGTH_SHORT);
 				}
+				show();
 			}
 
 			@Override
 			public void onNothingSelected(AdapterView<?> parent) { }
 		});
 		selectedPeerId=alldata.getNumbersDeviceId();
-		updatingSpinner=true;
-		RangeAdapter<AllData.GarminDeviceInfo> adap = new RangeAdapter<>(alldata.getGarminDeviceInfos(), context, device -> displaystr(context,device));
-		spinner.setAdapter(adap);
-		updatingSpinner=false;
 		avoidSpinnerDropdownFocus(spinner);
 
 		sdkreadyview = new TextView(context);
@@ -349,47 +351,21 @@ class GarminStatus {
 			show();
 			});
       
-		l3connection=new RadioGroup(context);
-        var marg= Layout.getMargins(l3connection);
-
-       marg.topMargin=(int)(density*8.0f);
-       marg.rightMargin=(int)(density*8.0f);
-		l3connection.setOrientation(RadioGroup.HORIZONTAL);
-        var directstring=context.getString(R.string.directsensor);
-        var direct=getlabel(context, directstring);
-        if(directstring.length()==0)
-            direct.setVisibility(GONE);
-        var connectionstring=context.getString(R.string.connectionl) + " (Libre3)";
-        connection=getlabel(context, connectionstring);
-        if(connectionstring.length()==0)
-             connection.setVisibility(GONE);
-        var l3phone=getradiobuttonId(context, R.string.phone,0);
-        var l3watch=getradiobuttonId(context, R.string.watch,1);
-        l3connection.addView(direct);
-        l3connection.addView(l3phone);
-        l3connection.addView(l3watch);
-
-       
-
-         BooleanConsumer  l3switch=enable-> {
-			if(!alldata.setGarminLibre3Direct(context,selectedPeerId,enable)) {
-				l3phone.setChecked(true);
-				Applic.argToaster(context,context.getString(R.string.garmin_select_device),Toast.LENGTH_SHORT);
-			   }
-			else if(enable && !GarminLibre3.switchCurrentSensor()) {
-				alldata.setGarminLibre3Direct(context,selectedPeerId,false);
-				l3phone.setChecked(true);
-			    }
-			show();
-             };
-
-		l3phone.setOnClickListener(v -> {
-            l3switch.accept(false);
-		    });
-		l3watch.setOnClickListener(v -> {
-            l3switch.accept(true);
-		    });
-
+		sensorConnection=new RadioGroup(context);
+		var margins=Layout.getMargins(sensorConnection);
+		margins.topMargin=(int)(density*8.0f);
+		margins.rightMargin=(int)(density*8.0f);
+		sensorConnection.setOrientation(RadioGroup.HORIZONTAL);
+		var direct=getlabel(context,R.string.directsensor);
+		if(direct.getText().length()==0) direct.setVisibility(GONE);
+		connection=getlabel(context,R.string.connectionl);
+		var phone=getradiobuttonId(context,R.string.phone,0);
+		var watch=getradiobuttonId(context,R.string.watch,1);
+		sensorConnection.addView(direct);
+		sensorConnection.addView(phone);
+		sensorConnection.addView(watch);
+		phone.setOnClickListener(v -> selectSensorReceiver(context,false));
+		watch.setOnClickListener(v -> selectSensorReceiver(context,true));
 
 		active=getcheckbox(context,R.string.active,false);
 		active.setOnClickListener(v -> {
@@ -465,7 +441,7 @@ class GarminStatus {
         transport.addView(method,new ViewGroup.LayoutParams(MATCH_PARENT,WRAP_CONTENT));
         for(var b: transportRadios)
             transport.addView(b,new ViewGroup.LayoutParams(MATCH_PARENT,WRAP_CONTENT));
-        transport.addView(l3connection);
+        transport.addView(sensorConnection);
         transport.addView(connection);
 		switch(alldata.getGarminTransportMode(context)) {
 			case AllData.GARMIN_TRANSPORT_CONNECT: garminConnectTransport.setChecked(true); break;
@@ -524,34 +500,67 @@ class GarminStatus {
 		layout.postDelayed(refreshStatus,1000L);
 	}
 
-	private int selectedPosition(java.util.List<AllData.GarminDeviceInfo> infos) {
-		for(int i=0;i<infos.size();i++) if(infos.get(i).id==selectedPeerId) return i;
-		return 0;
+	private void selectSensorReceiver(MainActivity context,boolean watch) {
+		var info=selectedDevice(alldata.getGarminDeviceInfos());
+		if(info!=null && info.active) {
+        /*(
+			if(AllData.LIBRE2_GARMIN_APP_ID.equals(info.appId)) {
+				if(watch) GarminLibre2.assign(context,alldata,info.id);
+				else GarminLibre2.returnToPhone(info.id);
+			} else*/ if(AllData.LIBRE3_GARMIN_APP_ID.equals(info.appId)) {
+				if(!alldata.setGarminLibre3Direct(context,info.id,watch)) {
+					Applic.argToaster(context,context.getString(R.string.garmin_select_device),Toast.LENGTH_SHORT);
+				} else if(watch && !GarminLibre3.switchCurrentSensor()) {
+					alldata.setGarminLibre3Direct(context,info.id,false);
+				}
+			}
+		}
+		show();
 	}
 
-	private boolean samePeerRows(java.util.List<AllData.GarminDeviceInfo> infos) {
-		if(infos.size()!=shownPeers.size()) return false;
-		for(int i=0;i<infos.size();i++) {
-			if(infos.get(i).id!=shownPeers.get(i).id ||
-					!displaystr(spinner.getContext(),infos.get(i)).equals(displaystr(spinner.getContext(),shownPeers.get(i)))) return false;
+	private static List<AppRow> appRows(List<AllData.GarminDeviceInfo> devices) {
+		var rows=new ArrayList<AppRow>();
+		for(var device:devices) {
+			for(String appId:device.installedApps)
+				rows.add(new AppRow(device.id,appId,device.name,device.connected,true));
+			// Keep the current app visible while discovery is pending or while
+			// an assigned app is unavailable. Refreshing status cannot switch it.
+			if(!device.installedApps.contains(device.appId))
+				rows.add(new AppRow(device.id,device.appId,device.name,device.connected,false));
 		}
-		return true;
+		return rows;
+	}
+
+	private int selectedPosition(List<AppRow> rows,AllData.GarminDeviceInfo info) {
+		if(info!=null) for(int i=0;i<rows.size();i++) {
+			var row=rows.get(i);
+			if(row.peerId==info.id && row.appId.equals(info.appId)) return i;
+		}
+		return 0;
 	}
 
 	public void show() {
 		try {
-			var infos=alldata.getGarminDeviceInfos();
-			if(selectedPeerId==-1L) selectedPeerId=alldata.getNumbersDeviceId();
-			int selectedPos=selectedPosition(infos);
-			updatingSpinner=true;
-			RangeAdapter<AllData.GarminDeviceInfo> adap=new RangeAdapter<>(infos,spinner.getContext(),device -> displaystr(spinner.getContext(),device));
-			spinner.setAdapter(adap);
-			if(!infos.isEmpty()) {
-				spinner.setSelection(selectedPos);
-				selectedPeerId=infos.get(selectedPos).id;
+			var devices=alldata.getGarminDeviceInfos();
+			var info=selectedDevice(devices);
+			if(info==null) {
+				selectedPeerId=alldata.getNumbersDeviceId();
+				info=selectedDevice(devices);
+				if(info==null && !devices.isEmpty()) info=devices.get(0);
 			}
-			shownPeers=infos;
-			updateDetails(infos,selectedPos);
+			var rows=appRows(devices);
+			int pos=selectedPosition(rows,info);
+			updatingSpinner=true;
+			if(!shownApps.equals(rows)) {
+				var context=spinner.getContext();
+				spinner.setAdapter(new RangeAdapter<>(rows,context,row -> displaystr(context,row)));
+				shownApps=rows;
+			}
+			if(info!=null) {
+				selectedPeerId=info.id;
+				if(spinner.getSelectedItemPosition()!=pos) spinner.setSelection(pos);
+			}
+			updateDetails(info);
 		} catch(Throwable e) {
 			Log.stack(LOG_ID,"show",e);
 		} finally {
@@ -559,23 +568,11 @@ class GarminStatus {
 		}
 	}
 
-	private void refreshDetails() {
-		try {
-			var infos=alldata.getGarminDeviceInfos();
-			// A changing timestamp must not rebuild an open spinner every second.
-			if(!samePeerRows(infos)) { show(); return; }
-			updateDetails(infos,selectedPosition(infos));
-		} catch(Throwable e) {
-			Log.stack(LOG_ID,"refreshDetails",e);
-		}
-	}
-
-	private void updateDetails(java.util.List<AllData.GarminDeviceInfo> infos,int selectedPos) {
+	private void updateDetails(AllData.GarminDeviceInfo info) {
 		int transportMode=alldata.getGarminTransportMode(spinner.getContext());
 		automaticTransport.setChecked(transportMode==AllData.GARMIN_TRANSPORT_AUTOMATIC);
 		garminConnectTransport.setChecked(transportMode==AllData.GARMIN_TRANSPORT_CONNECT);
 		directTransport.setChecked(transportMode==AllData.GARMIN_TRANSPORT_DIRECT);
-		AllData.GarminDeviceInfo info=infos.isEmpty()?null:infos.get(selectedPos);
 		active.setEnabled(info!=null);
 		active.setChecked(info!=null && info.active);
 		numbersDevice.setEnabled(info!=null);
@@ -585,7 +582,6 @@ class GarminStatus {
 		else sdkreadyview.setText(context.getString(R.string.garmin_connection_status,
 				context.getString(info.direct?R.string.transport_bluetooth:R.string.garmin_connect)));
 //				context.getString(info.connected?R.string.isconnected:R.string.isdisconnected)));
-//		registeredview.setText(context.getString(R.string.garmin_devices_numbers,infos.size(),numbersDeviceName(infos)));
 		StringBuilder builder=new StringBuilder();
 		if(info!=null) {
 			String none=context.getString(R.string.garmin_none);
@@ -605,6 +601,10 @@ class GarminStatus {
 				builder.append('\n').append(context.getString(R.string.garmin_transport_result,transportResult(context,info.lastStatus)));
 			}
 			if(info.lastError!=null) builder.append('\n').append(context.getString(R.string.garmin_last_error,lastError(context,info.lastError)));
+            /*
+			String assignment=GarminLibre2.assignmentStatus(context,info.id);
+			if(assignment!=null) builder.append('\n').append(assignment);
+            */
 		}
 		restview.setText(builder.toString());
 //        restview.post(() -> Log.d(LOG_ID, "width=" + restview.getWidth() + " measuredWidth=" + restview.getMeasuredWidth()));
@@ -612,19 +612,18 @@ class GarminStatus {
 		// it available for any known watch so the user can enable sending before
 		// the watch connects; queued/latest glucose will be sent when it becomes
 		// ready.
-		int vis=alldata.usewatch?VISIBLE:GONE;
 		glucose.setChecked(info!=null && info.glucose);
 		glucose.setVisibility(info!=null?VISIBLE:GONE);
 		glucose.setEnabled(info!=null);
-        l3connection.check((info!=null && info.libre3Direct)?1:0);
-		//l3watch.setChecked(info!=null && info.libre3Direct);
-		//l3watch.setChecked(info!=null && info.libre3Direct);
-        var l3vis=(info!=null && info.libre3Installed)?VISIBLE:GONE;
-		l3connection.setVisibility(l3vis);
-		connection.setVisibility(l3vis);
-        boolean l3pos=info!=null && info.active && info.libre3Installed;
-		EnableControls(l3connection,l3pos);
-		connection.setEnabled(l3pos);
+//		boolean libre2=info!=null && AllData.LIBRE2_GARMIN_APP_ID.equals(info.appId);
+		boolean libre3=info!=null && AllData.LIBRE3_GARMIN_APP_ID.equals(info.appId);
+		boolean sensorApp= libre3;
+		sensorConnection.check((libre3 && info.libre3Direct)?1:0);
+		sensorConnection.setVisibility(sensorApp?VISIBLE:GONE);
+		connection.setVisibility(sensorApp?VISIBLE:GONE);
+		if(sensorApp) connection.setText(context.getString(R.string.connectionl)+" (Libre 3)");
+		EnableControls(sensorConnection,sensorApp && info.active);
+		connection.setEnabled(sensorApp && info.active);
 		boolean selectedNumbers=info!=null && info.numbers;
 		next.setVisibility(info!=null && info.active && selectedNumbers && alldata.waiting(selectedPeerId) && !alldata.isSending()?VISIBLE:GONE);
 		sync.setVisibility(info!=null?VISIBLE:GONE);

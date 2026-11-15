@@ -26,6 +26,7 @@
 #include "curve/numiter.hpp"
 #include "activity/global.hpp"
 #include "activity/export.hpp"
+#include <algorithm>
 #include <memory>
 
 extern Sensoren *sensors;
@@ -353,24 +354,28 @@ bool exporthistory(int handle,uint32_t starttime=0,uint32_t endtime=UINT32_MAX,i
 	myclose(fp);
 	return ret;
 	}
-bool fexportnums(myfilep handle,int _unit,uint32_t starttime=0,uint32_t endtime=UINT32_MAX,int maxcount=INT_MAX,bool=false,bool=false) {
+bool fexportnums(myfilep handle,int _unit,uint32_t starttime=0,uint32_t endtime=UINT32_MAX,int maxcount=INT_MAX,bool labelids=false,bool=false) {
 	NumIter<Num> *numiters=mknumPerioditers(starttime,endtime);
 	destruct _dest([numiters]{delete[] numiters;});
 	int basecount=numdatas.size();
 	tostart(numiters,basecount);
-	return exportdata(handle,numiters,0,basecount, [](myfilep fp,const int index,const Num *num,const int oldest,const Num *beg) {
+	return exportdata(handle,numiters,0,basecount, [labelids](myfilep fp,const int index,const Num *num,const int oldest,const Num *beg) {
 			const char *label=settings->getlabel(num->type).data();
 			const auto [buf,zone]=timedata(num->gettime());
-			fprintf(fp,"%d\t%d\t%u\t%s\t%g\t%g\t%s\n",oldest,index+numdatas[oldest]->getfirstpos(),num->gettime(),buf,zone,num->value,label);
+			if(labelids)
+				fprintf(fp,"%d\t%d\t%u\t%s\t%g\t%g\t%u\t%s\n",oldest,index+numdatas[oldest]->getfirstpos(),num->gettime(),buf,zone,num->value,num->type,label);
+			else
+				fprintf(fp,"%d\t%d\t%u\t%s\t%g\t%g\t%s\n",oldest,index+numdatas[oldest]->getfirstpos(),num->gettime(),buf,zone,num->value,label);
 			return true;
 		},maxcount);
 
 	}
 
-static bool writenumheader(FILE* handle,int,bool=false) {
+static bool writenumheader(FILE* handle,int,bool labelids=false) {
 	constexpr const char header[]="Source\tnr\t" DATESTRING "\tTZ\tValue\tLabel\n";
-	constexpr int headlen=sizeof(header)-1;
-	if(fwrite(header,headlen,1,handle)!=1)
+	constexpr const char extended[]="Source\tnr\t" DATESTRING "\tTZ\tValue\tLabelId\tLabel\n";
+	const std::string_view text=labelids?extended:header;
+	if(fwrite(text.data(),text.size(),1,handle)!=1)
 		return false;
 	return true;
 	}
@@ -536,6 +541,8 @@ std::span<char> getexportdata(int startpos,int len,uint32_t starttime,uint32_t e
 		return len;
 		}
 	};
+	// The reserved prefix must exist even when a short web interval estimates zero bytes.
+	len=std::max(len,startpos);
 	Fmemopen mem{.mem= new(std::nothrow) char[len],.max=len,.iter=startpos};
 	if(!mem.mem)
 		return {(char *)nullptr,(size_t)0};
@@ -576,6 +583,10 @@ std::span<char> gethistory(int startpos, int len, uint32_t starttime, uint32_t e
 	}
 std::span<char> getamounts(int startpos, int len, uint32_t starttime, uint32_t endtime,bool header,int unit,bool overlap,int maxcount=INT_MAX,bool=false,bool calibratePast=false) {
 	return getexportdata(startpos,len,starttime, endtime,unit,fexportnums,header?writenumheader:nullptr,maxcount);
+	}
+std::span<char> getextendedamounts(int startpos, int len, uint32_t starttime, uint32_t endtime,bool header,int unit,bool,int maxcount,bool,bool) {
+	// The shared exporter/header format flag selects the extra label ID column here.
+	return getexportdata(startpos,len,starttime,endtime,unit,fexportnums,header?writenumheader:nullptr,maxcount,true);
 	}
 std::span<char> getstream(int startpos, int len, uint32_t starttime, uint32_t endtime,bool header,int unit,bool overlap,int maxcount=INT_MAX,bool calibrated=false,bool calibratePast=false) {
 	return getexportdata(startpos,len,starttime, endtime,unit,exportcurrent<false,&SensorGlucoseData::streamInperiod>,header?currentheader:nullptr,maxcount,calibrated,calibratePast);

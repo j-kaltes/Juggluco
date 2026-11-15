@@ -6,6 +6,12 @@ plugins {
 
 def requestedTasks = gradle.startParameter.taskNames
 def requestedTask = requestedTasks ? requestedTasks[0] : ""
+def independentLibre2Eu = providers.gradleProperty('libreIndependent')
+        .orElse(providers.gradleProperty('libre2Eu'))
+        .orElse(providers.systemProperty('libreIndependent'))
+        .orElse(providers.systemProperty('libre2Eu'))
+        .map { it.toBoolean() }
+        .getOrElse(false)
 
 // -Pabi=armeabi-v7a or -Pabi=arm64-v8a selects one ABI; the default builds both.
 def selectedAbi = providers.gradleProperty('abi').getOrElse('all')
@@ -127,6 +133,8 @@ android {
 
 
     defaultConfig {
+        buildConfigField 'boolean', 'LIBRE2_INDEPENDENT', independentLibre2Eu.toString()
+        buildConfigField 'boolean', 'independentLibre2Eu', independentLibre2Eu.toString()
         minSdk = MINSDK
         targetSdk = TARGETSDK
         buildConfigField 'int', 'targetSDK', TARGETSDK.toString()
@@ -138,17 +146,20 @@ android {
         //compileSdk 36
         applicationId "tk.glucodata"
 
-         versionName '11.5.7'
+         versionName '12.0.4'
 //    multiDexEnabled true
 
         buildConfigField 'int', 'isRelease', '0'
 
         externalNativeBuild {
             cmake {
+                arguments "-DLIBRE2_EU_INDEPENDENT=${independentLibre2Eu ? 'ON' : 'OFF'}"
+                if (independentLibre2Eu) targets 'g'
                 version "$CMAKEVERSION"
                 cppFlags  " -DAPPID=\"quotes($applicationId)\"   -DAPPVERSION=\"quotes($versionName)\" "
                 cFlags  " -DAPPID=\"quotes($applicationId)\"   -DAPPVERSION=\"quotes($versionName)\" "
-                arguments "-DJUGGLUCO_APP=TRUE -DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=TRUE   -DCMAKE_EXPORT_COMPILE_COMMANDS=ON "
+                arguments "-DJUGGLUCO_APP=TRUE", "-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=TRUE",
+                          "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
 
 
             }
@@ -211,7 +222,7 @@ flavorDimensions = ['wearos','libreVersion','SiBionics', 'DexCom','Google']
     //******  Zet op rollout op 100% ******
             dimension 'libreVersion'
             versionCode 939 //LIBRE2ONLY
-         //    versionName '11.5.7-no3'
+         //    versionName '12.0.4-no3'
             versionNameSuffix '-no3'
             buildConfigField 'int', 'libreVersion', '2'
             externalNativeBuild.cmake {
@@ -268,7 +279,7 @@ flavorDimensions = ['wearos','libreVersion','SiBionics', 'DexCom','Google']
         manifestPlaceholders["minSDK"] = '26'
         versionCode 940 //WATCH
     //******  Zet op rollout op 100% ******
-        //versionName '11.5.7-wear'
+        //versionName '12.0.4-wear'
         versionNameSuffix '-wear'
         signingConfig signingConfigs.alg
 
@@ -288,7 +299,7 @@ flavorDimensions = ['wearos','libreVersion','SiBionics', 'DexCom','Google']
 //        minSdk 19
             dimension 'wearos'
         versionCode 940 //WATCH
-        //versionName '11.5.7-small'
+        //versionName '12.0.4-small'
         versionNameSuffix '-small'
         signingConfig signingConfigs.alg
 
@@ -543,6 +554,7 @@ buildTypes {
 
     packagingOptions {
         jniLibs {
+            if (independentLibre2Eu) excludes += ['**/libcalibrate.so', '**/libcalibrat2.so']
             useLegacyPackaging = true
             doNotStrip '**/libcalibrate.so'
             doNotStrip '**/libcalibrat2.so'
@@ -577,6 +589,7 @@ buildTypes {
            mobileLibreOldNosiNodexNogoogle {
                java.srcDirs = ['src/mobileNosi/java']
                res.srcDirs= ['src/mobileNosi/res']
+               if (independentLibre2Eu) manifest.srcFile 'src/libreEu/AndroidManifest.xml'
            }
 
            wearLibre3SiDexNogoogle{
@@ -607,6 +620,10 @@ buildTypes {
         // addGeneratedSourceDirectory() assigns outputDirectory and carries the task
         // dependency automatically; no java.srcDir Provider or JavaCompile hook is needed.
         onVariants(selector().all(), { variant ->
+            if (independentLibre2Eu && variant.productFlavors.any { it.second == 'libreOld' }) {
+                variant.packaging.jniLibs.excludes.add('**/libinit.so')
+            }
+
             // One application identity controls Java and native Garmin defaults.
             // Use the final variant ID, including flavor/build-type suffixes.
             def releaseId = variant.applicationId.get() == "tk.glucodata" ? 1 : 0
@@ -630,7 +647,7 @@ buildTypes {
                     GenerateBuildTimeTask::getOutputDirectory)
         })
     }
-    compileSdkMinor 0
+    if (!independentLibre2Eu) compileSdkMinor 0
 }
 
 allprojects {

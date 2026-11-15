@@ -25,6 +25,8 @@
 #include "ui_messages.hpp"
 #include "auth.hpp"
 #include "tools.hpp"
+#include <cstdint>
+#include <optional>
 
 namespace jgchat {
 class Workspace;
@@ -48,6 +50,7 @@ public:
     Json history() const;
     Json plots() const; // Local attachments for the last successful answer.
     Json files() const; // Validated bundles, saved by the Android bridge on commit.
+    std::optional<uint32_t> curve_start() const; // Unix seconds; deliver after saving the answer.
     Json citations() const;
     void restore_history(const Json&);
 private:
@@ -61,6 +64,7 @@ private:
     Json models_ = Json::array();
     Json plots_ = Json::array();
     Json files_ = Json::array(), citations_ = Json::array();
+    std::optional<uint32_t> curve_start_;
     HttpResponse authenticated(HttpRequest, const std::atomic_bool&);
 };
 }

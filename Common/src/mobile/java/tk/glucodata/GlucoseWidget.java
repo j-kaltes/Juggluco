@@ -56,11 +56,15 @@ public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidge
    var widthdip=widgetInfo.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
    {if(doLog) {Log.i(LOG_ID,"onAppWidgetOptionsChanged widthdip="+widthdip);};};
    used=true;
-   if(widthdip!=0&&widthdip!=width) {
-       setWidth(widthdip);
-       updateAppWidget(context, appWidgetManager, appWidgetId);
-       }
+   synchronized (GlucoseWidget.class) {
+            if (widthdip != 0 && widthdip != width) {
+                setWidth(widthdip);
+                updateAppWidget(context, appWidgetManager, appWidgetId);
+            }
+        }
+
    } 
+
 static private RemoteViews remoteMessage(String message) {
     RemoteViews remoteViews = new RemoteViews(Applic.app.getPackageName(), R.layout.text);
     remoteViews.setTextColor(R.id.content, Notify.foregroundcolor);
@@ -79,11 +83,13 @@ static private void showviews(RemoteViews views,int rId,AppWidgetManager appWidg
         Log.stack(LOG_ID,"showviews",th);
         }
    }
-static private void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
+static private synchronized void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
    var widgetInfo=appWidgetManager.getAppWidgetOptions(appWidgetId);
-   for(var key : widgetInfo.keySet()) {
-        {if(doLog) {Log.d(LOG_ID, key + " = " + widgetInfo.get(key));};};
-        }
+   if(doLog) {
+           for(var key : widgetInfo.keySet()) {
+                Log.d(LOG_ID, key + " = " + widgetInfo.get(key));;
+                }
+          }
    var widthdip=widgetInfo.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
    if(widthdip==0) {
       if(remote==null)

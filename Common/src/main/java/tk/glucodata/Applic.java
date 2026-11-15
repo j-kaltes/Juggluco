@@ -1124,4 +1124,167 @@ public static int getResourceIdFromTheme(Context context, int attributeResId) {
     return typedValue.resourceId;
     }
 */
+private final java.util.IdentityHashMap< ActivityLifecycleCallbacks, ActivityLifecycleCallbacks> nfcWrappers = new java.util.IdentityHashMap<>();
+
+@Override
+public void registerActivityLifecycleCallbacks(ActivityLifecycleCallbacks callback) {
+    if((doLog||Build.VERSION.SDK_INT == 36) && callback.getClass().getName().equals("android.nfc.NfcActivityManager")) {
+        if(doLog) Log.i(LOG_ID,"registerActivityLifecycleCallbacks");
+        ActivityLifecycleCallbacks wrapper = new ActivityLifecycleCallbacks() {
+            @Override
+            public void onActivityCreated(Activity a, android.os.Bundle b) {
+                if(doLog) Log.i(LOG_ID,"onActivityCreated");
+                callback.onActivityCreated(a, b);
+            }
+
+            @Override
+            public void onActivityStarted(Activity a) {
+                if(doLog) Log.i(LOG_ID,"onActivityStarted");
+                callback.onActivityStarted(a);
+            }
+/*
+            @Override
+            public void onActivityResumed(Activity a) {
+                if(doLog) Log.i(LOG_ID,"onActivityResumed start");
+                try {
+                    callback.onActivityResumed(a);
+                } catch (RuntimeException e) {
+                    if (e.getCause() instanceof android.os.DeadObjectException) {
+                        android.util.Log.w("Applic", "NFC service died during resume", e);
+                    } else {
+                        throw e;
+                    }
+                }
+                finally {
+                    if(doLog) Log.i(LOG_ID,"onActivityResumed end");
+                    }
+            }
+*/
+@Override
+public void onActivityResumed(Activity a) {
+
+    if(doLog) Log.i(LOG_ID, "onActivityResumed START " + a.getClass().getName() + " callback=" + callback.getClass().getName());
+    try {
+        callback.onActivityResumed(a);
+        if(doLog) Log.i(LOG_ID, "onActivityResumed SUCCESS" );
+
+    } catch (RuntimeException e) {
+        boolean deadObject = false;
+
+        for (Throwable cause = e; cause != null;cause = cause.getCause()) {
+            if (cause instanceof android.os.DeadObjectException) {
+                deadObject = true;
+                break;
+            }
+        }
+
+        if (deadObject) {
+            if(doLog) 
+                Log.stack(LOG_ID, "onActivityResumed DeadObjectException", e);
+            return;
+            }
+
+        if(doLog) 
+            Log.stack(LOG_ID, "onActivityResumed unexpected exception", e);
+        throw e;
+    }
+   }
+
+
+/*
+private boolean traceNextNfcResume = true;
+
+@Override
+public void onActivityResumed(Activity a) {
+    long start = android.os.SystemClock.elapsedRealtimeNanos();
+    if(doLog) Log.i(LOG_ID, "onActivityResumed START " + a.getClass().getName() + " callback=" + callback.getClass().getName());
+    boolean tracing = false;
+    java.io.File traceFile = null;
+
+    if(traceNextNfcResume) {
+        traceNextNfcResume = false;
+
+      //  java.io.File dir = a.getExternalFilesDir(null);
+        java.io.File dir = a.getFilesDir();
+        if (dir != null) {
+            traceFile = new java.io.File(dir, "/logs/nfc-resume.trace");
+
+            try {
+                android.os.Debug.startMethodTracing(
+                    traceFile.getAbsolutePath(),
+                    16 * 1024 * 1024
+                );
+                tracing = true;
+            } catch (RuntimeException e) {
+                if(doLog) Log.stack(LOG_ID, "Cannot start NFC trace", e);
+            }
+        }
+    }
+
+    try {
+        callback.onActivityResumed(a);
+    } catch (RuntimeException e) {
+        boolean deadObject = false;
+        for (Throwable t = e; t != null; t = t.getCause()) {
+            if (t instanceof android.os.DeadObjectException) {
+                deadObject = true;
+                break;
+            }
+        }
+
+        if (!deadObject) {
+            throw e;
+        }
+
+        if(doLog) Log.stack(LOG_ID, "NFC DeadObjectException suppressed", e);
+    } finally {
+        if (tracing) {
+            android.os.Debug.stopMethodTracing(); 
+            if(doLog) Log.i(LOG_ID, "NFC method trace: " + traceFile.getAbsolutePath());
+        }
+
+    if(doLog) Log.i(LOG_ID, "onActivityResumed END " + a.getClass().getName() + " callback=" + callback.getClass().getName());
+    }
+}
+*/
+            @Override
+            public void onActivityPaused(Activity a) {
+                if(doLog) Log.i(LOG_ID,"onActivityPaused");
+                callback.onActivityPaused(a);
+            }
+
+            @Override
+            public void onActivityStopped(Activity a) {
+                if(doLog) Log.i(LOG_ID,"onActivityStopped");
+                callback.onActivityStopped(a);
+            }
+
+            @Override
+            public void onActivitySaveInstanceState(Activity a, android.os.Bundle b) {
+                if(doLog) Log.i(LOG_ID, "onActivitySaveInstanceState");
+                callback.onActivitySaveInstanceState(a, b);
+                }
+
+            @Override
+            public void onActivityDestroyed(Activity a) {
+                if(doLog) Log.i(LOG_ID,"onActivityDestroyed");
+                callback.onActivityDestroyed(a);
+            }
+        };
+
+        nfcWrappers.put(callback, wrapper);
+        super.registerActivityLifecycleCallbacks(wrapper);
+    } else {
+        super.registerActivityLifecycleCallbacks(callback);
+        }
+}
+
+@Override
+public void unregisterActivityLifecycleCallbacks(ActivityLifecycleCallbacks callback) {
+    if(doLog) Log.i(LOG_ID,"unregisterActivityLifecycleCallbacks");
+    ActivityLifecycleCallbacks wrapper = nfcWrappers.remove(callback);
+    super.unregisterActivityLifecycleCallbacks(wrapper != null ? wrapper : callback);
+    }
+
+
 }

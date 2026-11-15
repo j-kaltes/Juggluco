@@ -59,6 +59,7 @@
 #include "settings/settings.hpp"
 #include "timevalues.h"
 #include "calibrate/CaliPara.hpp"
+#include "libre2_imp/processing/patch_profile.hpp"
 #include "net/Connect.hpp"
 
 inline constexpr const char sensorInfoStr[]="sensorInfo";
@@ -1123,21 +1124,7 @@ static int getgeneration(const char *info) {
     return 2;
     } */
 static int getgeneration(const char *info) {
-    const int i = info[2] >> 4;
-    const int i2 = info[2] & 0xF;
-    if(i == 3) {
-        if(i2 < 9) {
-            return 1;
-            }
-        return 2;
-       } 
-    else if(i == 7) {
-        if(i2 < 4) {
-            return 1;
-            }
-        return 2;
-        }
-    return 0;
+    return libre2_processing::libre_security_generation(static_cast<std::uint8_t>(info[2]));
     } 
 
 
@@ -1181,7 +1168,7 @@ static bool mkdatabase(string_view sensordir,time_t start,const  char *uid,const
             inf.blueinfo.data[5]=0;
             }
         }
-    writeall(infoname,&inf,sizeof(inf));
+    writeallNoTrunc(infoname,&inf,sizeof(inf),0);
     settings->data()->haslibre2=true;
     return true;
     }
@@ -1263,7 +1250,7 @@ static bool mkdatabase3(string_view sensordir,time_t start,uint32_t pin,const ch
     else
         inf.deviceaddress[0]='\0';
         
-    writeall(infoname,&inf,sizeof(inf));
+    writeallNoTrunc(infoname,&inf,sizeof(inf));
 
     settings->data()->haslibre3=true;
 
@@ -1288,7 +1275,7 @@ static bool mkdatabaseSI3(string_view sensordir,string_view sensorgegs,uint32_t 
   Info inf{.starttime=(uint32_t)start,.lastscantime=(uint32_t)start,.starthistory=0,.endhistory=0,.scancount=0,.startid=0,.interval=interval5,.dupl=3,.days=maxdaysSI3 ,.sibionics=true,.lastLifeCountReceived=0,.newSI=true,.siType=siType,.pollcount=0,.pollinterval=88.0, .lockcount=1,.manualwarmup=45,.siIdlen=(uint32_t)sensorgegs.size(),.warmupstartpos=45};
    memcpy(inf.siId,sensorgegs.data(),inf.siIdlen);
         
-    writeall(infoname,&inf,sizeof(inf));
+    writeallNoTrunc(infoname,&inf,sizeof(inf));
 
     return true;
     }
@@ -1322,7 +1309,7 @@ static bool mkdatabaseSI(string_view sensordir,string_view sensorgegs,uint32_t n
     inf.siBlueToothNum[8]='\0';
     LOGGER("siBlueToothNum=%s\n", inf.siBlueToothNum);
         
-    writeall(infoname,&inf,sizeof(inf));
+    writeallNoTrunc(infoname,&inf,sizeof(inf));
 
     return true;
     }
@@ -1341,7 +1328,7 @@ static bool mkdatabaseAir(string_view sensordir,string_view sensorgegs,uint32_t 
     uint32_t start=now;
     Info inf{.starttime=(uint32_t)start,.lastscantime=(uint32_t)start,.starthistory=0,.endhistory=0,.scancount=0,.startid=0,.interval=interval5,.dupl=3,.days=maxdaysAir ,.warmup=30,.wearduration=21600,.lastLifeCountReceived=1,.askEarlier=0,.pollcount=0,.lockcount=0,.air=true};
     memcpy(&inf.airData,sensorgegs.data(),sensorgegs.size());
-    writeall(infoname,&inf,sizeof(inf));
+    writeallNoTrunc(infoname,&inf,sizeof(inf));
 
     return true;
     }
@@ -1366,7 +1353,7 @@ static bool mkdatabaseAidexX(string_view sensordir,string_view sensorgegs,std::s
     inf.aidexXdat.scanlen=sensorgegs.size();
     memcpy(inf.aidexXdat.scan,sensorgegs.data(),sensorgegs.size());
 
-    writeall(infoname,&inf,sizeof(inf));
+    writeallNoTrunc(infoname,&inf,sizeof(inf));
 
     return true;
     }
@@ -1387,7 +1374,7 @@ static bool mkdatabaseAccu(string_view sensordir,string_view sensorgegs,uint32_t
     Info inf{.starttime=(uint32_t)start,.lastscantime=(uint32_t)start,.starthistory=0,.endhistory=0,.scancount=0,.startid=0,.interval=interval5,.dupl=3,.days=maxdaysAccu ,.warmup=60,.wearduration=20160,.lastLifeCountReceived=1,.pollcount=0,.accuChek=true};
     inf.siIdlen=sensorgegs.size();
     memcpy(inf.siId,sensorgegs.data(),inf.siIdlen);
-    writeall(infoname,&inf,sizeof(inf));
+    writeallNoTrunc(infoname,&inf,sizeof(inf));
 
     return true;
     };
@@ -1409,7 +1396,7 @@ static bool mkdatabaseDex(string_view sensordir,string_view sensorgegs,uint32_t 
     Info inf{.starttime=(uint32_t)now,.lastscantime=(uint32_t)start,.starthistory=0,.endhistory=0,.scancount=0,.startid=0,.interval=interval5,.dupl=3,.dexcom=true,.days=(uint8_t)(days+2),.warmup=30,.wearduration=(uint16_t)(days*24*60),.lastLifeCountReceived=1,.pollcount=0};
     inf.siIdlen=sensorgegs.size();
     memcpy(inf.siId,sensorgegs.data(),inf.siIdlen);
-    writeall(infoname,&inf,sizeof(inf));
+    writeallNoTrunc(infoname,&inf,sizeof(inf));
 
 //        settings->data()->balanced_priority=false;
  //       settings->data()->android13=true;
@@ -1537,6 +1524,16 @@ if(error()) {
     LOGGER("SensorGlucoseData %s %s Error\n",sensordir.data(),baseuit.data());
     return;
     }
+const uint32_t count = getinfo()->pollcount;
+const size_t capacity = polls.count();
+
+if(count > capacity) {
+    LOGGER("SensorGlucoseData sensor=%d: Invalid pollcount=%u capacity=%zu days=%u maxstreampos=%d dexcom=%d libre3=%d\n", sensorIndex, count, capacity, getinfo()->days, maxstreampos(), isDexcom(), isLibre3());
+    haserror = true;
+    return;
+   }
+
+
 if(isSibionics2())
     getinfo()->days=45;
 if(const ScanData *last=lastpoll()) {
@@ -1546,7 +1543,7 @@ if(const ScanData *last=lastpoll()) {
         LOGGER("waslast: lastlifecount=%d %s",lastlifecount,ctime(&timelastcurrent));
         }
     int start=getStreamStart();
-    if((start+1)<pollcount()) {
+    if((start+1)<count) {
         if(!polls[start].t)
             polls[start].t=polls[start+1].t-60;
 
@@ -1683,12 +1680,28 @@ void savetrend(const nfcdata *scan,std::array<uint16_t,16> &trendbuf){
         trendbuf[i]=scan->getglucose<trend>(i);
     
     }
-
+/*
 void saveglucose(const nfcdata*nfc,time_t tim,int id,int glu,int trend,float change) {
     savetrend(nfc,gettrendsbuf(scancount()));
     saveglucosedata(scans,getinfo()->scancount,tim, id, glu, trend, change);
     setlastscantime(tim);
     }
+*/
+void saveglucose(const nfcdata *nfc, time_t tim, int id, int glu, int trend, float change, const std::array<uint16_t, 16> *scanTrendMgL = nullptr) {
+    auto &count = getinfo()->scancount;
+    const auto index = count;
+    if(index >= scans.count() || index >= trends.count()) 
+        return;
+    auto &trendbuf = trends[index];
+    if(scanTrendMgL) 
+        trendbuf = *scanTrendMgL;
+    else 
+        savetrend(nfc, trendbuf);
+
+    saveglucosedata(scans, count, tim, id, glu, trend, change);
+    setlastscantime(tim);
+}
+
 
 bool savepoll(time_t tim,int id,int glu,int trend,float change) {
     if(getinfo()->pollcount) {

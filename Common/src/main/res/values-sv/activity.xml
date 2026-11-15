@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+    <string name="activity_import">Aktiviteter</string>
+    <string name="activity_export_extended">Utökad</string>
+    <string name="activity_details">Aktivitet</string>
+    <string name="activity_retrieve">Hämta</string>
+    <string name="activity_permissions">Behörigheter</string>
+    <string name="activity_history_granted">Åtkomst till historiska data har beviljats.</string>
+    <string name="activity_history_missing">Åtkomst till historiska data har inte beviljats.</string>
+    <string name="activity_history_unavailable">Åtkomst till historiska data är inte tillgänglig.</string>
+    <string name="activity_measure_existing">Befintliga importerade värden använder vald etikett, mätstorhet och avrundning när dessa är tillgängliga. Individuella ändringar bevaras.</string>
+    <string name="activity_round_to">Avrunda till:</string>
+    <string name="activity_round_to_invalid">Ange ett positivt avrundningssteg, till exempel 1 eller 0.1</string>
+    <string name="activity_from">Hämta från</string>
+    <string name="activity_interval">Automatisk hämtning</string>
+    <string name="activity_create_amounts">Skapa värden från aktiviteter</string>
+    <string name="activity_units">Enheter för distans och hastighet</string>
+    <string-array name="activity_units">
+        <item>km och km/h</item><item>mi och mi/h</item>
+    </string-array>
+    <string name="activity_last">Senaste hämtning:</string>
+    <string name="activity_never">Aldrig</string>
+    <string name="activity_retrieving">Hämtar aktiviteter…</string>
+    <string name="activity_retrieving_details">Hämtar aktivitetsdetaljer: %1$d av %2$d</string>
+    <string name="activity_quota_wait">Gränsen för förfrågningar till Health Connect har nåtts. Väntar på nytt försök…</string>
+    <string name="activity_retrieved">Aktiviteter hämtade</string>
+    <string name="activity_labels">Etiketter</string>
+    <string name="activity_saved">Sparade aktiviteter</string>
+    <string name="activity_default">Allmän aktivitetsetikett</string>
+    <string name="activity_update_existing">Ändra även tidigare automatiskt skapade värden</string>
+    <string name="activity_new_label">Ny etikett</string>
+    <string name="activity_choose_label">Välj eller skapa en aktivitetsetikett</string>
+    <string name="activity_none">Inga sparade aktiviteter</string>
+    <string name="activity_unavailable">Aktivitetsdetaljer är inte tillgängliga på den här enheten</string>
+    <string name="activity_delete_confirm">Ta bort den här aktiviteten från Juggluco och förhindra att den importeras igen? De automatiskt skapade värdena tas bort. Manuellt inmatade eller ändrade värden behålls, men kopplingen till aktiviteten tas bort. Data i Health Connect förblir oförändrade.</string>
+    <string name="activity_remove_source">Ta bort källa</string>
+    <string name="activity_remove_source_confirm">Ta bort %1$s som källa för den här aktiviteten i Juggluco? Aktivitets- och pulsdata från källan undantas vid framtida hämtningar. Övriga källor och data i Health Connect behålls.</string>
+    <string name="activity_mirrored">Hämtning från Health Connect är inaktiverad eftersom värden tas emot via spegling.</string>
+    <string name="activity_source">Källa</string>
+    <string name="activity_heart_source">Pulskälla</string>
+    <string name="activity_heart_used">Pulskälla som används i sammanfattningen</string>
+    <string name="activity_source_deleted">Den här källan har tagits bort i Health Connect</string>
+    <string name="activity_not_returned">Ingår inte i den aktuella hämtningen från Health Connect</string>
+    <string name="activity_excess">Medelpuls − vilopuls</string>
+    <string name="activity_period_duration">%1$s – %2$s (varaktighet: %3$s)</string>
+    <string name="activity_link">Länka till värde</string>
+    <string name="activity_no_match">Inga olänkade aktivitetsvärden under den här perioden</string>
+    <string name="activity_distance_miles">Distans (mi)</string>
+    <string name="activity_speed_miles">Medelhastighet (mi/h)</string>
+    <string-array name="activity_intervals">
+        <item>Av</item><item>15 minuter</item><item>30 minuter</item><item>1 timme</item>
+        <item>3 timmar</item><item>6 timmar</item><item>24 timmar</item>
+    </string-array>
+    <string-array name="activity_measures">
+        <item>Förfluten tid (min)</item><item>Distans (km)</item><item>Medelpuls − vilopuls (slag/min)</item>
+        <item>Medelpuls (slag/min)</item><item>Pulsens standardavvikelse (slag/min)</item><item>Aktiv energi (kcal)</item>
+        <item>Medelhastighet (km/h)</item><item>Steg</item><item>Höjdvinst (m)</item>
+        <item>Medeluteffekt (W)</item><item>Genomsnittlig trampfrekvens (varv/min)</item>
+        <item>@string/activity_distance_miles</item><item>@string/activity_speed_miles</item>
+        <item>Maxpuls (slag/min)</item>
+    </string-array>
+    <string-array name="activity_fields">
+        <item>Varaktighet</item><item>Distans</item><item>Vilopuls</item>
+        <item>Medelpuls</item><item>Pulsens standardavvikelse</item><item>Pulstäckning</item>
+        <item>Aktiv energi</item><item>Medelhastighet</item><item>Steg</item>
+        <item>Höjdvinst</item><item>Medeluteffekt</item><item>Trampfrekvens</item>
+        <item>Maxpuls</item><item>Maxhastighet</item>
+    </string-array>
+</resources>

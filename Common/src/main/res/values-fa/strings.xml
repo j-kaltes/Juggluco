@@ -1,0 +1,705 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+    <string name="language">fa</string>
+    <string name="languagename">زبان</string>
+    <string name="app_name">Juggluco</string>
+
+    <string name="ok">تأیید</string>
+    <string name="cancel">لغو</string>
+
+    <string name="garmin_initialization_error">مقداردهی اولیهٔ Garmin Connect SDK ناموفق بود:</string>
+
+    <string name="error_nfc_device_not_supported">اسکن ممکن نیست؛ این دستگاه NFC ندارد</string>
+    <string name="error_nfc_disabled">NFC خاموش است. می‌توانید آن را از تنظیمات دستگاه روشن کنید.</string>
+
+   <string name="kerfstok_missing_title">Kerfstok روی ساعت نصب نیست</string>
+    <string name="kerfstok_missing_message">Kerfstok روی ساعت نصب نیست. می‌توانید آن را از فروشگاه Garmin Connect IQ دریافت کنید.</string>
+
+
+    <string name="alarm_description">گلوکز بسیار پایین یا بسیار بالا</string>
+    <string name="loss_description">ارتباط Juggluco با حسگر قطع شده است</string>
+    <string name="numalarm_description">یادآوری برای تزریق، غذاخوردن یا ورزش</string>
+    <string name="notification_description">مقدار کنونی گلوکز را در اعلان نمایش می‌دهد</string>
+    <string name="ongoing_description">برنامه در حال اجراست</string>
+    <string name="scan_permission">مجوز</string>
+    <string name="scanname">اسکن</string>
+    <string name="scansname">اسکن‌ها</string>
+    <string name="historyname">تاریخچه</string>
+    <string name="streamname">داده‌های پیوسته</string>
+    <string name="resetname">بازنشانی</string>
+    <string name="helpname">راهنما</string>
+    <string name="searchtopast">جست‌وجو در گذشته</string>
+    <string name="nobluetooth">بلوتوث موجود نیست</string>
+    <string name="bluetoothenabled">بلوتوث روشن شد</string>
+    <string name="bluetoothdisabled">بلوتوث خاموش شد</string>
+    <string name="amountsname">مقدارها</string>
+    <string name="amountshort">@string/amountsname</string>
+    <string name="mealsname">وعده‌های غذایی</string>
+    <string name="closename">بستن</string>
+    <string name="exporthelp">داده‌ها تا آخرین مقدار نمایش‌داده‌شده روی صفحه ذخیره می‌شوند. آغاز بازه، تعداد روزهای تعیین‌شده پیش از آن است.</string>
+    <string name="detect">شناسایی</string>
+    <string name="testip">آزمایش IP</string>
+    <string name="testlabel">آزمایش برچسب</string>
+    <string name="passiveonly">فقط غیرفعال</string>
+    <string name="activeonly">فقط فعال</string>
+    <string name="both">هر دو</string>
+    <string name="receivefrom">دریافت از</string>
+    <string name="datapresentuntil">داده‌های موجود در گیرنده تا:</string>
+    <string name="visible">نمایان</string>
+    <string name="password">گذرواژه</string>
+    <string name="delete">حذف</string>
+    <string name="specifyreceiveordata">«دریافت از» یا داده‌های ارسالی به دستگاه دیگر را مشخص کنید</string>
+    <string name="specifyip">باید یک IP مشخص کنید</string>
+    <string name="portrange">درگاه شبکه باید بین 1024 و 65535 باشد</string>
+    <string name="start">شروع</string>
+    <string name="now">اکنون</string>
+    <string name="dontchangeamounts">آینه مقدارها را می‌فرستد</string>
+    <string name="thishost">این میزبان:</string>
+    <string name="dozemode">حالت Doze؟</string>
+    <string name="sync">همگام‌سازی</string>
+    <string name="alarms">هشدارها</string>
+    <string name="save">ذخیره</string>
+ <string name="addconnectionbutton">افزودن اتصال</string>
+ <string name="offtouch">غیرفعال‌کردن لمس</string>
+ <string name="glucosestatusbar">اعلان گلوکز</string>
+ <string name="lowglucosealarm">هشدار افت گلوکز</string>
+ <string name="numlabel">برچسب:</string>
+ <string name="roundto">گردکردن به:</string>
+ <string name="weight">وزن:</string>
+ <string name="ringtonename">آهنگ زنگ</string>
+ <string name="highglucosealarm">هشدار افزایش گلوکز</string>
+ <string name="valueavailablenotification">اعلان در دسترس بودن مقدار</string>
+ <string name="lossofsignalalarm">هشدار قطع سیگنال پس از</string>
+ <string name="cantsetminutes">نمی‌توان دقیقه را روی این مقدار تنظیم کرد:</string>
+  <string name="minutes">دقیقه</string>
+ <string name="toolarg">بیش‌ازحد طولانی است</string>
+ <string name="targetrange">محدودهٔ هدف:</string>
+ <string name="graphrange">محدودهٔ نمودار:</string>
+ <string name="unit">واحد:</string>
+ <string name="glucoseaxisleft">محور گلوکز در سمت چپ</string>
+ <string name="startsapp">اسکن، برنامه را باز کند</string>
+ <string name="patchedlibrebroadcast">انتشار Patched Libre</string>
+ <string name="disablecamerakey">غیرفعال‌کردن کلید دوربین</string>
+ <string name="invertscreen">چرخش ۱۸۰ درجه</string>
+ <string name="nfcsound">صدای NFC</string>
+ <string name="manuallyscale">مقیاس‌بندی دستی</string>
+ <string name="time">زمان</string>
+ <string name="glucose">گلوکز</string>
+ <string name="sensorviabluetooth">حسگر از طریق بلوتوث</string>
+ <string name="sensorviabluetoothon">برای هشدار در دستگاهی که آینه نیست، باید «حسگر از طریق بلوتوث» روشن باشد</string>
+ <string name="setunitfirst">ابتدا واحد را انتخاب کنید</string>
+ <string name="numberlabels">برچسب‌های مقدارها</string>
+ <string name="colors">رنگ‌ها</string>
+ <string name="remindersname">یادآورها</string>
+ <string name="display">نمایش</string>
+ <string name="shutcuts">میان‌برها</string>
+ <string name="advanced">پیشرفته</string>
+ <string name="newname">جدید</string>
+ <string name="deletelast">حذف آخرین مورد</string>
+ <string name="meal">وعدهٔ غذایی:</string>
+ <string name="ringshort">زنگ</string>
+ <string name="days">روز</string>
+ <string name="invaliddays">نامعتبر است. تعداد روزها باید عدد طبیعی باشد.</string>
+ <string name="summarygraph">نمودار خلاصه</string>
+ <string name="forget">فراموش‌کردن</string>
+ <string name="reenable">فعال‌سازی دوباره</string>
+ <string name="failure_info">اطلاعات</string>
+ <string name="last_failure">آخرین خطا</string>
+ <string name="last_success">آخرین موفقیت</string>
+ <string name="stage">مرحله</string>
+ <string name="use_bluetooth">استفاده از بلوتوث</string>
+ <string name="connection">اتصال</string>
+ <string name="handshake">دست‌دهی</string>
+ <string name="glucose_value">مقدار گلوکز</string>
+ <string name="info">اطلاعات</string>
+ <string name="devicespecific">تنظیم ویژهٔ دستگاه</string>
+ <string name="dozeupdate">به‌روزرسانی در حالت Doze</string>
+ <string name="refresh">تازه‌سازی</string>
+ <string name="sendqueue">صف ارسال</string>
+ <string name="reinit">راه‌اندازی مجدد اتصال</string>
+ <string name="watchappinstalled">برنامهٔ ساعت روی ساعت نصب است</string>
+ <string name="error">خطا</string>
+ <string name="additem">افزودن مورد</string>
+ <string name="round">گردکردن</string>
+ <string name="repeat">تکرار</string>
+ <string name="ingredient">مادهٔ غذایی:</string>
+ <string name="select">انتخاب</string>
+ <string name="carbohydrate">کربوهیدرات:</string>
+ <string name="carbo">کربوهیدرات</string>
+ <string name="total">مجموع:</string>
+ <string name="mealtotal">مجموع وعدهٔ غذایی:</string>
+ <string name="quantity">مقدار مادهٔ غذایی</string>
+ <string name="per"> به‌ازای</string>
+ <string name="specifyingredient">باید مادهٔ غذایی را مشخص کنید</string>
+ <string name="specifyhowmuch">باید مقدار را مشخص کنید</string>
+ <string name="define">تعریف</string>
+ <string name="edit">ویرایش</string>
+ <string name="name">نام:</string>
+ <string name="carbperunit">کربوهیدرات در هر واحد:</string>
+ <string name="database">پایگاه داده</string>
+ <string name="search">جست‌وجو</string>
+ <string name="trace">ردیابی</string>
+ <string name="unknown">نامشخص</string>
+ <string name="showzero">نمایش صفر</string>
+ <string name="compositionof100gram">ترکیب در ۱۰۰ گرم</string>
+ <string name="status">وضعیت</string>
+ <string name="config">پیکربندی</string>
+ <string name="initwatchapp">راه‌اندازی اولیهٔ برنامهٔ ساعت</string>
+ <string name="nowatchesfound">هیچ ساعتی پیدا نشد</string>
+ <string name="getkerfstok">دریافت برنامهٔ ساعت Kerfstok</string>
+ <string name="mealname">وعدهٔ غذایی</string>
+ <string name="deletequestion">حذف شود؟</string>
+ <string name="soundname">صدا</string>
+ <string name="play">پخش</string>
+ <string name="defaultname">پیش‌فرض</string>
+ <string name="flash">چشمک</string>
+ <string name="permission">مجوز</string>
+ <string name="shortcut">میان‌بر</string>
+ <string name="value">مقدار</string>
+ <string name="nextpage">صفحهٔ بعد</string>
+ <string name="ips">نشانی‌های IP:</string>
+ <string name="port">درگاه</string>
+ <string name="saved">ذخیره شد</string>
+ <string name="savefailed">ذخیره ناموفق بود</string>
+ <string name="notsaved">ذخیره نشد</string>
+ <string name="failedbyexception">ناموفق (استثنا)</string>
+ <string name="nodata">داده‌ای موجود نیست</string>
+ <string name="addsensorenddate">تاریخ پایان حسگر را به تقویم اضافه کنید</string>
+ <string name="enddatesensor">تاریخ پایان حسگر</string>
+ <string name="open">بازکردن</string>
+ <string name="withoutsensor">بدون حسگر</string>
+ <string name="wronglibrary">کتابخانه درست کار نمی‌کند؛ کتابخانهٔ دیگری را امتحان کنید</string>
+ <string name="installedlibrary">کتابخانهٔ نصب‌شده</string>
+ <string name="cantextract">استخراج %s ممکن نیست؛ فایل APK دیگری را امتحان کنید</string>
+ <string name="connectwithsensor">برای اتصال به حسگر اجرا می‌شود</string>
+ <string name="exchangedata">برای تبادل داده اجرا می‌شود</string>
+ <string name="nonewvalue">از این زمان مقدار جدیدی نرسیده است:</string>
+ <string name="lowglucose"> افت گلوکز!</string>
+ <string name="highglucose"> افزایش گلوکز!</string>
+ <string name="lowglucoseshort">@string/lowglucose</string>
+ <string name="highglucoseshort">@string/highglucose</string>
+ <string name="sendto">ارسال به</string>
+ <string name="resenddata">ارسال دوبارهٔ داده‌ها</string>
+ <string name="minimum">کمینه</string>
+ <string name="minuteddeactivated">دقیقه‌های غیرفعال‌بودن:</string>
+ <string name="duractionsec">مدت (ثانیه):</string>
+ <string name="duraction">مدت:</string>
+ <string name="sec">ثانیه</string>
+ <string name="notentered"> وارد نشده است</string>
+ <string name="spacedand"> و</string>
+    <string name="disturb">مزاحمت</string>
+    <string name="uselibreview">ارسال به LibreView</string>
+    <string name="libreviewname">LibreView</string>
+    <string name="sendnow">هم‌اکنون ارسال کن</string>
+    <string name="blueormirror">«حسگر از طریق بلوتوث» باید روشن باشد یا این دستگاه به‌صورت آینه پیکربندی شود</string>
+    <string name="vibrationname">لرزش</string>
+    <string name="high_priority">توربو</string>
+    <string name="darkmode">حالت تیره</string>
+    <string name="multiply">ضرب در:</string>
+    <string name="rapidinsulin">انسولین سریع‌الاثر</string>
+ <string name="longinsulin">انسولین طولانی‌اثر</string>
+    <string name="comments">یادداشت‌ها</string>
+ <string name="dontsend">ارسال نکن</string>
+ <string name="sendamounts">ارسال مقدارها</string>
+ <string name="resendquestion">داده‌ها دوباره ارسال شوند؟</string>
+ <string name="resendmessage">مراقب باشید داده‌های همپوشان به LibreView ارسال نکنید.</string>
+ <string name="getaccountidquestion">شناسهٔ حساب از LibreView دریافت شود؟</string>
+ <string name="getaccountidmessage">برای استفاده از حسگرهای Libre 3 که با برنامهٔ Libre 3 شرکت Abbott و این حساب LibreView فعال شده‌اند، شناسهٔ حساب لازم است.</string>
+ <string name="deleteconnection">اتصال حذف شود؟</string>
+ <string name="wakelock">قفل بیدارباش</string>
+ <string name="wifi">وای‌فای</string>
+ <string name="heartrate">ضربان قلب</string>
+ <string name="xdripbroadcast">انتشار پیام xDrip</string>
+ <string name="sensorpermission">مجوز حسگرها</string>
+ <string name="sensorpermissionmessage">برای نمایش ضربان قلب لازم است. آن را در «تنظیمات دستگاه ← برنامه‌ها ← مجوزها ← Juggluco» فعال کنید</string>
+ <string name="floatglucose">نمایش شناور گلوکز</string>
+ <string name="floatglucoseshort">@string/floatglucose</string>
+
+ <string name="fontsize">اندازهٔ قلم</string>
+ <string name="fontsizeshort">@string/fontsize</string>
+ <string name="fonttoolarge">اندازهٔ قلم بیش‌ازحد بزرگ است؛ حداکثر=</string>
+ <string name="foreground">رنگ پیش‌زمینه</string>
+ <string name="background">رنگ پس‌زمینه</string>
+ <string name="backgroundshort">پس‌زمینه</string>
+
+ <string name="transparent">شفاف</string>
+ <string name="touchable">قابل لمس</string>
+
+ <string name="overlaypermission">مجوز لازم است</string>
+ <string name="overlaypermissionmessage">adb shell pm grant tk.glucodata android.permission.SYSTEM_ALERT_WINDOW</string>
+ <string name="deletereminder">یادآور حذف شود؟</string>
+ <string name="deletelabel">برچسب حذف شود؟</string>
+
+ <string name="finish">خاتمه</string>
+ <string name="finishsensormessage">دریافت پیوسته از این حسگر متوقف شود؟</string>
+ 
+ <string name="email">ایمیل:</string>
+ <string name="getaccountid">دریافت شناسهٔ حساب</string>
+
+ <string name="emailaddresstooshort">نشانی ایمیل بیش‌ازحد کوتاه است</string>
+ <string name="emailaddresstoolong">نشانی ایمیل بیش‌ازحد طولانی است</string>
+ <string name="password8">گذرواژه باید حداقل ۸ نویسه داشته باشد</string>
+ <string name="password36">گذرواژه حداکثر می‌تواند ۳۶ نویسه داشته باشد</string>
+ <string name="fromlibreview">از LibreView</string>
+ <string name="manual">دستی</string>
+<string name="noaccountidspecified">شناسهٔ حساب تعیین نشده است</string>
+<string name="wrongformat">قالب نادرست</string>
+<string name="noapplisteningto">هیچ برنامه‌ای به این پیام گوش نمی‌دهد:</string>
+<string name="secret">api_secret</string>
+<string name="withoutsaving">بدون ذخیره خارج شوید؟</string>
+<string name="active">فعال</string>
+<string name="usessl">استفاده از SSL</string>
+<string name="fullchain">زنجیرهٔ کامل</string>
+
+	<string name="privatekey">کلید خصوصی</string>
+<string name="localonly">فقط محلی</string>
+<string name="toolongsecret">api_secret بیش‌ازحد طولانی است. حداکثر=</string>
+<string name="invalidport"> شمارهٔ درگاه نامعتبر است</string>
+<string name="newsecret">api_secret جدید:</string>
+<string name="newport">درگاه جدید =</string>
+<string name="webserver">وب‌سرور</string>
+<string name="treatments">ارسال مقدارها</string>
+<string name="android13">Android</string>
+    <string name="wentwrong">مشکلی پیش آمد</string>
+    <string name="dosis"> دوز</string>
+    <string name="doses"> دوز</string>
+ <string name="penfailed">خواندن قلم انسولین ناموفق بود. دوباره تلاش کنید.</string>
+ <string name="changeinsulin">نوع انسولین را تغییر دهید به</string>
+    <string name="type">نوع:</string>
+    <string name="dosesprior">فقط دوزهای پس از این زمان را اضافه کنید:</string>
+    <string name="modify">اصلاح</string>
+    <string name="notsynced">همگام نشده است</string>
+ <string name="lossdata">بازگرداندن پیش‌فرض‌ها ممکن است موجب ازدست‌رفتن داده‌ها شود.</string>
+ <string name="defaults">پیش‌فرض‌ها</string>
+    <string name="notify">اعلان</string>
+ <string name="separate">جداگانه</string>
+    <string name="librecurrent">فوری</string>
+    <string name="speed">سرعت</string>
+ <string name="pitch">زیر و بمی صدا</string>
+ <string name="talker">صدا</string>
+ <string name="secondsbetween">فاصلهٔ بین دو اعلام (ثانیه)</string>
+ <string name="test">آزمایش</string>
+ <string name="streamhistory">تاریخچه از طریق بلوتوث</string>
+ <string name="libreisviewed">نمایش جاسوسی</string>
+ <string name="novalue">مقداری موجود نیست</string>
+ <string name="talk">گفتار</string>
+ <string name="watches">ساعت</string>
+ <string name="menus">منوها</string>
+ <string name="system_ui">رابط سیستم</string>
+ <string name="sensor">حسگر</string>
+ <string name="settings">تنظیمات</string>
+ <string name="aboutname">درباره</string>
+ <string name="export">برون‌بری</string>
+ <string name="mirror">آینه‌سازی</string>
+ <string name="new_amount">مقدار جدید</string>
+ <string name="list">فهرست</string>
+ <string name="statistics">آمار</string>
+ <string name="floatname">نمایش شناور</string>
+ <string name="last_scan">آخرین اسکن</string>
+    <string name="date">تاریخ</string>
+ <string name="day_back">روز قبل</string>
+ <string name="day_later">روز بعد</string>
+ <string name="week_back">هفتهٔ قبل</string>
+ <string name="week_later">هفتهٔ بعد</string>
+ <string name="talk_touch">خواندن با لمس</string>
+ <string name="speakmessages">خواندن پیام‌ها</string>
+ <string name="speakalarms">خواندن هشدارها</string>
+ <string name="speakglucose">خواندن گلوکز</string>
+    <string name="notfound">پیدا نشد</string>
+ <string name="no_ringtone_picker_found">برنامه‌ای برای انتخاب آهنگ زنگ پیدا نشد</string>
+ <string name="can_t_play">پخش ممکن نیست:</string>
+ <string name="seconds"> ثانیه</string>
+ <string name="duration_can_t_be_negative">مدت نمی‌تواند منفی باشد:</string>
+ <string name="too_large_maximum_65535"> بیش‌ازحد بزرگ است، حداکثر=65535،</string>
+ <string name="too_large"> بیش‌ازحد بزرگ است</string>
+ <string name="can_t_use_specification">نمی‌توان از این مشخصات استفاده کرد</string>
+ <string name="turn_on_nearby_devices_permission">مجوز دستگاه‌های نزدیک را فعال کنید</string>
+    <string name="enable_bluetooth">بلوتوث را روشن کنید</string>
+ <string name="turn_on_location_permission">مجوز مکان را فعال کنید</string>
+ <string name="bluetooth_is_turned_off">بلوتوث خاموش است</string>
+ <string name="allsentnoreceive">وقتی همهٔ داده‌ها برای یک میزبان فرستاده می‌شوند، «دریافت از» باید خاموش باشد.</string>
+ <string name="nomirrorport">شمارهٔ درگاه باید با درگاه آینه‌سازی متفاوت باشد</string>
+ <string name="nohttpport">شمارهٔ درگاه باید با درگاه HTTP متفاوت باشد</string>
+ <string name="httpportxdripwarning">وب‌سرور فقط هنگامی با برنامه‌های ساعت xDrip کار می‌کند که درگاه HTTP برابر 17580 باشد.</string>
+<string name="ready_in"> آماده می‌شود تا</string>
+<string name="ready_for_use">حسگر آمادهٔ استفاده است</string>
+<string name="endstime"> در این زمان پایان می‌یابد</string>
+<string name="triednothing">هیچ تلاشی انجام نشد</string>
+<string name="success">موفق</string>
+<string name="resendwarning">همهٔ داده‌ها دوباره ارسال می‌شوند؛ این کار زمان‌بر است و ممکن است برای LibreView و Kerfstok پیامدهایی داشته باشد</string>
+<string name="parseip">خطا در پردازش IP</string>
+<string name="toomanyhosts">بیشینهٔ شمار میزبان‌ها رد شده است</string>
+<string name="senthosts">Juggluco حداکثر به ۶ میزبان می‌فرستد</string>
+    <string name="hostname">نام میزبان</string>
+   <string name="clampnow">ثابت‌ماندن اکنون</string>
+    <string name="sendfrom">ارسال از:</string>
+ <string name="changestartbutton">تغییر شروع</string>
+ <string name="floatjuggluco">بالای برنامه‌های دیگر</string>
+ <string name="uploader">بارگذار</string>
+ <string name="upload">بارگذاری</string>
+ <string name="sibionics">Sibionics</string>
+ <string name="mmolL">mmol/L</string>
+ <string name="mgdL">mg/dL</string>
+ <string name="interval">فاصلهٔ زمانی</string>
+ <string name="off">خاموش</string>
+ <string name="shortoff">خاموش</string>
+ <string name="streamingenabled"> دریافت پیوسته فعال است</string>
+ <string name="streamingnotenabled"> دریافت پیوسته فعال نیست</string>
+    <string name="everSensebroadcast">انتشار پیام EverSense</string>
+ <string name="threshold">آستانه</string>
+ <string name="untouchablequestion">نمایش شناور گلوکز غیرقابل لمس شود؟</string>
+
+ <string name="hour12">۱۲ ساعته</string>
+<string name="complications">اجزای صفحهٔ ساعت</string>
+    <string name="colors_style_setting_description">رنگ صفحهٔ ساعت</string>
+
+   <string name="glucosenumbercomplicationlabel">مقدار گلوکز</string>
+   <string name="glucosearrowcomplicationlabel">پیکان روند گلوکز</string>
+   <string name="glucosearrowvaluecomplicationlabel">مقدار و پیکان</string>
+ <string name="glucosevalueiconcomplicationlabel">مقدار کوچک گلوکز</string>
+ <string name="glucosearrowiconcomplicationlabel">پیکان کوچک گلوکز</string>
+ <string name="glucoseshortcomplicationlabel">مقدار و پیکان کوچک</string>
+
+   <string name="text">متن</string>
+   <string name="arrow">پیکان</string>
+   <string name="notalldata">هشدار: «دریافت از» تنظیم نشده، اما بعضی انواع داده‌ها ارسال نمی‌شوند.</string>
+  <string name="libresetalllabels">ابتدا مشخص کنید با هر برچسب چه کاری انجام شود.</string>
+   <string name="photo">عکس</string>
+   <string name="photomessage">کد ماتریسی حسگر Dexcom G7/ONE+ یا Sibionics GS1 یا کد QR آینه‌سازی را اسکن کنید.</string>
+   <string name="exchanges">تبادل داده</string>
+   <string name="dexfuture">پیش‌بینی (Dexcom)</string>
+   <string name="initializing">در حال راه‌اندازی اولیه</string> 
+   <string name="startjuggluco">آیا Juggluco روی تلفن اجرا می‌شود؟\n\nآیا وای‌فای و بلوتوث روشن‌اند؟</string> 
+   <string name="connected">متصل شد!</string> 
+   <string name="useclose">دکمهٔ بستن</string> 
+   <string name="alarmclock">⏰</string> 
+   <string name="filesize">اندازهٔ فایل</string> 
+   <string name="logging">ثبت گزارش</string> 
+    <string name="aspart">انسولین آسپارت / NovoRapid / NovoLog</string>
+    <string name="fiasp">Fiasp</string>
+    <string name="lispro">انسولین لیسپرو / Humalog</string>
+    <string name="urli">URLi / Lyumjev / انسولین لیسپرو-aabc</string>
+    <string name="glulisine">انسولین گلولیزین / Apidra</string>
+    <string name="humaninsulin">انسولین انسانی / Humulin R / Novolin R</string>
+    <string name="afrezza">Afrezza</string>
+    <string name="not">ارسال نشود</string>
+    <string name="eusibionics">Sibionics اروپا - com.sisensing.sijoy</string>
+    <string name="chsibionics">Sibionics چین - com.sisensing.sisensingcgm</string>
+    <string name="hematonix">Hematonix - com.sisensing.rusibionics</string>
+    <string name="sibionics2">Sibionics 2/Split - com.sisensing.eco</string>
+    <string name="datapresent">داده‌های موجود:</string>
+    <string name="overwrite">بازنویسی شود؟</string>
+    <string name="autoqr">QR خودکار</string>
+    
+    <string name="googlescan">اسکن Google</string>
+    <string name="usedweight">هشدار: وزن (%.1f) صفر نیست</string>
+
+ <string name="verylowglucose"> گلوکز بسیار پایین!</string>
+ <string name="veryhighglucose"> گلوکز بسیار بالا!</string>
+
+ <string name="verylowglucoseshort"> بسیار پایین!</string>
+ <string name="veryhighglucoseshort"> بسیار بالا!</string>
+
+ <string name="prelowglucose"> به‌زودی گلوکز پایین می‌آید!</string>
+ <string name="prehighglucose"> به‌زودی گلوکز بالا می‌رود!</string>
+
+ <string name="verylowglucosealarm">هشدار افت شدید گلوکز</string>
+ <string name="veryhighglucosealarm">هشدار افزایش شدید گلوکز</string>
+
+ <string name="prelowglucosealarm">هشدار پیش‌بینی افت به کمتر از</string>
+ <string name="prehighglucosealarm">هشدار پیش‌بینی افزایش به بیشتر از</string>
+    <string name="schedules">برنامه‌های زمانی</string>
+    <string name="profile">پروفایل</string>
+ <string name="lossofsignal">قطع سیگنال</string>
+ <string name="valuenotification">اعلان مقدار</string>
+ <string name="nothing"/>
+ <string name="scantranstitle">کد ماتریسی فرستنده را اسکن کنید</string>
+ <string name="scantransmessage">کد ماتریسی حسگر Sibionics 2 با موفقیت اسکن شد.\nاکنون کد ماتریسی فرستنده را اسکن کنید.</string>
+ <string name="mirrorscansucces">اتصال با موفقیت به «منوی میانی سمت چپ ← آینه‌سازی» اضافه شد.</string>
+ <string name="resettitle">بازنشانی</string>
+ <string name="resetmessage">حافظهٔ فرستنده را پاک می‌کند؛ پیش از استفاده از حسگر جدید در فرستندهٔ قبلاً استفاده‌شده، این گزینه را بزنید.</string>
+ <string name="nolibrelink">به‌جای آن از انتشار پیام EverSense استفاده کنید. راهنما را ببینید.</string>
+ <string name="calibration">کالیبراسیون</string>
+ <string name="exclude">کنارگذاشتن</string>
+ <string name="calibratepast">اعمال به گذشته</string>
+ <string name="bloodvar">گلوکز خون:</string>
+ <string name="calibrate_a">تغییر شیب</string>
+ <string name="calibrated">کالیبره‌شده</string>
+ <string name="delete_calibration">کالیبراسیون حذف شود؟</string>
+ <string name="hide">پنهان‌کردن</string>
+ <string name="sensorstreamed"/>
+ <string name="sensornotstreamed">هنوز چیزی دریافت نشده است</string>
+ <string name="calibrations">کالیبراسیون‌ها</string>
+ <string name="allvalues">همهٔ مقدارها</string>
+ <string name="writedown">یادداشت کنید!</string>
+ <string name="switchtowatch">انتقال به ساعت</string>
+ <string name="last">آخرین:</string>
+ <string name="bloodafter">فقط اندازه‌گیری‌های گلوکز پس از این زمان اضافه شوند:</string>
+ <string name="specifyblood">ابتدا برچسب اندازه‌گیری گلوکز خون را انتخاب کنید</string>
+ <string name="meterlist">دستگاه‌های قند خون</string>
+ <string name="finddevices">یافتن دستگاه‌ها</string>
+ <string name="nonewdata">دادهٔ جدیدی نیست</string>
+ <string name="newdata">دادهٔ جدید</string>
+<string name="isconnected">متصل</string> 
+<string name="isdisconnected">قطع اتصال</string> 
+<string name="phone">تلفن</string>
+ <string name="watch">ساعت</string>
+<string name="directsensor">حسگر مستقیم-</string>
+<string name="enternums">ورود مقدارها روی</string>
+<string name="connectionl">اتصال</string>
+<string name="disconnectsensor">اشکال</string>
+<string name="internet">اینترنت</string>
+<string name="homenet">شبکهٔ محلی</string>
+<string name="ICE">ICE</string>
+<string name="zero">0</string>
+<string name="one">1</string>
+<string name="icelabel">برچسب ICE</string>
+<string name="username">نام کاربری</string>
+<string name="turnserver">سرور TURN</string>
+ <string name="ICElabeltooshort">خطا: برچسب ICE باید دست‌کم ۱۶ بایت باشد.</string>
+    <string name="divorcename">لغو جفت‌سازی</string>
+    <string name="divorcemessage">به حسگر اجازه داده شود به‌جای این دستگاه به تلفن یا ساعت دیگری متصل شود؟</string>
+    <string name="unpairsuccess"> لغو جفت‌سازی موفق بود</string>
+    <string name="unpairfailed"> لغو جفت‌سازی ناموفق بود</string>
+    <string name="warmup">گرم‌شدن {0}</string>
+    <string name="releasingsensor">در حال آزادکردن حسگر</string>
+    <string name="sensorreleased">حسگر آزاد شد</string>
+    <string name="releasefailed">آزادسازی ناموفق بود</string>
+    <string name="timedout">زمان به پایان رسید</string>
+    <string name="unpairing">در حال لغو جفت‌سازی</string>
+    <string name="unpairingwatch">در حال لغو جفت‌سازی ساعت</string>
+    <string name="failed">ناموفق</string>
+    <string name="successful">موفق</string>
+    <string name="use">فعال‌سازی</string>
+    <string name="connecttosensor">در حال اتصال به حسگر…</string>
+    <string name="clear">پاک‌سازی</string>
+    <string name="clearingmemory">در حال پاک‌کردن حافظهٔ حسگر</string>
+    <string name="clearmessage">حسگر دوباره راه‌اندازی شود؟ حافظهٔ حسگر پاک شود؟</string>
+    <string name="clearing">در حال پاک‌سازی</string>
+    <string name="clearsuccess"> پاک‌سازی موفق بود</string>
+    <string name="clearfailed"> پاک‌سازی ناموفق بود</string>
+    <string name="sensors">حسگرها</string>
+    <string name="titlewebserverneed">وب‌سرور لازم است</string>
+    <string name="messagewebserverneed">برای فعال‌کردن وب‌سرور به «منوی چپ ← تنظیمات ← تبادل داده ← وب‌سرور» بروید</string>
+    <string name="nostreamvalues">هیچ مقداری در «داده‌های پیوسته» نیست</string>
+    <string name="nohistoryvalues">هیچ مقداری در «تاریخچه» نیست</string>
+    <string name="jugglucoupdate">خواندن طول عمر</string>
+
+     <string name="retrieve">دریافت از سرور</string>
+     <string name="wrongcode">کد QR نادرست است</string>
+     <string name="leave">خارج شوید؟</string>
+     <string name="id0message">شناسه باید غیر از صفر باشد</string>
+     <string name="emailnotused">ترکیب ایمیل و گذرواژه استفاده نشد و ذخیره نخواهد شد.</string>
+    <string name="connecttoserver">در حال اتصال به سرور…</string>
+    <string name="retrievefailed">دریافت شناسهٔ حساب ناموفق بود</string>
+    <string name="themesname">پوسته‌ها:</string>
+    <string name="buttonshape">شکل دکمه</string>
+    <string name="radius">شعاع:</string>
+    <string name="rectangle">مستطیل</string>
+    <string name="oval">بیضی</string>
+    <string name="light">روشن</string>
+    <string name="dark">تیره</string>
+    <string name="apply">اعمال</string>
+
+    <string name="theme">پوسته</string>
+    <string name="alarm">هشدار</string>
+    <string name="media">رسانه</string>
+    <string name="notification">اعلان</string>
+    <string name="alarmis">هشدار از نوع</string>
+    <string name="deletemeter">اطلاعات دستگاه قند خون حذف می‌شود؛ اندازه‌گیری‌ها باقی می‌مانند.</string>
+
+    <!-- Web server additions file manager -->
+    <string name="webuploadpages">بارگذاری صفحه‌های وب</string>
+    <string name="webuploadfiles">بارگذاری فایل‌ها</string>
+    <string name="webuploaddirectory">بارگذاری پوشه</string>
+    <string name="webup">پوشهٔ بالاتر</string>
+    <string name="webcantaccessdirectory">دسترسی به پوشهٔ %1$s ممکن نیست</string>
+    <string name="webcantcreatedirectory">ایجاد %1$s ممکن نیست</string>
+    <string name="webcantopenfileselector">بازکردن انتخابگر فایل ممکن نیست</string>
+    <string name="webcantopendirectoryselector">بازکردن انتخابگر پوشه ممکن نیست</string>
+    <string name="webinvaliddirectory">پوشهٔ %1$s نامعتبر است</string>
+    <string name="webuploadingfiles">در حال بارگذاری فایل‌ها…</string>
+    <string name="webuploadingdirectory">در حال بارگذاری پوشه…</string>
+    <string name="webuploadresult">فایل‌های بارگذاری‌شده: %1$d؛ پوشه‌ها: %2$d؛ ناموفق: %3$d</string>
+    <string name="webdeletefilequestion">فایل «%1$s» حذف شود؟</string>
+    <string name="webdeletedirectoryquestion">پوشهٔ «%1$s» و همهٔ محتویات آن حذف شود؟</string>
+    <string name="webdeleting">در حال حذف %1$s…</string>
+    <string name="webdeleted">%1$s حذف شد</string>
+    <string name="webdeletefailed">حذف %1$s ممکن نبود</string>
+    <string name="webdirectoryempty">این پوشه خالی است</string>
+    <string name="webdirectoryentry">[پوشه] %1$s</string>
+
+    <string name="autorotate">چرخش خودکار</string>
+    <string name="rotateText">چرخش متن</string>
+
+    <string name="mirror_transport">روش اتصال:</string>
+    <string name="transport_automatic">خودکار</string>
+    <string name="transport_tcp">TCP/IP</string>
+    <string name="transport_bluetooth">بلوتوث مستقیم BLE</string>
+    <string name="transport_messages">پیام‌ها</string>
+    <string name="transport_needs_label">بلوتوث مستقیم و پیام‌ها به برچسب اتصال نیاز دارند</string>
+    <string name="transport_needs_password">بلوتوث مستقیم به گذرواژهٔ آینه‌سازی نیاز دارد</string>
+     <string name="via_garmin">Garmin Connect</string>
+     <string name="use_for_numbers">عددهای ثبت‌شده</string>
+
+    <!-- Garmin status: placeholders hold device names, timestamps or status text. -->
+    <string name="garmin_watch_app_id">شناسهٔ برنامهٔ ساعت Garmin:</string>
+    <string name="garmin_app_kerfstok">Kerfstok</string>
+    <string name="garmin_app_libre2">Libre 2 Kerfstok</string>
+    <string name="garmin_app_libre3">Libre 3 Kerfstok</string>
+    <string name="garmin_app_device_row">%1$s - %2$s - %3$s</string>
+    <string name="garmin_app_unconfirmed">%1$s (نصب تأیید نشده است)</string>
+    <string name="garmin_app_sensor_assigned">پیش از تغییر برنامه، در Kerfstok فعلی دستگاه «تلفن» را انتخاب کنید.</string>
+    <string name="garmin_libre2_open_app">برنامهٔ Libre 2 Kerfstok را روی ساعت انتخاب‌شده باز کنید و ساعت را نزدیک نگه دارید.</string>
+    <string name="garmin_libre2_backend_required">انتقال Libre 2 به ساعت به نسخه‌ای از Juggluco با پردازشگر مستقل و بومی Libre 2 نیاز دارد.</string>
+    <string name="garmin_libre2_need_sensor">حسگر Libre 2 را با Juggluco اسکن کنید و پیش از انتقال، منتظر یک خوانش بلوتوثی بمانید.</string>
+    <string name="garmin_libre2_busy">از قبل یک حسگر Libre 2 به ساعت اختصاص یافته است؛ نخست آن حسگر را به تلفنش بازگردانید.</string>
+    <string name="garmin_libre2_other_watch">Libre 2 به ساعت Garmin دیگری اختصاص یافته است. برای بازگرداندن حسگر به تلفن، آن ساعت را انتخاب کنید.</string>
+    <string name="garmin_libre2_release_libre3">پیش از اختصاص Libre 2، حسگر Libre 3 این ساعت را به تلفن بازگردانید.</string>
+    <string name="garmin_libre2_provisioning">در حال ارسال تنظیمات %1$s. برنامهٔ Libre 2 Kerfstok را باز نگه دارید.</string>
+    <string name="garmin_libre2_assigned">%1$s به این ساعت اختصاص یافت.</string>
+    <string name="garmin_libre2_releasing">در انتظار آزادسازی %1$s از سوی ساعت. برنامهٔ Libre 2 Kerfstok را باز نگه دارید.</string>
+    <string name="garmin_app_id_button" translatable="false">شناسه</string>
+    <string name="garmin_id_length">شناسه باید ۳۲ نویسه داشته باشد (اکنون %1$d)</string>
+    <string name="garmin_id_change_failed">تغییر شناسه ناموفق بود</string>
+    <string name="garmin_select_device">ابتدا یک دستگاه Garmin انتخاب کنید</string>
+    <string name="garmin_already_numbers_device">%1$s از قبل دستگاه ثبت مقدارهاست</string>
+    <string name="garmin_change_numbers_title">دستگاه ثبت مقدارها تغییر کند؟</string>
+    <string name="garmin_change_numbers_message">دستگاه ثبت مقدارها از %1$s به %2$s تغییر کند؟\n\nممکن است حجم زیادی از عددهای ذخیره‌شده همگام‌سازی شود. پس از آن دیگر نمی‌توان از دستگاه قبلی برای ثبت مقدارها استفاده کرد.</string>
+    <string name="garmin_change">تغییر</string>
+    <string name="garmin_no_device">دستگاه Garmin موجود نیست</string>
+    <string name="garmin_connect" translatable="false">Garmin Connect</string>
+    <string name="garmin_none">هیچ‌کدام</string>
+
+    <string name="garmin_device_row">%1$s - %2$s</string>
+    <string name="garmin_connection_status">%1$s</string>
+    <string name="garmin_kerfstok_status">Kerfstok: %1$s</string>
+    <string name="garmin_last_confirmed_reply">آخرین پاسخ تأییدشده: %1$s</string>
+    <string name="garmin_glucose_confirmed">گلوکز تأییدشده: %1$s</string>
+    <string name="garmin_glucose_sample">نمونهٔ گلوکز: %1$s</string>
+    <string name="garmin_glucose_ack">تأیید دریافت گلوکز: %1$s</string>
+    <string name="garmin_ack_timestamped">دارای مهر زمانی</string>
+    <string name="garmin_ack_legacy">قدیمی</string>
+    <string name="garmin_last_sent">آخرین ارسال: %1$s</string>
+    <string name="garmin_last_received">آخرین دریافت: %1$s</string>
+    <string name="garmin_transport_result">نتیجهٔ انتقال: %1$s</string>
+    <string name="garmin_last_error">آخرین خطا: %1$s</string>
+    <string name="garmin_status_unknown">وضعیت ارتباط نامشخص است</string>
+    <string name="garmin_status_closed">Kerfstok بسته است</string>
+    <string name="garmin_status_recovering">در حال بازیابی ارتباط</string>
+    <string name="garmin_status_error">خطای ارتباط</string>
+    <string name="garmin_status_connecting">در حال اتصال</string>
+    <string name="garmin_status_waiting_start">در انتظار START از Kerfstok</string>
+    <string name="garmin_status_not_ready">متصل است؛ Kerfstok هنوز آماده نیست</string>
+    <string name="garmin_status_waiting_glucose">در انتظار تأیید دریافت گلوکز</string>
+    <string name="garmin_status_waiting_history">در انتظار تأیید دریافت تاریخچه</string>
+    <string name="garmin_status_confirmed">ارتباط دوطرفه تأیید شد</string>
+    <string name="garmin_status_receiving">در حال دریافت؛ پاسخ‌ها هنوز تأیید نشده‌اند</string>
+    <string name="garmin_status_sending">در حال ارسال؛ پاسخ‌ها هنوز تأیید نشده‌اند</string>
+    <string name="garmin_status_unconfirmed">متصل است؛ ارتباط هنوز تأیید نشده است</string>
+    <string name="garmin_transfer_failed">انتقال ناموفق بود</string>
+    <string name="garmin_invalid_device">دستگاه نامعتبر</string>
+    <string name="garmin_invalid_format">قالب پیام نامعتبر است</string>
+    <string name="garmin_message_too_large">پیام بیش‌ازحد بزرگ است</string>
+    <string name="garmin_unsupported_type">نوع پیام پشتیبانی نمی‌شود</string>
+    <string name="garmin_unknown_failure">خطای نامشخص</string>
+    <string name="garmin_no_start_ack">تأیید START از Kerfstok دریافت نشد</string>
+    <string name="garmin_no_glucose_ack">تأیید دریافت گلوکز نرسید</string>
+
+    <string name="garmin_libre3_no_active_sensor">هیچ حسگر Libre 3 فعالی وجود ندارد</string>
+    <string name="garmin_libre3_multiple_sensors">بیش از یک حسگر Libre 3 فعال است</string>
+    <string name="garmin_libre3_not_authorized">Libre 3 هنوز به‌طور کامل مجاز نشده است</string>
+    <string name="garmin_libre3_find_failed">حسگر فعال Libre 3 پیدا نشد</string>
+   
+    <string name="garmin_libre3_backfill_send_failed">ارسال موقعیت داده‌های عقب‌افتادهٔ Libre 3 به Garmin ممکن نبود</string>
+
+ <string name="delay_can_t_be_negative">تأخیر نمی‌تواند منفی باشد:</string>
+ <string name="too_large_maximum_4095"> بیش‌ازحد بزرگ است، حداکثر=4095،</string>
+    <string name="garmin_alarm_alert">هشدار</string>
+    <string name="garmin_alarm_sound_update">برای استفاده از صدای هشدار، Kerfstok این ساعت را به‌روزرسانی کنید. تنظیمات لرزش همچنان قابل ذخیره است.</string>
+    <string name="garmin_alarm_sound_unavailable">این ساعت از صدای هشدار پشتیبانی نمی‌کند.</string>
+    <string name="garmin_alarm_sound_supported">صدا را می‌توان مستقل از لرزش فعال کرد.</string>
+    <string name="garmin_alarm_sound_unknown">برای بررسی پشتیبانی از صدا، Libre 3 Kerfstok را روی ساعت متصل باز کنید. اکنون می‌توانید انتخاب‌های صدا را ذخیره کنید.</string>
+    <string name="garmin_alarm_tone">آهنگ</string>
+    <string name="garmin_alarm_outputs_update">برای تنظیم مستقل لرزش و هشدار با هر مقدار جدید گلوکز وقتی «دقیقه‌های غیرفعال‌بودن» صفر است، Kerfstok این ساعت را به‌روزرسانی کنید.</string>
+    <string name="garmin_alarm_vibration_unavailable">این ساعت از لرزش پشتیبانی نمی‌کند.</string>
+    <string name="garmin_alarm_vibration_supported">لرزش را می‌توان مستقل از صدا فعال کرد.</string>
+    <string name="garmin_alarm_vibration_unknown">برای بررسی پشتیبانی از لرزش، Libre 3 Kerfstok را روی ساعت متصل باز کنید. اکنون می‌توانید انتخاب‌ها را ذخیره کنید.</string>
+    <!-- Positions are Garmin Attention.TONE_* IDs (0 through 18), not display order. -->
+    <string-array name="garmin_alarm_tones">
+        <item>کلید</item>
+        <item>شروع</item>
+        <item>توقف</item>
+        <item>پیام</item>
+        <item>هشدار بالا</item>
+        <item>هشدار پایین</item>
+        <item>بوق بلند</item>
+        <item>هشدار فاصله‌ای</item>
+        <item>زنگ هشدار</item>
+        <item>بازنشانی</item>
+        <item>دور</item>
+        <item>قناری</item>
+        <item>هشدار زمان</item>
+        <item>هشدار مسافت</item>
+        <item>ناموفق</item>
+        <item>موفق</item>
+        <item>برق</item>
+        <item>باتری کم</item>
+        <item>خطا</item>
+    </string-array>
+    <string name="garmin_alarm_vibration">لرزش</string>
+    <string name="garmin_alarm_saved">روی ساعت ذخیره شد</string>
+    <string name="garmin_alarm_waiting">روی تلفن ذخیره شد؛ در انتظار ساعت</string>
+    <string name="garmin_alarm_open">برای اعمال این تنظیمات، نسخهٔ به‌روزشدهٔ Libre 3 Kerfstok را باز کنید.</string>
+    <string name="garmin_alarm_save_failed">تنظیمات هشدار ذخیره نشد. دوباره تلاش کنید.</string>
+    <string name="garmin_alarm_invalid">مقدارها را بررسی کنید: حد پایین باید کمتر از حد بالا باشد؛ تأخیر کمبود مقدار ۱ تا ۴۰۹۵ دقیقه، تکرار ۰ تا ۴۰۹۵ دقیقه و مدت ۰ تا ۶۵۵۳۵ ثانیه.</string>
+    <string name="garmin_alarm_newer">ساعت تنظیمات هشدار جدیدتری دارد. ذخیره در اینجا آن‌ها را جایگزین می‌کند.</string>
+
+
+    <string name="clarity_login_instructions">با ایمیل یا نام کاربری و گذرواژهٔ حساب خود در صفحهٔ Dexcom وارد شوید.</string>
+    <string name="clarity_login_country">کد دوحرفی کشور</string>
+    <string name="clarity_sign_in">ورود به Dexcom</string>
+    <string name="clarity_login_finish_pending">تکمیل ورودِ معلق</string>
+    <string name="clarity_login_tls_error">امن‌بودن اتصال Dexcom تأیید نشد.</string>
+    <string name="clarity_login_load_error">صفحهٔ ورود Dexcom بارگذاری نشد.</string>
+    <string name="clarity_login_http_error">صفحهٔ ورود Dexcom کد HTTP %1$d را برگرداند.</string>
+    <string name="clarity_login_destination_error">صفحهٔ ورود مقصدی را درخواست کرد که پشتیبانی نمی‌شود.</string>
+    <string name="clarity_login_start_error">شروع ورود به Dexcom ممکن نیست.</string>
+    <string name="clarity_login_in_progress">ورود هنوز در حال تکمیل است. کمی بعد «تکمیل ورودِ معلق» را امتحان کنید.</string>
+    <string name="clarity_login_completing">در حال تکمیل ورود به Dexcom…</string>
+    <string name="clarity_login_complete_error">تکمیل ورود به Dexcom ممکن نیست.</string>
+    <string name="clarity_login_retry_error">%1$s\nاگر اطلاعات ورود پذیرفته شده‌اند، «تکمیل ورودِ معلق» را امتحان کنید؛ در غیر این صورت دوباره وارد شوید.</string>
+    <string name="clarity_last_ack">آخرین تأیید دریافت: %1$s</string>
+    <string name="clarity_ack_count">مقدارهای گلوکز حسگر که دریافتشان تأیید شده: %1$d</string>
+    <string name="clarity_ack_latest">آخرین خوانش تأییدشده: %1$s</string>
+    <string name="clarity_pending_glucose">گلوکز در انتظار ارسال: %1$d، از %2$s تا %3$s</string>
+    <string name="clarity_read_settings_error">خواندن تنظیمات Clarity ممکن نیست</string>
+    <string name="clarity_send_enabled">ارسال به Clarity</string>
+    <string name="clarity_use_history">استفاده از تاریخچهٔ Libre 3</string>
+    <string name="clarity_start_date">شروع: %1$s</string>
+    <string name="clarity_change_start_title">تاریخ شروع Clarity تغییر کند؟</string>
+    <string name="clarity_change_start_message">از %1$s استفاده شود؟ تاریخ زودتر، داده‌های قدیمیِ مجاز و تأییدنشده را ارسال می‌کند؛ تاریخ دیرتر از داده‌های قدیمیِ ارسال‌نشده می‌گذرد. داده‌های تأییدشده و بسته‌های در انتظار باقی می‌مانند؛ این کار تاریخچهٔ Clarity را پاک یا بازنشانی نمی‌کند.\n\nبرای اعمال تغییر، در صفحهٔ Clarity «ذخیره» را بزنید.</string>
+    <string name="clarity_categories">دسته‌بندی‌ها</string>
+    <string name="clarity_save_settings_error">ذخیرهٔ تنظیمات Clarity ممکن نیست</string>
+    <string name="clarity_category_choose">دسته‌بندی را انتخاب کنید</string>
+    <string name="clarity_category_fast">انسولین سریع‌الاثر</string>
+    <string name="clarity_category_long">انسولین طولانی‌اثر</string>
+    <string name="clarity_category_carbs">کربوهیدرات</string>
+    <string name="clarity_category_comment">یادداشت</string>
+    <string name="clarity_category_not">ارسال نشود</string>
+    <string name="clarity_category_blood">اندازه‌گیری گلوکز خون</string>
+    <string name="clarity_read_labels_error">خواندن برچسب‌ها ممکن نیست؛ «دسته‌بندی‌ها» را دوباره باز کنید</string>
+    <string name="clarity_category_label">%1$s: %2$s</string>
+    <string name="clarity_category_carbs_weight">%1$s (×%2$s گرم)</string>
+    <string name="clarity_change_blood_first">ابتدا دستهٔ «اندازه‌گیری گلوکز خون» برای %1$s را تغییر دهید</string>
+    <string name="clarity_grams_per_unit">گرم در هر واحد: %1$s</string>
+    <string name="clarity_positive_number">عدد مثبت وارد کنید</string>
+    <string name="clarity_labels_changed">برچسب‌ها تغییر کرده‌اند؛ «دسته‌بندی‌ها» را دوباره باز کنید</string>
+    <string name="clarity_save_categories_error">ذخیرهٔ دسته‌بندی‌ها ممکن نیست</string>
+    <string name="clarity_login_success">ورود انجام شد. برای بازگشت به تنظیمات Clarity دکمهٔ بازگشت را بزنید.</string>
+
+    <string name="dexcomG7NFCtitle">عکس</string>
+    <string name="dexcomG7NFCmessage">کد ماتریسی روی اپلیکاتور حسگر Dexcom G7/ONE+ را باید با «منوی چپ ← عکس» اسکن کنید</string>
+
+
+</resources>

@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+    <string name="activity_import">गतिविधियाँ</string>
+    <string name="activity_export_extended">विस्तृत</string>
+    <string name="activity_details">गतिविधि</string>
+    <string name="activity_retrieve">प्राप्त करें</string>
+    <string name="activity_permissions">अनुमतियाँ</string>
+    <string name="activity_history_granted">पुराने डेटा तक पहुँच की अनुमति दी गई है।</string>
+    <string name="activity_history_missing">पुराने डेटा तक पहुँच की अनुमति नहीं दी गई है।</string>
+    <string name="activity_history_unavailable">पुराने डेटा तक पहुँच उपलब्ध नहीं है।</string>
+    <string name="activity_measure_existing">पहले से आयातित मान उपलब्ध होने पर चुने गए लेबल, माप और राउंडिंग का उपयोग करते हैं। अलग-अलग किए गए बदलाव सुरक्षित रहते हैं।</string>
+    <string name="activity_round_to">इस पर पूर्णांकित करें:</string>
+    <string name="activity_round_to_invalid">पूर्णांकन के लिए धनात्मक अंतर दर्ज करें, जैसे 1 या 0.1</string>
+    <string name="activity_from">यहाँ से प्राप्त करें</string>
+    <string name="activity_interval">स्वचालित प्राप्ति</string>
+    <string name="activity_create_amounts">गतिविधियों से मान बनाएँ</string>
+    <string name="activity_units">दूरी और गति की इकाइयाँ</string>
+    <string-array name="activity_units">
+        <item>km और km/h</item><item>mi और mi/h</item>
+    </string-array>
+    <string name="activity_last">पिछली प्राप्ति:</string>
+    <string name="activity_never">कभी नहीं</string>
+    <string name="activity_retrieving">गतिविधियाँ प्राप्त की जा रही हैं…</string>
+    <string name="activity_retrieving_details">गतिविधि विवरण प्राप्त हो रहे हैं: %2$d में से %1$d</string>
+    <string name="activity_quota_wait">Health Connect की अनुरोध सीमा पूरी हो गई है। पुनः प्रयास की प्रतीक्षा…</string>
+    <string name="activity_retrieved">गतिविधियाँ प्राप्त हुईं</string>
+    <string name="activity_labels">लेबल</string>
+    <string name="activity_saved">सहेजी गई गतिविधियाँ</string>
+    <string name="activity_default">सामान्य गतिविधि लेबल</string>
+    <string name="activity_update_existing">पहले स्वचालित रूप से बनाए गए मान भी बदलें</string>
+    <string name="activity_new_label">नया लेबल</string>
+    <string name="activity_choose_label">गतिविधि लेबल चुनें या बनाएँ</string>
+    <string name="activity_none">कोई सहेजी गई गतिविधि नहीं</string>
+    <string name="activity_unavailable">इस डिवाइस पर गतिविधि विवरण उपलब्ध नहीं हैं</string>
+    <string name="activity_delete_confirm">क्या इस गतिविधि को Juggluco से हटाकर फिर से आयात होने से रोकना है? इससे स्वचालित रूप से बने मान हटा दिए जाएँगे। हाथ से दर्ज या संपादित मान गतिविधि से लिंक हटने के बाद भी सुरक्षित रहेंगे। Health Connect का डेटा नहीं बदलेगा।</string>
+    <string name="activity_remove_source">स्रोत हटाएँ</string>
+    <string name="activity_remove_source_confirm">क्या Juggluco में इस गतिविधि के स्रोत के रूप में %1$s को हटाना है? इस स्रोत का गतिविधि और हृदय गति डेटा आगे की प्राप्तियों से बाहर रखा जाएगा। अन्य स्रोत और Health Connect का डेटा सुरक्षित रहेगा।</string>
+    <string name="activity_mirrored">Health Connect से डेटा प्राप्त करना बंद है, क्योंकि मान मिरर के माध्यम से मिल रहे हैं।</string>
+    <string name="activity_source">स्रोत</string>
+    <string name="activity_heart_source">हृदय गति का स्रोत</string>
+    <string name="activity_heart_used">सारांश में उपयोग किया गया हृदय गति स्रोत</string>
+    <string name="activity_source_deleted">यह स्रोत Health Connect से हटा दिया गया था</string>
+    <string name="activity_not_returned">Health Connect की वर्तमान प्राप्ति में शामिल नहीं है</string>
+    <string name="activity_excess">औसत हृदय गति − विश्राम हृदय गति</string>
+    <string name="activity_period_duration">%1$s – %2$s (अवधि: %3$s)</string>
+    <string name="activity_link">मान से लिंक करें</string>
+    <string name="activity_no_match">इस समयावधि में कोई बिना लिंक वाला गतिविधि मान नहीं है</string>
+    <string name="activity_distance_miles">दूरी (mi)</string>
+    <string name="activity_speed_miles">औसत गति (mi/h)</string>
+    <string-array name="activity_intervals">
+        <item>बंद</item><item>15 मिनट</item><item>30 मिनट</item><item>1 घंटा</item>
+        <item>3 घंटे</item><item>6 घंटे</item><item>24 घंटे</item>
+    </string-array>
+    <string-array name="activity_measures">
+        <item>बीती अवधि (min)</item><item>दूरी (km)</item><item>औसत हृदय गति − विश्राम हृदय गति (धड़कन/मिनट)</item>
+        <item>औसत हृदय गति (धड़कन/मिनट)</item><item>हृदय गति का मानक विचलन (धड़कन/मिनट)</item><item>सक्रिय ऊर्जा (kcal)</item>
+        <item>औसत गति (km/h)</item><item>कदम</item><item>ऊँचाई में बढ़ोतरी (m)</item>
+        <item>औसत शक्ति (W)</item><item>औसत साइकिल कैडेंस (चक्कर/मिनट)</item>
+        <item>@string/activity_distance_miles</item><item>@string/activity_speed_miles</item>
+        <item>अधिकतम हृदय गति (धड़कन/मिनट)</item>
+    </string-array>
+    <string-array name="activity_fields">
+        <item>अवधि</item><item>दूरी</item><item>विश्राम हृदय गति</item>
+        <item>औसत हृदय गति</item><item>हृदय गति का मानक विचलन</item><item>हृदय गति डेटा कवरेज</item>
+        <item>सक्रिय ऊर्जा</item><item>औसत गति</item><item>कदम</item>
+        <item>ऊँचाई में बढ़ोतरी</item><item>औसत शक्ति</item><item>साइकिल चलाने की कैडेंस</item>
+        <item>अधिकतम हृदय गति</item><item>अधिकतम गति</item>
+    </string-array>
+</resources>

@@ -102,7 +102,7 @@
     <string name="stage">Етап</string>
     <string name="use_bluetooth">Датчик через Bluetooth</string>
     <string name="connection">Підключення</string>
-    <string name="unlock_key">Рукостискання</string>
+    <string name="handshake">Рукостискання</string>
     <string name="glucose_value">Значення глюкози</string>
     <string name="info">Інформація</string>
     <string name="devicespecific">Установіть налаштування для конкретного пристрою</string>

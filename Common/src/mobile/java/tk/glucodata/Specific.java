@@ -39,8 +39,7 @@ public class Specific {
 	static void rmlayout() {
 	}
 
-	static void initScreen(Object act) {
-	}
+	static void initScreen(Object act) { }
 
 	static void blockedNum(Object act) {
 	}

@@ -117,7 +117,7 @@ RemoteGlucose(float gl,float notwidth,float xper,int whiteonblack,boolean giveti
 }
 
 static final String stopalarmAction= "StopAlarm";
-final RemoteViews arrowremote(int kind, notGlucose glucose,final boolean alarm) {
+synchronized final RemoteViews arrowremote(int kind, notGlucose glucose,final boolean alarm) {
    RemoteViews remoteViews= new RemoteViews(Applic.app.getPackageName(),alarm?R.layout.alarm:R.layout.arrowandvalue);
    if(alarm) {
       Intent closeintent=new Intent(Applic.app,NumAlarm.class);
@@ -163,7 +163,7 @@ final RemoteViews arrowremote(int kind, notGlucose glucose,final boolean alarm) 
       canvas.drawText(timestr, usedensity*16, gety+timeHeight, glucosePaint);
       {if(doLog) {Log.i(LOG_ID,"time: "+timestr);};};
       }
-   canvas.setBitmap(glucoseBitmap);
+ //  canvas.setBitmap(glucoseBitmap);
    remoteViews.setImageViewBitmap(arrowandvalue, glucoseBitmap);
    return remoteViews;
    }

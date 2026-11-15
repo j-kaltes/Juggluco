@@ -967,7 +967,7 @@ new View[]{isvalue},new View[]{ringisvalue},new View[]{alarmis,alarmtype},new Vi
 final private static String  codestr=String.valueOf(BuildConfig.VERSION_CODE);
 
 
-static private final List<String> supportedlanguages= Arrays.asList("Language","ar","be","de","en","es","fr","hi","it","ja","ko","nl","pl","pt","ru","sv","tr","uk","uz","zh");
+static private final List<String> supportedlanguages= Arrays.asList("Language","ar","az","be","de","en","es","fa","fr","hi","it","ja","ko","nl","pl","pt","ru","sv","tr","uk","uz","zh");
 
 static public Spinner getGenSpin(Activity context) {
     var spin=  new Spinner(context,isWearable?MODE_DIALOG: MODE_DROPDOWN);

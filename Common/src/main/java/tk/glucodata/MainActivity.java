@@ -145,6 +145,14 @@ public MainActivity() {
     private static final String LOG_ID = "MainActivity";
     private NfcAdapter mNfcAdapter=null;
 private boolean started=false;
+
+void bothUnitsSettings() {
+       final int unit=Natives.getunit();
+       if(!(unit==1||unit==2)) {
+              Applic.postDelayed(()->tk.glucodata.settings.Settings.set(this),1000L);
+              }
+        }
+
 private void startall() {
      if(doLog) {Log.d(LOG_ID, "startall");};
      if(!started) {
@@ -152,14 +160,11 @@ private void startall() {
         netinitstep();
         if(isWearable) {
             if(Natives.hasData())  {
-               final int unit=Natives.getunit();
-               if(!(unit==1||unit==2)) {
-                      Applic.postDelayed(()->tk.glucodata.settings.Settings.set(this),1000L);
-                      }
+                bothUnitsSettings();
                 }
             else {
-               Specific.initScreen(this);
-               }
+                Specific.initScreen(this);
+                }
             }
         else {
              //  lightBars(!getInvertColors( ));
@@ -176,10 +181,7 @@ private void startall() {
                    help.help(R.string.introhelp,act,
                        l->{ setShownintro(true);
                            act.lightBars(!Natives.getInvertColors()); 
-                           final int unit=Natives.getunit();
-                           if(!(unit==1||unit==2)) {
-                                  tk.glucodata.settings.Settings.set(act);
-                                }
+                           bothUnitsSettings();
                           }); 
                    }
                 }
@@ -1987,15 +1989,22 @@ void showindialog(String message,boolean cancel) {
             Applic.app.numdata.stopalarm();
             }
         }).setTitle("  ").setMessage(message).create();;
+
        dialog.setCanceledOnTouchOutside(false);
         dialog.setOnShowListener(a ->  {
             final var colres= android.R.color.holo_orange_light; //Very infrequently button not shown. Maybe this helps.
-        final var col=
-           (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)?getResources().getColor(colres, getTheme()):
-                getResources().getColor(colres);
-         var negbut=dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
-        negbut.setTextColor(col);
-        }    
+            final var col=
+               (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)?getResources().getColor(colres, getTheme()):
+                    getResources().getColor(colres);
+             var negbut=dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+            negbut.setTextColor(col);
+            if(!isWearable) {
+                TextView textView = (TextView) dialog.findViewById(android.R.id.message);
+                if(textView!=null)
+                    textView.setTextSize(Applic.mediumfontsize*.62f);
+                    }    
+//                negbut.setTextSize(Applic.mediumfontsize);
+                }
             );
 
     dialog.show();
@@ -2272,8 +2281,8 @@ private static void keepNormalClick(TextView text) {
                         event.getEventTime() - event.getDownTime() < longPressTimeout) {
                         v.cancelLongPress();
                         v.setPressed(false);
-                        if (v.isEnabled())
-                            v.performClick();
+                        if(v.isEnabled())
+                            v.post(v::performClick);
                         return true;
                     }
                     return false;

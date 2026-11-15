@@ -1573,7 +1573,8 @@ static bool writeStatisticsHtml(StatisticsWriter &writer,const stats &stat,int u
                                 std::string_view source,bool calibrated,bool darkmode,
                                 uint16_t lang) {
     const auto *text=language::gettext(lang);
-    const bool visualrtl=text==&artext;
+    const bool visualrtl=text==&artext||text==&fatext;
+
     const bool righttoleft=visualrtl||lang==(mklanguagenum2('i','w'));
     char localebuffer[3]={'e','n','\0'};
     if(lang) {

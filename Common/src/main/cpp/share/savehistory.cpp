@@ -140,18 +140,18 @@ bool addStreamHistory(const jniHistory &hist,time_t nutime,int nuid, SensorGluco
     int endhist=save.getAllendhistory();
     GlucoseValue   histvalue=hist.get(len-2);
     if(!histvalue.valid()) {
-        LOGAR("not valid");
+        LOGAR("addStreamHistory not valid");
         return false;
         }
     int id=histvalue.getId();
     int pos=int(round(id/ save.getmininterval()));
     if(pos<endhist)  {
-        LOGAR("old value");
+        LOGAR("addStreamHistory old value");
         return false;
         }
     uint16_t gv=10*histvalue.getValue();//Same unit as raw
     time_t was=nutime-(nuid-id)*60;
-    LOGGER("glucose id=%d %.1f (%d) %ld %s",id,gv/180.0f,gv,was,ctime(&was));
+    LOGGER("addStreamHistory glucose id=%d %.1f (%d) %ld %s",id,gv/180.0f,gv,was,ctime(&was));
     save.saveel(pos,was,id, {0,gv,0x4000});
     save.setendStreamhistory(pos+1);
     if(!save.getstarthistory()) {

@@ -47,6 +47,13 @@ import android.content.pm.PackageManager;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
+import com.google.android.gms.common.GoogleApiAvailability;
+import	com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.wearable.MessageClient;
+import com.google.android.gms.wearable.Wearable;
+
+
 public class Specific {
 final static private String LOG_ID="Specific";
 
@@ -71,17 +78,21 @@ static boolean settext(String str) {
 private static void rmlayoutUI() {
    var lay=layout;
    if(lay!=null) {
+      var act=(MainActivity)lay.getContext();
       text=null;
       layout=null;
       removeContentView(lay); 
       tk.glucodata.glucosecomplication.GlucoseValue.updateall();
+      act.requestRender();
       }
    }
 
 static void rmlayout() {
      RunOnUiThread(Specific::rmlayoutUI);
      }
-static void initScreen(MainActivity act) {
+
+
+static private void oldInitScreen(MainActivity act) {
     LayoutInflater flater= LayoutInflater.from(act);
     ViewGroup layout = (ViewGroup) flater.inflate(R.layout.startview ,null, false);
     text=layout.findViewById(R.id.text2);
@@ -89,6 +100,39 @@ static void initScreen(MainActivity act) {
     act.addMyContentView(layout, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
    }
 
+
+static void initScreen(MainActivity context) {
+
+    if(!context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_WATCH)) {
+        Log.i(LOG_ID,"Not a watch");
+        context.bothUnitsSettings();
+        return ;
+        }
+    if(GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context) != ConnectionResult.SUCCESS) {
+        Log.i(LOG_ID,"No Google Play Services");
+        context.bothUnitsSettings();
+        return;
+       }
+    //MessageClient messageClient = MessageSender.getMessageClientS();
+    MessageClient messageClient = Wearable.getMessageClient(context);
+    if(messageClient==null) {
+        Log.e(LOG_ID,"No MessageClient");
+        context.bothUnitsSettings();
+        return;
+        }
+
+    GoogleApiAvailability.getInstance()
+            .checkApiAvailability(messageClient)
+            .addOnSuccessListener(unused -> {
+                     oldInitScreen(context) ;
+                     return;
+            })
+            .addOnFailureListener(e -> {
+                Log.stack(LOG_ID, "Wear OS Data Layer unavailable", e);
+              context.bothUnitsSettings();
+                return;
+            }); 
+        }
 static void   blockedNum(MainActivity  act) {
     help.basehelp(R.string.staticnum,act,xzy->{ });
     }

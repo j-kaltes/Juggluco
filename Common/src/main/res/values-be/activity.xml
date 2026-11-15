@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+    <string name="activity_import">Актыўнасці</string>
+    <string name="activity_export_extended">Пашыраны</string>
+    <string name="activity_details">Актыўнасць</string>
+    <string name="activity_retrieve">Атрымаць</string>
+    <string name="activity_permissions">Дазволы</string>
+    <string name="activity_history_granted">Доступ да гісторыі дадзеных дадзены.</string>
+    <string name="activity_history_missing">Доступ да гісторыі дадзеных не дадзены.</string>
+    <string name="activity_history_unavailable">Доступ да гісторыі дадзеных недаступны.</string>
+    <string name="activity_measure_existing">Раней імпартаваныя значэнні выкарыстоўваюць выбраныя пазнаку, паказчык і акругленне, калі яны даступныя. Асобныя праўкі захоўваюцца.</string>
+    <string name="activity_round_to">Акругляць да:</string>
+    <string name="activity_round_to_invalid">Увядзіце дадатны крок акруглення, напрыклад 1 або 0.1</string>
+    <string name="activity_from">Атрымліваць з</string>
+    <string name="activity_interval">Аўтаматычнае атрыманне</string>
+    <string name="activity_create_amounts">Ствараць значэнні з актыўнасцей</string>
+    <string name="activity_units">Адзінкі адлегласці і хуткасці</string>
+    <string-array name="activity_units">
+        <item>km і km/h</item><item>mi і mi/h</item>
+    </string-array>
+    <string name="activity_last">Апошняе атрыманне:</string>
+    <string name="activity_never">Ніколі</string>
+    <string name="activity_retrieving">Атрыманне актыўнасцей…</string>
+    <string name="activity_retrieving_details">Атрыманне звестак аб актыўнасцях: %1$d з %2$d</string>
+    <string name="activity_quota_wait">Дасягнуты ліміт запытаў Health Connect. Чаканне паўторнай спробы…</string>
+    <string name="activity_retrieved">Актыўнасці атрыманы</string>
+    <string name="activity_labels">Пазнакі</string>
+    <string name="activity_saved">Захаваныя актыўнасці</string>
+    <string name="activity_default">Агульная пазнака актыўнасці</string>
+    <string name="activity_update_existing">Таксама змяняць раней аўтаматычна створаныя значэнні</string>
+    <string name="activity_new_label">Новая пазнака</string>
+    <string name="activity_choose_label">Выберыце або стварыце пазнаку актыўнасці</string>
+    <string name="activity_none">Няма захаваных актыўнасцей</string>
+    <string name="activity_unavailable">Звесткі аб актыўнасці недаступныя на гэтай прыладзе</string>
+    <string name="activity_delete_confirm">Выдаліць гэтую актыўнасць з Juggluco і забараніць яе паўторны імпарт? Створаныя з яе значэнні будуць выдалены. Уведзеныя або адрэдагаваныя ўручную значэнні застануцца, але без сувязі з актыўнасцю. Дадзеныя Health Connect не зменяцца.</string>
+    <string name="activity_remove_source">Выдаліць крыніцу</string>
+    <string name="activity_remove_source_confirm">Выдаліць %1$s як крыніцу гэтай актыўнасці ў Juggluco? Дадзеныя актыўнасці і пульсу з гэтай крыніцы будуць выключаны з наступных запытаў. Іншыя крыніцы і дадзеныя Health Connect застануцца.</string>
+    <string name="activity_mirrored">Атрыманне з Health Connect адключана, бо значэнні паступаюць праз люстраванне.</string>
+    <string name="activity_source">Крыніца</string>
+    <string name="activity_heart_source">Крыніца пульсу</string>
+    <string name="activity_heart_used">Крыніца пульсу для зводкі</string>
+    <string name="activity_source_deleted">Гэта крыніца выдалена з Health Connect</string>
+    <string name="activity_not_returned">Няма ў бягучых дадзеных з Health Connect</string>
+    <string name="activity_excess">Сярэдні пульс − пульс у спакоі</string>
+    <string name="activity_period_duration">%1$s – %2$s (працягласць: %3$s)</string>
+    <string name="activity_link">Звязаць са значэннем</string>
+    <string name="activity_no_match">Няма незвязаных значэнняў актыўнасці за гэты перыяд</string>
+    <string name="activity_distance_miles">Адлегласць (mi)</string>
+    <string name="activity_speed_miles">Сярэдняя хуткасць (mi/h)</string>
+    <string-array name="activity_intervals">
+        <item>Выкл.</item><item>15 хвілін</item><item>30 хвілін</item><item>1 гадзіна</item>
+        <item>3 гадзіны</item><item>6 гадзін</item><item>24 гадзіны</item>
+    </string-array>
+    <string-array name="activity_measures">
+        <item>Працягласць (min)</item><item>Адлегласць (km)</item><item>Сярэдні пульс − пульс у спакоі (уд/хв)</item>
+        <item>Сярэдні пульс (уд/хв)</item><item>Стандартнае адхіленне пульсу (уд/хв)</item><item>Актыўная энергія (kcal)</item>
+        <item>Сярэдняя хуткасць (km/h)</item><item>Крокі</item><item>Набор вышыні (m)</item>
+        <item>Сярэдняя магутнасць (W)</item><item>Сярэдні кадэнс педалявання (аб/хв)</item>
+        <item>@string/activity_distance_miles</item><item>@string/activity_speed_miles</item>
+        <item>Максімальны пульс (уд/хв)</item>
+    </string-array>
+    <string-array name="activity_fields">
+        <item>Працягласць</item><item>Адлегласць</item><item>Пульс у спакоі</item>
+        <item>Сярэдні пульс</item><item>Стандартнае адхіленне пульсу</item><item>Ахоп вымярэнняў пульсу</item>
+        <item>Актыўная энергія</item><item>Сярэдняя хуткасць</item><item>Крокі</item>
+        <item>Набор вышыні</item><item>Сярэдняя магутнасць</item><item>Кадэнс педалявання</item>
+        <item>Максімальны пульс</item><item>Максімальная хуткасць</item>
+    </string-array>
+</resources>

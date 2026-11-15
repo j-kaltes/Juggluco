@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+    <string name="activity_import">Aktivitäten</string>
+    <string name="activity_export_extended">Erweitert</string>
+    <string name="activity_details">Aktivität</string>
+    <string name="activity_retrieve">Abrufen</string>
+    <string name="activity_permissions">Berechtigungen</string>
+    <string name="activity_history_granted">Zugriff auf historische Daten gewährt.</string>
+    <string name="activity_history_missing">Zugriff auf historische Daten nicht gewährt.</string>
+    <string name="activity_history_unavailable">Zugriff auf historische Daten nicht verfügbar.</string>
+    <string name="activity_measure_existing">Bereits importierte Mengen verwenden, soweit verfügbar, das ausgewählte Etikett, die Kennzahl und die Rundung. Individuelle Änderungen bleiben erhalten.</string>
+    <string name="activity_round_to">Runden auf:</string>
+    <string name="activity_round_to_invalid">Geben Sie einen positiven Rundungsschritt ein, zum Beispiel 1 oder 0.1</string>
+    <string name="activity_from">Abrufen von</string>
+    <string name="activity_interval">Automatischer Abruf</string>
+    <string name="activity_create_amounts">Mengen aus Aktivitäten erstellen</string>
+    <string name="activity_units">Einheiten für Distanz und Geschwindigkeit</string>
+    <string-array name="activity_units">
+        <item>km und km/h</item><item>mi und mi/h</item>
+    </string-array>
+    <string name="activity_last">Letzter Abruf:</string>
+    <string name="activity_never">Nie</string>
+    <string name="activity_retrieving">Aktivitäten werden abgerufen…</string>
+    <string name="activity_retrieving_details">Aktivitätsdetails werden abgerufen: %1$d von %2$d</string>
+    <string name="activity_quota_wait">Anfragelimit von Health Connect erreicht. Warten auf einen erneuten Versuch…</string>
+    <string name="activity_retrieved">Aktivitäten abgerufen</string>
+    <string name="activity_labels">Etiketten</string>
+    <string name="activity_saved">Gespeicherte Aktivitäten</string>
+    <string name="activity_default">Allgemeines Aktivitätsetikett</string>
+    <string name="activity_update_existing">Ändern Sie auch bereits vorhandene, automatisch erstellte Mengen</string>
+    <string name="activity_new_label">Neues Etikett</string>
+    <string name="activity_choose_label">Aktivitätsetikett auswählen oder erstellen</string>
+    <string name="activity_none">Keine gespeicherten Aktivitäten</string>
+    <string name="activity_unavailable">Aktivitätsdetails sind auf diesem Gerät nicht verfügbar</string>
+    <string name="activity_delete_confirm">Diese Aktivität aus Juggluco löschen und verhindern, dass sie erneut importiert wird? Die daraus automatisch erstellten Mengen werden gelöscht. Manuell eingegebene oder bearbeitete Mengen bleiben erhalten, jedoch ohne Verknüpfung zur Aktivität. Die Daten in Health Connect bleiben unverändert.</string>
+    <string name="activity_remove_source">Quelle entfernen</string>
+    <string name="activity_remove_source_confirm">%1$s als Quelle dieser Aktivität in Juggluco entfernen? Die Aktivitäts- und Herzfrequenzdaten dieser Quelle werden bei zukünftigen Abrufen ausgeschlossen. Die anderen Quellen und die Daten in Health Connect bleiben erhalten.</string>
+    <string name="activity_mirrored">Der Abruf aus Health Connect ist deaktiviert, da Mengen über die Spiegelung empfangen werden.</string>
+    <string name="activity_source">Quelle</string>
+    <string name="activity_heart_source">Herzfrequenzquelle</string>
+    <string name="activity_heart_used">Für die Zusammenfassung verwendete Herzfrequenzquelle</string>
+    <string name="activity_source_deleted">Diese Quelle wurde in Health Connect gelöscht</string>
+    <string name="activity_not_returned">Im aktuellen Abruf aus Health Connect nicht enthalten</string>
+    <string name="activity_excess">Mittlere Herzfrequenz − Ruheherzfrequenz</string>
+    <string name="activity_period_duration">%1$s – %2$s (Dauer: %3$s)</string>
+    <string name="activity_link">Mit Menge verknüpfen</string>
+    <string name="activity_no_match">Keine unverknüpften Aktivitätsmengen in diesem Zeitraum</string>
+    <string name="activity_distance_miles">Distanz (mi)</string>
+    <string name="activity_speed_miles">Durchschnittsgeschwindigkeit (mi/h)</string>
+    <string-array name="activity_intervals">
+        <item>Aus</item><item>15 Minuten</item><item>30 Minuten</item><item>1 Stunde</item>
+        <item>3 Stunden</item><item>6 Stunden</item><item>24 Stunden</item>
+    </string-array>
+    <string-array name="activity_measures">
+        <item>Dauer (min)</item><item>Distanz (km)</item><item>Mittlere Herzfrequenz − Ruheherzfrequenz (bpm)</item>
+        <item>Mittlere Herzfrequenz (bpm)</item><item>Standardabweichung der Herzfrequenz (bpm)</item><item>Aktive Energie (kcal)</item>
+        <item>Durchschnittsgeschwindigkeit (km/h)</item><item>Schritte</item><item>Höhengewinn (m)</item>
+        <item>Durchschnittliche Leistung (W)</item><item>Mittlere Trittfrequenz (U/min)</item>
+        <item>@string/activity_distance_miles</item><item>@string/activity_speed_miles</item>
+        <item>Maximale Herzfrequenz (bpm)</item>
+    </string-array>
+    <string-array name="activity_fields">
+        <item>Dauer</item><item>Distanz</item><item>Ruheherzfrequenz</item>
+        <item>Mittlere Herzfrequenz</item><item>Standardabweichung der Herzfrequenz</item><item>Abdeckung der Herzfrequenzmessung</item>
+        <item>Aktive Energie</item><item>Durchschnittsgeschwindigkeit</item><item>Schritte</item>
+        <item>Höhengewinn</item><item>Durchschnittliche Leistung</item><item>Trittfrequenz</item>
+        <item>Maximale Herzfrequenz</item><item>Höchstgeschwindigkeit</item>
+    </string-array>
+</resources>

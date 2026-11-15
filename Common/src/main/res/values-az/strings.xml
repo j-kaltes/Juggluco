@@ -1,0 +1,705 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+    <string name="language">az</string>
+    <string name="languagename">Dil</string>
+    <string name="app_name">Juggluco</string>
+
+    <string name="ok">OK</string>
+    <string name="cancel">Ləğv et</string>
+
+    <string name="garmin_initialization_error">"Garmin Connect SDK işə salına bilmədi: "</string>
+
+    <string name="error_nfc_device_not_supported">Skan mümkün deyil: bu qurğuda NFC yoxdur</string>
+    <string name="error_nfc_disabled">NFC söndürülüb. Onu qurğunun tənzimləmələrində aktiv edə bilərsiniz.</string>
+
+   <string name="kerfstok_missing_title">Saatda Kerfstok quraşdırılmayıb</string>
+    <string name="kerfstok_missing_message">Saatda Kerfstok quraşdırılmayıb. Onu Garmin Connect IQ mağazasından əldə edə bilərsiniz.</string>
+
+
+    <string name="alarm_description">Qlükoza həddən artıq aşağı və ya yüksəkdir</string>
+    <string name="loss_description">Juggluco sensorla əlaqəni itirib</string>
+    <string name="numalarm_description">Dərman qəbulu, yemək və ya məşq xatırlatması</string>
+    <string name="notification_description">Cari qlükoza göstəricisi barədə bildiriş</string>
+    <string name="ongoing_description">Tətbiq işləyir</string>
+    <string name="scan_permission">İcazə</string>
+    <string name="scanname">Skan et</string>
+    <string name="scansname">Skanlar</string>
+    <string name="historyname">Tarixçə</string>
+    <string name="streamname">Axın</string>
+    <string name="resetname">Sıfırla</string>
+    <string name="helpname">Kömək</string>
+    <string name="searchtopast">Keçmişə doğru axtar</string>
+    <string name="nobluetooth">Bluetooth yoxdur</string>
+    <string name="bluetoothenabled">Bluetooth aktivdir</string>
+    <string name="bluetoothdisabled">Bluetooth söndürülüb</string>
+    <string name="amountsname">Miqdarlar</string>
+    <string name="amountshort">@string/amountsname</string>
+    <string name="mealsname">Yeməklər</string>
+    <string name="closename">Bağla</string>
+    <string name="exporthelp">Məlumatlar ekranda göstərilən son göstəriciyə qədər saxlanılır. Başlanğıc tarixi göstərilən gün sayı qədər əvvələ düşür.</string>
+    <string name="detect">Aşkar et</string>
+    <string name="testip">IP-ni yoxla</string>
+    <string name="testlabel">Etiketi yoxla</string>
+    <string name="passiveonly">Yalnız passiv</string>
+    <string name="activeonly">Yalnız aktiv</string>
+    <string name="both">Hər ikisi</string>
+    <string name="receivefrom">Buradan al</string>
+    <string name="datapresentuntil">"Qəbul edən qurğuda məlumatların olduğu son vaxt: "</string>
+    <string name="visible">Görünən</string>
+    <string name="password">Şifrə</string>
+    <string name="delete">Sil</string>
+    <string name="specifyreceiveordata">\'Buradan al\' seçimini və ya digər qurğuya göndəriləcək məlumatı göstərin</string>
+    <string name="specifyip">IP ünvanı daxil edin</string>
+    <string name="portrange">Şəbəkə portu 1024–65535 aralığında olmalıdır</string>
+    <string name="start">Başlanğıc</string>
+    <string name="now">İndi</string>
+    <string name="dontchangeamounts">Güzgü miqdarları göndərir</string>
+    <string name="thishost">Bu qurğu:</string>
+    <string name="dozemode">Yuxu rejimi?</string>
+    <string name="sync">Sinxronlaşdır</string>
+    <string name="alarms">Siqnallar</string>
+    <string name="save">Yadda saxla</string>
+ <string name="addconnectionbutton">Bağlantı əlavə et</string>
+ <string name="offtouch">Toxunmanı söndür</string>
+ <string name="glucosestatusbar">Qlükoza bildirişi</string>
+ <string name="lowglucosealarm">Aşağı qlükoza siqnalı</string>
+ <string name="numlabel">"Etiket: "</string>
+ <string name="roundto">"Buna yuvarlaqlaşdır: "</string>
+ <string name="weight">"Çəki: "</string>
+ <string name="ringtonename">Zəng səsi</string>
+ <string name="highglucosealarm">Yüksək qlükoza siqnalı</string>
+ <string name="valueavailablenotification">Yeni göstərici barədə bildiriş</string>
+ <string name="lossofsignalalarm">Siqnal itdikdən sonra xəbərdarlıq</string>
+ <string name="cantsetminutes">"Dəqiqə sayı təyin edilə bilmir: "</string>
+  <string name="minutes">dəqiqə</string>
+ <string name="toolarg">çox uzundur</string>
+ <string name="targetrange">"Hədəf aralığı: "</string>
+ <string name="graphrange">"Qrafik aralığı: "</string>
+ <string name="unit">"Vahid: "</string>
+ <string name="glucoseaxisleft">Qlükoza oxu SOLDA</string>
+ <string name="startsapp">Skan tətbiqi başladır</string>
+ <string name="patchedlibrebroadcast">Dəyişdirilmiş Libre</string>
+ <string name="disablecamerakey">Kamera düyməsini deaktiv et</string>
+ <string name="invertscreen">180° döndər</string>
+ <string name="nfcsound">NFC səsi</string>
+ <string name="manuallyscale">Əl ilə miqyaslandır</string>
+ <string name="time">Vaxt</string>
+ <string name="glucose">Qlükoza</string>
+ <string name="sensorviabluetooth">Bluetooth vasitəsilə sensor</string>
+ <string name="sensorviabluetoothon">Güzgü olmayan qurğularda siqnallar üçün \'Bluetooth vasitəsilə sensor\' aktiv olmalıdır</string>
+ <string name="setunitfirst">Əvvəlcə vahidi seçin</string>
+ <string name="numberlabels">Miqdar etiketləri</string>
+ <string name="colors">Rənglər</string>
+ <string name="remindersname">Xatırlatmalar</string>
+ <string name="display">Ekran</string>
+ <string name="shutcuts">Qısa yollar</string>
+ <string name="advanced">Qabaqcıl</string>
+ <string name="newname">Yeni</string>
+ <string name="deletelast">Sonuncunu sil</string>
+ <string name="meal">Yemək:</string>
+ <string name="ringshort">Səs</string>
+ <string name="days">Gün</string>
+ <string name="invaliddays">" yanlışdır. Gün sayı müsbət tam ədəd olmalıdır."</string>
+ <string name="summarygraph">Ümumi qrafik</string>
+ <string name="forget">Unut</string>
+ <string name="reenable">Yenidən aktiv et</string>
+ <string name="failure_info">Məlumat</string>
+ <string name="last_failure">Son uğursuz cəhd</string>
+ <string name="last_success">Son uğurlu cəhd</string>
+ <string name="stage">Mərhələ</string>
+ <string name="use_bluetooth">Bluetooth-dan istifadə et</string>
+ <string name="connection">Bağlantı</string>
+ <string name="handshake">Əlaqə qurma</string>
+ <string name="glucose_value">Qlükoza göstəricisi</string>
+ <string name="info">Məlumat</string>
+ <string name="devicespecific">Qurğuya aid tənzimləməni seç</string>
+ <string name="dozeupdate">Yuxu rejimində yenilə</string>
+ <string name="refresh">Yenilə</string>
+ <string name="sendqueue">Göndərmə növbəsi</string>
+ <string name="reinit">Yenidən başlat</string>
+ <string name="watchappinstalled">Saat tətbiqi quraşdırılıb</string>
+ <string name="error">Xəta</string>
+ <string name="additem">Element əlavə et</string>
+ <string name="round">"Yuvarlaqlaşdır: "</string>
+ <string name="repeat">Təkrar et</string>
+ <string name="ingredient">Tərkib hissəsi:</string>
+ <string name="select">Seç</string>
+ <string name="carbohydrate">Karbohidrat:</string>
+ <string name="carbo">Karbohidrat</string>
+ <string name="total">Cəmi:</string>
+ <string name="mealtotal">Yeməyin cəmi:</string>
+ <string name="quantity">Qida miqdarı</string>
+ <string name="per">" hər "</string>
+ <string name="specifyingredient">Tərkib hissəsini göstərin</string>
+ <string name="specifyhowmuch">Miqdarı göstərin</string>
+ <string name="define">Təyin et</string>
+ <string name="edit">Redaktə et</string>
+ <string name="name">Ad:</string>
+ <string name="carbperunit">Karbohidrat/vahid:</string>
+ <string name="database">Verilənlər bazası</string>
+ <string name="search">Axtar</string>
+ <string name="trace">İz</string>
+ <string name="unknown">Naməlum</string>
+ <string name="showzero">Sıfırı göstər</string>
+ <string name="compositionof100gram">100 qramın tərkibi</string>
+ <string name="status">Vəziyyət</string>
+ <string name="config">Konfiqurasiya</string>
+ <string name="initwatchapp">Saat tətbiqini işə sal</string>
+ <string name="nowatchesfound">Saat tapılmadı</string>
+ <string name="getkerfstok">Kerfstok saat tətbiqini əldə et</string>
+ <string name="mealname">Yemək</string>
+ <string name="deletequestion">Silinsin?</string>
+ <string name="soundname">Səs</string>
+ <string name="play">Səsləndir</string>
+ <string name="defaultname">Standart</string>
+ <string name="flash">Flaş</string>
+ <string name="permission">İcazə</string>
+ <string name="shortcut">Qısa yol</string>
+ <string name="value">Göstərici</string>
+ <string name="nextpage">Növbəti səhifə</string>
+ <string name="ips">IP ünvanları:</string>
+ <string name="port">Port</string>
+ <string name="saved">yadda saxlanıldı</string>
+ <string name="savefailed">Yadda saxlamaq mümkün olmadı</string>
+ <string name="notsaved">Yadda saxlanılmadı</string>
+ <string name="failedbyexception">Uğursuz oldu (istisna)</string>
+ <string name="nodata">Məlumat yoxdur</string>
+ <string name="addsensorenddate">Sensorun bitmə tarixini təqvimə əlavə et</string>
+ <string name="enddatesensor">"Sensorun bitmə tarixi "</string>
+ <string name="open">Aç</string>
+ <string name="withoutsensor">Sensorsuz</string>
+ <string name="wronglibrary">Kitabxana düzgün işləmir, başqasını sınayın</string>
+ <string name="installedlibrary">Quraşdırılmış kitabxana</string>
+ <string name="cantextract">%s çıxarıla bilmir, başqa APK sınayın</string>
+ <string name="connectwithsensor">Sensora qoşulmaq üçün işləyir</string>
+ <string name="exchangedata">Məlumat mübadiləsi üçün işləyir</string>
+ <string name="nonewvalue">"Bu vaxtdan bəri yeni göstərici yoxdur: "</string>
+ <string name="lowglucose">" Aşağı qlükoza!"</string>
+ <string name="highglucose">" Yüksək qlükoza!"</string>
+ <string name="lowglucoseshort">@string/lowglucose</string>
+ <string name="highglucoseshort">@string/highglucose</string>
+ <string name="sendto">Bura göndər</string>
+ <string name="resenddata">Məlumatları yenidən göndər</string>
+ <string name="minimum">Minimum</string>
+ <string name="minuteddeactivated">Deaktivlik (dəq.):</string>
+ <string name="duractionsec">Müddət (saniyə):</string>
+ <string name="duraction">Müddət:</string>
+ <string name="sec">san.</string>
+ <string name="notentered">" daxil edilməyib"</string>
+ <string name="spacedand">" və "</string>
+    <string name="disturb">Narahat etmə</string>
+    <string name="uselibreview">LibreView-a göndər</string>
+    <string name="libreviewname">LibreView</string>
+    <string name="sendnow">İndi göndər</string>
+    <string name="blueormirror">\'Bluetooth vasitəsilə sensor\' aktiv edilməli və ya bu qurğu güzgü kimi qurulmalıdır</string>
+    <string name="vibrationname">Titrət</string>
+    <string name="high_priority">Turbo</string>
+    <string name="darkmode">Qaranlıq rejim</string>
+    <string name="multiply">Buna vur:</string>
+    <string name="rapidinsulin">Teztəsirli insulin</string>
+ <string name="longinsulin">Uzuntəsirli insulin</string>
+    <string name="comments">Şərhlər</string>
+ <string name="dontsend">Göndərmə</string>
+ <string name="sendamounts">Miqdarları göndər</string>
+ <string name="resendquestion">Məlumatlar yenidən göndərilsin?</string>
+ <string name="resendmessage">Eyni vaxt aralığının məlumatlarını LibreView-a təkrar göndərməməyə diqqət edin.</string>
+ <string name="getaccountidquestion">Hesab ID-si LibreView-dan alınsın?</string>
+ <string name="getaccountidmessage">Abbott-un Libre 3 tətbiqində bu LibreView hesabı ilə aktivləşdirilmiş Libre 3 sensorlarını istifadə etmək üçün hesab ID-si lazımdır.</string>
+ <string name="deleteconnection">Bağlantı silinsin?</string>
+ <string name="wakelock">Oyaq saxlama kilidi</string>
+ <string name="wifi">Wi-Fi</string>
+ <string name="heartrate">Ürək döyüntülərinin tezliyi</string>
+ <string name="xdripbroadcast">xDrip yayımı</string>
+ <string name="sensorpermission">Sensor icazəsi</string>
+ <string name="sensorpermissionmessage">Ürək döyüntülərini göstərmək üçün tələb olunur. Qurğu tənzimləmələri → Tətbiqlər → İcazələr → Juggluco bölməsində verin.</string>
+ <string name="floatglucose">Üzən qlükoza</string>
+ <string name="floatglucoseshort">@string/floatglucose</string>
+
+ <string name="fontsize">Şrift ölçüsü</string>
+ <string name="fontsizeshort">@string/fontsize</string>
+ <string name="fonttoolarge">Şrift ölçüsü çox böyükdür, maksimum=</string>
+ <string name="foreground">Ön plan</string>
+ <string name="background">Arxa plan</string>
+ <string name="backgroundshort">Arxa-</string>
+
+ <string name="transparent">Şəffaf</string>
+ <string name="touchable">Toxunula bilən</string>
+
+ <string name="overlaypermission">İcazə tələb olunur</string>
+ <string name="overlaypermissionmessage">adb shell pm grant tk.glucodata android.permission.SYSTEM_ALERT_WINDOW</string>
+ <string name="deletereminder">Xatırlatma silinsin?</string>
+ <string name="deletelabel">Etiket silinsin?</string>
+
+ <string name="finish">Dayandır</string>
+ <string name="finishsensormessage">Bu sensordan axın göstəricilərinin alınması dayandırılsın?</string>
+ 
+ <string name="email">E-poçt:</string>
+ <string name="getaccountid">Hesab ID-sini al</string>
+
+ <string name="emailaddresstooshort">E-poçt ünvanı çox qısadır</string>
+ <string name="emailaddresstoolong">E-poçt ünvanı çox uzundur</string>
+ <string name="password8">Şifrə ən azı 8 simvoldan ibarət olmalıdır</string>
+ <string name="password36">Şifrənin maksimum uzunluğu 36 simvoldur</string>
+ <string name="fromlibreview">LibreView-dan</string>
+ <string name="manual">Əl ilə</string>
+<string name="noaccountidspecified">"Hesab ID-si göstərilməyib "</string>
+<string name="wrongformat">"Yanlış format "</string>
+<string name="noapplisteningto">"Bu məlumatı qəbul edən tətbiq yoxdur: "</string>
+<string name="secret">api_secret</string>
+<string name="withoutsaving">Yadda saxlamadan çıxılsın?</string>
+<string name="active">Aktiv</string>
+<string name="usessl">SSL istifadə et</string>
+<string name="fullchain">Tam sertifikat zənciri</string>
+
+	<string name="privatekey">Məxfi açar</string>
+<string name="localonly">Yalnız yerli</string>
+<string name="toolongsecret">: api_secret çox uzundur, maksimum=</string>
+<string name="invalidport">" yanlış port nömrəsi"</string>
+<string name="newsecret">"yeni api_secret: "</string>
+<string name="newport">yeni port =</string>
+<string name="webserver">Veb-server</string>
+<string name="treatments">Miqdarları ötür</string>
+<string name="android13">Android</string>
+    <string name="wentwrong">Xəta baş verdi</string>
+    <string name="dosis">" doza "</string>
+    <string name="doses">" doza "</string>
+ <string name="penfailed">İnsulin qələmindən məlumat oxunmadı. Yenidən cəhd edin.</string>
+ <string name="changeinsulin">"İnsulinin növünü buna dəyiş: "</string>
+    <string name="type">"Növ: "</string>
+    <string name="dosesprior">Yalnız bu vaxtdan sonrakı dozaları əlavə et:</string>
+    <string name="modify">Dəyişdir</string>
+    <string name="notsynced">Sinxronlaşdırılmayıb</string>
+ <string name="lossdata">Standart tənzimləmələrə qayıtmaq məlumat itkisinə səbəb ola bilər.</string>
+ <string name="defaults">Standart tənzimləmələr</string>
+    <string name="notify">Bildir</string>
+ <string name="separate">Ayrı</string>
+    <string name="librecurrent">Dərhal</string>
+    <string name="speed">Sürət</string>
+ <string name="pitch">Səs tonu</string>
+ <string name="talker">Səs</string>
+ <string name="secondsbetween">Aradakı saniyə sayı</string>
+ <string name="test">Sına</string>
+ <string name="streamhistory">Bluetooth tarixçəsi</string>
+ <string name="libreisviewed">Baxışları izlə</string>
+ <string name="novalue">Göstərici yoxdur</string>
+ <string name="talk">Səsləndir</string>
+ <string name="watches">Saat</string>
+ <string name="menus">Menyular</string>
+ <string name="system_ui">Android interfeysi</string>
+ <string name="sensor">Sensor</string>
+ <string name="settings">Tənzimləmələr</string>
+ <string name="aboutname">Haqqında</string>
+ <string name="export">İxrac et</string>
+ <string name="mirror">Güzgü</string>
+ <string name="new_amount">Yeni miqdar</string>
+ <string name="list">Siyahı</string>
+ <string name="statistics">Statistika</string>
+ <string name="floatname">Üzən pəncərə</string>
+ <string name="last_scan">Son skan</string>
+    <string name="date">Tarix</string>
+ <string name="day_back">Bir gün geri</string>
+ <string name="day_later">Bir gün irəli</string>
+ <string name="week_back">Bir həftə geri</string>
+ <string name="week_later">Bir həftə irəli</string>
+ <string name="talk_touch">Toxunmanı səsləndir</string>
+ <string name="speakmessages">Mesajları səsləndir</string>
+ <string name="speakalarms">Siqnalları səsləndir</string>
+ <string name="speakglucose">Qlükozanı səsləndir</string>
+    <string name="notfound">Tapılmadı</string>
+ <string name="no_ringtone_picker_found">Zəng səsi seçicisi tapılmadı</string>
+ <string name="can_t_play">"Səsləndirmək mümkün deyil: "</string>
+ <string name="seconds">" saniyə"</string>
+ <string name="duration_can_t_be_negative">"Müddət mənfi ola bilməz: "</string>
+ <string name="too_large_maximum_65535">" çox böyükdür, maksimum=65535, "</string>
+ <string name="too_large">" çox böyükdür"</string>
+ <string name="can_t_use_specification">Göstərilən tənzimləmədən istifadə etmək mümkün deyil</string>
+ <string name="turn_on_nearby_devices_permission">YAXINLIQDAKI QURĞULAR icazəsini aktiv edin</string>
+    <string name="enable_bluetooth">Bluetooth-u aktiv edin</string>
+ <string name="turn_on_location_permission">Məkan icazəsini aktiv edin</string>
+ <string name="bluetooth_is_turned_off">Bluetooth söndürülüb</string>
+ <string name="allsentnoreceive">Bütün məlumatlar başqa qurğuya göndərilirsə, \'Buradan al\' söndürülməlidir.</string>
+ <string name="nomirrorport">Bu port nömrəsi güzgü portundan fərqli olmalıdır</string>
+ <string name="nohttpport">Bu port nömrəsi HTTP portundan fərqli olmalıdır</string>
+ <string name="httpportxdripwarning">Veb-server xDrip saat tətbiqləri ilə yalnız HTTP portu 17580 olduqda işləyir.</string>
+<string name="ready_in">" bu müddətdən sonra hazır olacaq: "</string>
+<string name="ready_for_use">Sensor istifadəyə hazırdır</string>
+<string name="endstime">" bu vaxtda bitir"</string>
+<string name="triednothing">Heç bir cəhd edilməyib</string>
+<string name="success">Uğurlu oldu</string>
+<string name="resendwarning">Bütün məlumatlar yenidən göndəriləcək. Bu vaxt aparır və LibreView ilə Kerfstok-a təsir göstərə bilər.</string>
+<string name="parseip">IP ünvanının təhlili xətası</string>
+<string name="toomanyhosts">Qurğuların maksimum sayı keçilib</string>
+<string name="senthosts">Juggluco ən çox 6 qurğuya məlumat göndərir</string>
+    <string name="hostname">Host adı</string>
+   <string name="clampnow">İndini sabit saxla</string>
+    <string name="sendfrom">"Bu vaxtdan göndər: "</string>
+ <string name="changestartbutton">Başlanğıcı dəyiş</string>
+ <string name="floatjuggluco">Üstdə</string>
+ <string name="uploader">Yükləyici</string>
+ <string name="upload">Yüklə</string>
+ <string name="sibionics">Sibionics</string>
+ <string name="mmolL">mmol/L</string>
+ <string name="mgdL">mg/dL</string>
+ <string name="interval">İnterval</string>
+ <string name="off">Sönülü</string>
+ <string name="shortoff">Sönülü</string>
+ <string name="streamingenabled">" Axın aktivdir"</string>
+ <string name="streamingnotenabled">" Axın aktiv deyil"</string>
+    <string name="everSensebroadcast">Eversense yayımı</string>
+ <string name="threshold">Hədd</string>
+ <string name="untouchablequestion">Üzən qlükoza pəncərəsi toxunmaya cavab verməsin?</string>
+
+ <string name="hour12">12 saat</string>
+<string name="complications">Saat komplikasiyaları</string>
+    <string name="colors_style_setting_description">Saat siferblatının rəngi</string>
+
+   <string name="glucosenumbercomplicationlabel">Qlükoza göstəricisi</string>
+   <string name="glucosearrowcomplicationlabel">Qlükoza oxu</string>
+   <string name="glucosearrowvaluecomplicationlabel">Göstərici + ox</string>
+ <string name="glucosevalueiconcomplicationlabel">Kiçik qlükoza göstəricisi</string>
+ <string name="glucosearrowiconcomplicationlabel">Kiçik qlükoza oxu</string>
+ <string name="glucoseshortcomplicationlabel">Kiçik göstərici + ox</string>
+
+   <string name="text">Mətn</string>
+   <string name="arrow">Ox</string>
+   <string name="notalldata">DİQQƏT: \'Buradan al\' seçilməyib, lakin bəzi məlumat növləri də göndərilmir.</string>
+  <string name="libresetalllabels">Əvvəlcə hər etiket üçün onun məlumatlarının necə işlənəcəyini seçin.</string>
+   <string name="photo">Foto</string>
+   <string name="photomessage">Dexcom G7/ONE+ və ya Sibionics GS1 sensorunun Data Matrix kodunu, yaxud güzgü bağlantısı üçün QR kodunu skan edin.</string>
+   <string name="exchanges">Məlumat mübadiləsi</string>
+   <string name="dexfuture">Proqnoz (Dexcom)</string>
+   <string name="initializing">İşə salınır</string> 
+   <string name="startjuggluco">Juggluco telefonda işləyir?\n\nWi-Fi və Bluetooth aktivdir?</string> 
+   <string name="connected">Qoşuldu!</string> 
+   <string name="useclose">Bağla düyməsi</string> 
+   <string name="alarmclock">\u23F0</string> 
+   <string name="filesize">Faylın ölçüsü</string> 
+   <string name="logging">Jurnala yazma</string> 
+    <string name="aspart">İnsulin aspart/NovoRapid/NovoLog</string>
+    <string name="fiasp">Fiasp</string>
+    <string name="lispro">İnsulin lispro/Humalog</string>
+    <string name="urli">URLi/Lyumjev/insulin lispro-aabc</string>
+    <string name="glulisine">İnsulin glulizin/Apidra</string>
+    <string name="humaninsulin">İnsan insulini/Humulin R/Novolin R</string>
+    <string name="afrezza">Afrezza</string>
+    <string name="not">Yox</string>
+    <string name="eusibionics">Avropa Sibionics – com.sisensing.sijoy</string>
+    <string name="chsibionics">Çin Sibionics – com.sisensing.sisensingcgm</string>
+    <string name="hematonix">Hematonix – com.sisensing.rusibionics</string>
+    <string name="sibionics2">Sibionics 2/Split – com.sisensing.eco</string>
+    <string name="datapresent">"Mövcud məlumatlar: "</string>
+    <string name="overwrite">Üzərinə yazılsın?</string>
+    <string name="autoqr">Avtomatik QR</string>
+    
+    <string name="googlescan">Google skanı</string>
+    <string name="usedweight">DİQQƏT: çəki (%.1f) sıfır deyil</string>
+
+ <string name="verylowglucose">" Qlükoza ÇOX AŞAĞIDIR!"</string>
+ <string name="veryhighglucose">" Qlükoza ÇOX YÜKSƏKDİR!"</string>
+
+ <string name="verylowglucoseshort">" ÇOX AŞAĞI!"</string>
+ <string name="veryhighglucoseshort">" ÇOX YÜKSƏK!"</string>
+
+ <string name="prelowglucose">" Qlükoza tezliklə AŞAĞI olacaq!"</string>
+ <string name="prehighglucose">" Qlükoza tezliklə YÜKSƏK olacaq!"</string>
+
+ <string name="verylowglucosealarm">Çox aşağı qlükoza siqnalı</string>
+ <string name="veryhighglucosealarm">Çox yüksək qlükoza siqnalı</string>
+
+ <string name="prelowglucosealarm">Tezliklə aşağı həddi keçdikdə siqnal</string>
+ <string name="prehighglucosealarm">Tezliklə yuxarı həddi keçdikdə siqnal</string>
+    <string name="schedules">Cədvəllər</string>
+    <string name="profile">"Profil "</string>
+ <string name="lossofsignal">Siqnalın itməsi</string>
+ <string name="valuenotification">Göstərici bildirişi</string>
+ <string name="nothing"/>
+ <string name="scantranstitle">ÖTÜRÜCÜNÜN Data Matrix kodunu skan edin</string>
+ <string name="scantransmessage">Sibionics 2 sensorunun Data Matrix kodu uğurla skan edildi.\nİndi ötürücünün Data Matrix kodunu skan edin.</string>
+ <string name="mirrorscansucces">Bağlantı ortanın solundakı menyunun Güzgü bölməsinə əlavə edildi.</string>
+ <string name="resettitle">Sıfırla</string>
+ <string name="resetmessage">Ötürücünün yaddaşını təmizləyir. İstifadə edilmiş ötürücüyə yeni sensor qoşmazdan əvvəl basılmalıdır.</string>
+ <string name="nolibrelink">Əvəzində Eversense yayımından istifadə edin. Köməyə baxın.</string>
+ <string name="calibration">Kalibrləmə</string>
+ <string name="exclude">İstisna et</string>
+ <string name="calibratepast">Əvvəlki göstəricilərə tətbiq et</string>
+ <string name="bloodvar">Qan qlükozası:</string>
+ <string name="calibrate_a">Meyli dəyiş</string>
+ <string name="calibrated">Kalibrlənib</string>
+ <string name="delete_calibration">Kalibrləmə silinsin?</string>
+ <string name="hide">Gizlət</string>
+ <string name="sensorstreamed"/>
+ <string name="sensornotstreamed">Hələ heç nə yoxdur</string>
+ <string name="calibrations">Kalibrləmələr</string>
+ <string name="allvalues">Bütün göstəricilər</string>
+ <string name="writedown">Qeyd edin!</string>
+ <string name="switchtowatch">Keçir</string>
+ <string name="last">"Sonuncu: "</string>
+ <string name="bloodafter">"Yalnız bu vaxtdan sonrakı qlükoza ölçmələrini əlavə et: "</string>
+ <string name="specifyblood">Əvvəlcə qan qlükozası etiketini seçin</string>
+ <string name="meterlist">Qlükometrlər</string>
+ <string name="finddevices">Qurğuları tap</string>
+ <string name="nonewdata">Yeni məlumat yoxdur</string>
+ <string name="newdata">Yeni məlumat</string>
+<string name="isconnected">Qoşulub</string> 
+<string name="isdisconnected">Bağlantı kəsilib</string> 
+<string name="phone">telefon</string>
+ <string name="watch">saat</string>
+<string name="directsensor">Birbaşa sensor–</string>
+<string name="enternums">Miqdarları burada daxil et</string>
+<string name="connectionl">bağlantı</string>
+<string name="disconnectsensor">Xəta</string>
+<string name="internet">İnternet</string>
+<string name="homenet">Yerli şəbəkə</string>
+<string name="ICE">ICE</string>
+<string name="zero">0</string>
+<string name="one">1</string>
+<string name="icelabel">ICE etiketi</string>
+<string name="username">İstifadəçi adı</string>
+<string name="turnserver">TURN serveri</string>
+ <string name="ICElabeltooshort">XƏTA: ICE etiketi ən azı 16 bayt olmalıdır.</string>
+    <string name="divorcename">Cütləşməni ləğv et</string>
+    <string name="divorcemessage">Sensorun bu telefon və ya saat əvəzinə başqa qurğuya qoşulmasına icazə verilsin?</string>
+    <string name="unpairsuccess">" Cütləşmə uğurla ləğv edildi"</string>
+    <string name="unpairfailed">" Cütləşməni ləğv etmək mümkün olmadı"</string>
+    <string name="warmup">İsinmə {0}</string>
+    <string name="releasingsensor">Sensorun bağlantısı buraxılır</string>
+    <string name="sensorreleased">Sensorun bağlantısı buraxıldı</string>
+    <string name="releasefailed">Bağlantını buraxmaq mümkün olmadı</string>
+    <string name="timedout">Vaxt limiti keçdi</string>
+    <string name="unpairing">"Cütləşmə ləğv edilir: "</string>
+    <string name="unpairingwatch">"Saatın cütləşməsi ləğv edilir: "</string>
+    <string name="failed">uğursuz</string>
+    <string name="successful">uğurlu</string>
+    <string name="use">Aktivləşdir</string>
+    <string name="connecttosensor">Sensora qoşulur…</string>
+    <string name="clear">Təmizlə</string>
+    <string name="clearingmemory">Sensor yaddaşı təmizlənir</string>
+    <string name="clearmessage">Sensor yenidən başladılıb yaddaşı təmizlənsin?</string>
+    <string name="clearing">"Təmizlənir: "</string>
+    <string name="clearsuccess">" Təmizləmə uğurlu oldu"</string>
+    <string name="clearfailed">" Təmizləmə uğursuz oldu"</string>
+    <string name="sensors">Sensorlar</string>
+    <string name="titlewebserverneed">Veb-server tələb olunur</string>
+    <string name="messagewebserverneed">Veb-serveri aktivləşdirmək üçün sol menyu → Tənzimləmələr → Məlumat mübadiləsi → Veb-server bölməsinə keçin</string>
+    <string name="nostreamvalues">Axın göstəriciləri yoxdur</string>
+    <string name="nohistoryvalues">Tarixçə göstəriciləri yoxdur</string>
+    <string name="jugglucoupdate">Ölçmənin yaşı</string>
+
+     <string name="retrieve">Serverdən al</string>
+     <string name="wrongcode">Yanlış QR kod</string>
+     <string name="leave">Çıxılsın?</string>
+     <string name="id0message">ID sıfırdan fərqli olmalıdır</string>
+     <string name="emailnotused">E-poçt və şifrə istifadə edilməyəcək və yadda saxlanılmayacaq.</string>
+    <string name="connecttoserver">Serverə qoşulur…</string>
+    <string name="retrievefailed">Hesab ID-si alına bilmədi</string>
+    <string name="themesname">Mövzular:</string>
+    <string name="buttonshape">Düymə forması</string>
+    <string name="radius">"Radius: "</string>
+    <string name="rectangle">Düzbucaqlı</string>
+    <string name="oval">Oval</string>
+    <string name="light">Açıq</string>
+    <string name="dark">Qaranlıq</string>
+    <string name="apply">Tətbiq et</string>
+
+    <string name="theme">Mövzu</string>
+    <string name="alarm">Siqnal</string>
+    <string name="media">Media</string>
+    <string name="notification">Bildiriş</string>
+    <string name="alarmis">Siqnal növü</string>
+    <string name="deletemeter">Qlükometr haqqında məlumat silinsin. Ölçmələr qalacaq.</string>
+
+    <!-- Web server additions file manager -->
+    <string name="webuploadpages">Veb-səhifələri yüklə</string>
+    <string name="webuploadfiles">Faylları yüklə</string>
+    <string name="webuploaddirectory">Qovluğu yüklə</string>
+    <string name="webup">Yuxarı</string>
+    <string name="webcantaccessdirectory">%1$s qovluğuna giriş mümkün deyil</string>
+    <string name="webcantcreatedirectory">%1$s yaradıla bilmir</string>
+    <string name="webcantopenfileselector">Fayl seçicisi açıla bilmir</string>
+    <string name="webcantopendirectoryselector">Qovluq seçicisi açıla bilmir</string>
+    <string name="webinvaliddirectory">Yanlış %1$s qovluğu</string>
+    <string name="webuploadingfiles">Fayllar yüklənir…</string>
+    <string name="webuploadingdirectory">Qovluq yüklənir…</string>
+    <string name="webuploadresult">Yüklənən fayllar: %1$d; qovluqlar: %2$d; uğursuz: %3$d</string>
+    <string name="webdeletefilequestion">%1$s faylı silinsin?</string>
+    <string name="webdeletedirectoryquestion">%1$s qovluğu və içindəki bütün məlumatlar silinsin?</string>
+    <string name="webdeleting">Silinir: %1$s…</string>
+    <string name="webdeleted">Silindi: %1$s</string>
+    <string name="webdeletefailed">%1$s silinə bilmədi</string>
+    <string name="webdirectoryempty">Bu qovluq boşdur</string>
+    <string name="webdirectoryentry">[qovluq] %1$s</string>
+
+    <string name="autorotate">Avtomatik döndər</string>
+    <string name="rotateText">Mətni döndər</string>
+
+    <string name="mirror_transport">Bağlantı üsulu:</string>
+    <string name="transport_automatic">Avtomatik</string>
+    <string name="transport_tcp">TCP/IP</string>
+    <string name="transport_bluetooth">Birbaşa BLE</string>
+    <string name="transport_messages">Mesajlar</string>
+    <string name="transport_needs_label">Birbaşa Bluetooth və Mesajlar üçün bağlantı etiketi tələb olunur</string>
+    <string name="transport_needs_password">Birbaşa Bluetooth üçün güzgü şifrəsi tələb olunur</string>
+     <string name="via_garmin">Garmin Connect</string>
+     <string name="use_for_numbers">Miqdarlar</string>
+
+    <!-- Garmin status: placeholders hold device names, timestamps or status text. -->
+    <string name="garmin_watch_app_id">Garmin saat tətbiqinin ID-si:</string>
+    <string name="garmin_app_kerfstok">Kerfstok</string>
+    <string name="garmin_app_libre2">Libre 2 Kerfstok</string>
+    <string name="garmin_app_libre3">Libre 3 Kerfstok</string>
+    <string name="garmin_app_device_row">%1$s – %2$s – %3$s</string>
+    <string name="garmin_app_unconfirmed">%1$s (quraşdırma təsdiqlənməyib)</string>
+    <string name="garmin_app_sensor_assigned">Tətbiqi dəyişməzdən əvvəl cari Kerfstok tətbiqində Telefon seçin.</string>
+    <string name="garmin_libre2_open_app">Seçilmiş saatda Libre 2 Kerfstok-u açın və saatı yaxınlıqda saxlayın.</string>
+    <string name="garmin_libre2_backend_required">Libre 2 sensorunun ötürülməsi üçün müstəqil yerli Libre 2 emal modulu olan Juggluco tələb olunur.</string>
+    <string name="garmin_libre2_need_sensor">Ötürməzdən əvvəl Libre 2 sensorunu Juggluco ilə skan edin və Bluetooth göstəricisi gələnədək gözləyin.</string>
+    <string name="garmin_libre2_busy">Saata artıq Libre 2 sensoru təyin edilib. Əvvəlcə onu telefona qaytarın.</string>
+    <string name="garmin_libre2_other_watch">Libre 2 sensoru başqa Garmin saatına təyin edilib. Sensoru telefona qaytarmaq üçün həmin saatı seçin.</string>
+    <string name="garmin_libre2_release_libre3">Libre 2 təyin etməzdən əvvəl bu saatdakı Libre 3 sensorunu telefona qaytarın.</string>
+    <string name="garmin_libre2_provisioning">%1$s üçün quraşdırma məlumatları göndərilir. Libre 2 Kerfstok-u açıq saxlayın.</string>
+    <string name="garmin_libre2_assigned">%1$s bu saata təyin edildi.</string>
+    <string name="garmin_libre2_releasing">Saatın %1$s sensorunun bağlantısını buraxması gözlənilir. Libre 2 Kerfstok-u açıq saxlayın.</string>
+    <string name="garmin_app_id_button" translatable="false">ID</string>
+    <string name="garmin_id_length">ID 32 simvoldan ibarət olmalıdır (hazırda %1$d)</string>
+    <string name="garmin_id_change_failed">ID-ni dəyişmək mümkün olmadı</string>
+    <string name="garmin_select_device">Əvvəlcə Garmin qurğusunu seçin</string>
+    <string name="garmin_already_numbers_device">%1$s artıq miqdarların daxil edildiyi qurğudur</string>
+    <string name="garmin_change_numbers_title">Miqdarların daxil edildiyi qurğu dəyişdirilsin?</string>
+    <string name="garmin_change_numbers_message">Miqdarların daxil edildiyi qurğu %1$s əvəzinə %2$s olsun?\n\nBu, saxlanılmış miqdarların böyük həcmdə sinxronlaşdırılmasına səbəb ola bilər. Əvvəlki qurğudan artıq miqdar daxil etmək üçün istifadə etmək mümkün olmayacaq.</string>
+    <string name="garmin_change">Dəyişdir</string>
+    <string name="garmin_no_device">Garmin qurğusu yoxdur</string>
+    <string name="garmin_connect" translatable="false">Garmin Connect</string>
+    <string name="garmin_none">Heç biri</string>
+
+    <string name="garmin_device_row">%1$s – %2$s</string>
+    <string name="garmin_connection_status">%1$s</string>
+    <string name="garmin_kerfstok_status">Kerfstok: %1$s</string>
+    <string name="garmin_last_confirmed_reply">Son təsdiqlənmiş cavab: %1$s</string>
+    <string name="garmin_glucose_confirmed">Qlükoza təsdiqlənib: %1$s</string>
+    <string name="garmin_glucose_sample">Qlükoza ölçməsi: %1$s</string>
+    <string name="garmin_glucose_ack">Qlükoza təsdiqi (ACK): %1$s</string>
+    <string name="garmin_ack_timestamped">Vaxt nişanlı</string>
+    <string name="garmin_ack_legacy">Köhnə format</string>
+    <string name="garmin_last_sent">Son göndərilən: %1$s</string>
+    <string name="garmin_last_received">Son alınan: %1$s</string>
+    <string name="garmin_transport_result">Ötürmə nəticəsi: %1$s</string>
+    <string name="garmin_last_error">Son xəta: %1$s</string>
+    <string name="garmin_status_unknown">Rabitənin vəziyyəti məlum deyil</string>
+    <string name="garmin_status_closed">Kerfstok bağlanıb</string>
+    <string name="garmin_status_recovering">Rabitə bərpa edilir</string>
+    <string name="garmin_status_error">Rabitə xətası</string>
+    <string name="garmin_status_connecting">Qoşulur</string>
+    <string name="garmin_status_waiting_start">Kerfstok START siqnalı gözlənilir</string>
+    <string name="garmin_status_not_ready">Qoşulub, Kerfstok hələ hazır deyil</string>
+    <string name="garmin_status_waiting_glucose">Qlükoza təsdiqi gözlənilir</string>
+    <string name="garmin_status_waiting_history">Tarixçə təsdiqi gözlənilir</string>
+    <string name="garmin_status_confirmed">İkitərəfli rabitə təsdiqlənib</string>
+    <string name="garmin_status_receiving">Məlumat alınır; cavablar hələ təsdiqlənməyib</string>
+    <string name="garmin_status_sending">Məlumat göndərilir; cavablar hələ təsdiqlənməyib</string>
+    <string name="garmin_status_unconfirmed">Qoşulub; rabitə hələ təsdiqlənməyib</string>
+    <string name="garmin_transfer_failed">Ötürmə uğursuz oldu</string>
+    <string name="garmin_invalid_device">Yanlış qurğu</string>
+    <string name="garmin_invalid_format">Yanlış mesaj formatı</string>
+    <string name="garmin_message_too_large">Mesaj çox böyükdür</string>
+    <string name="garmin_unsupported_type">Dəstəklənməyən mesaj növü</string>
+    <string name="garmin_unknown_failure">Naməlum xəta</string>
+    <string name="garmin_no_start_ack">Kerfstok START təsdiqi alınmadı</string>
+    <string name="garmin_no_glucose_ack">Qlükoza təsdiqi alınmadı</string>
+
+    <string name="garmin_libre3_no_active_sensor">Aktiv Libre 3 sensoru yoxdur</string>
+    <string name="garmin_libre3_multiple_sensors">Birdən çox Libre 3 sensoru aktivdir</string>
+    <string name="garmin_libre3_not_authorized">Libre 3 hələ tam təsdiqlənməyib</string>
+    <string name="garmin_libre3_find_failed">Aktiv Libre 3 sensorunu tapmaq mümkün deyil</string>
+   
+    <string name="garmin_libre3_backfill_send_failed">Libre 3-ün geriyə doldurma mövqeyi Garmin-ə göndərilə bilmir</string>
+
+ <string name="delay_can_t_be_negative">"Gecikmə mənfi ola bilməz: "</string>
+ <string name="too_large_maximum_4095">" çox böyükdür, maksimum=4095, "</string>
+    <string name="garmin_alarm_alert">Xəbərdarlıq</string>
+    <string name="garmin_alarm_sound_update">Siqnal səslərindən istifadə etmək üçün bu saatdakı Kerfstok-u yeniləyin. Titrəmə tənzimləmələrini yenə də saxlaya bilərsiniz.</string>
+    <string name="garmin_alarm_sound_unavailable">Bu saat siqnal səslərini dəstəkləmir.</string>
+    <string name="garmin_alarm_sound_supported">Səsi titrəmədən asılı olmayaraq aktiv etmək olar.</string>
+    <string name="garmin_alarm_sound_unknown">Səs dəstəyini yoxlamaq üçün qoşulmuş saatda Libre 3 Kerfstok-u açın. Səs seçimlərini indidən saxlamaq olar.</string>
+    <string name="garmin_alarm_tone">Siqnal tonu</string>
+    <string name="garmin_alarm_outputs_update">Səsdən müstəqil titrəmə tənzimləmələri və deaktiv qalma müddəti sıfır olduqda hər yeni qlükoza göstəricisində siqnal üçün bu saatdakı Kerfstok-u yeniləyin.</string>
+    <string name="garmin_alarm_vibration_unavailable">Bu saat titrəməni dəstəkləmir.</string>
+    <string name="garmin_alarm_vibration_supported">Titrəməni səsdən asılı olmayaraq aktiv etmək olar.</string>
+    <string name="garmin_alarm_vibration_unknown">Titrəmə dəstəyini yoxlamaq üçün qoşulmuş saatda Libre 3 Kerfstok-u açın. Seçimləri indidən saxlamaq olar.</string>
+    <!-- Positions are Garmin Attention.TONE_* IDs (0 through 18), not display order. -->
+    <string-array name="garmin_alarm_tones">
+        <item>Düymə</item>
+        <item>Başlanğıc</item>
+        <item>Dayandırma</item>
+        <item>Mesaj</item>
+        <item>Yüksək xəbərdarlıq</item>
+        <item>Aşağı xəbərdarlıq</item>
+        <item>Güclü siqnal</item>
+        <item>İnterval xəbərdarlığı</item>
+        <item>Siqnal</item>
+        <item>Sıfırlama</item>
+        <item>Dövrə</item>
+        <item>Kanareyka</item>
+        <item>Vaxt xəbərdarlığı</item>
+        <item>Məsafə xəbərdarlığı</item>
+        <item>Uğursuzluq</item>
+        <item>Uğur</item>
+        <item>Enerji</item>
+        <item>Batareya zəifdir</item>
+        <item>Xəta</item>
+    </string-array>
+    <string name="garmin_alarm_vibration">Titrəmə</string>
+    <string name="garmin_alarm_saved">Saatda yadda saxlanıldı</string>
+    <string name="garmin_alarm_waiting">Telefonda saxlanıldı; saat gözlənilir</string>
+    <string name="garmin_alarm_open">Bu tənzimləmələri tətbiq etmək üçün yenilənmiş Libre 3 Kerfstok tətbiqini açın.</string>
+    <string name="garmin_alarm_save_failed">Siqnal tənzimləmələri saxlanıla bilmədi. Yenidən cəhd edin.</string>
+    <string name="garmin_alarm_invalid">Göstəriciləri yoxlayın: aşağı hədd yuxarı həddən kiçik olmalıdır; itmiş göstərici üçün gecikmə 1–4095 dəqiqə, təkrar 0–4095 dəqiqə, müddət 0–65535 saniyə olmalıdır.</string>
+    <string name="garmin_alarm_newer">Saatda daha yeni siqnal tənzimləmələri var. Burada yadda saxlamaq onları əvəz edəcək.</string>
+
+
+    <string name="clarity_login_instructions">Dexcom-un səhifəsində hesabınızın e-poçt ünvanı və ya istifadəçi adı, eləcə də şifrəsi ilə daxil olun.</string>
+    <string name="clarity_login_country">İki hərfli ölkə kodu</string>
+    <string name="clarity_sign_in">Dexcom-a daxil ol</string>
+    <string name="clarity_login_finish_pending">Gözləyən giriş prosesini tamamla</string>
+    <string name="clarity_login_tls_error">Dexcom ilə təhlükəsiz bağlantını təsdiqləmək mümkün olmadı.</string>
+    <string name="clarity_login_load_error">Dexcom-un giriş səhifəsi yüklənə bilmədi.</string>
+    <string name="clarity_login_http_error">Dexcom-un giriş səhifəsi HTTP %1$d qaytardı.</string>
+    <string name="clarity_login_destination_error">Giriş səhifəsi dəstəklənməyən ünvana keçid tələb etdi.</string>
+    <string name="clarity_login_start_error">Dexcom-a giriş başlatmaq mümkün deyil.</string>
+    <string name="clarity_login_in_progress">Giriş prosesi hələ tamamlanır. Sonra \'Gözləyən giriş prosesini tamamla\' seçin.</string>
+    <string name="clarity_login_completing">Dexcom-a giriş tamamlanır…</string>
+    <string name="clarity_login_complete_error">Dexcom-a giriş tamamlana bilmədi.</string>
+    <string name="clarity_login_retry_error">%1$s\nGiriş məlumatlarınız qəbul edilibsə, \'Gözləyən giriş prosesini tamamla\' seçin. Əks halda yenidən daxil olun.</string>
+    <string name="clarity_last_ack">Son təsdiq: %1$s</string>
+    <string name="clarity_ack_count">Təsdiqlənmiş sensor göstəriciləri: %1$d</string>
+    <string name="clarity_ack_latest">Son təsdiqlənmiş göstərici: %1$s</string>
+    <string name="clarity_pending_glucose">Göndərilməmiş qlükoza göstəriciləri: %1$d, %2$s–%3$s</string>
+    <string name="clarity_read_settings_error">Clarity tənzimləmələri oxuna bilmir</string>
+    <string name="clarity_send_enabled">Clarity-yə göndər</string>
+    <string name="clarity_use_history">Libre 3 tarixçəsindən istifadə et</string>
+    <string name="clarity_start_date">Başlanğıc: %1$s</string>
+    <string name="clarity_change_start_title">Clarity üçün başlanğıc tarixi dəyişdirilsin?</string>
+    <string name="clarity_change_start_message">%1$s istifadə edilsin? Daha erkən tarix hələ təsdiqlənməmiş, göndərilməyə uyğun köhnə məlumatları göndərir. Daha gec tarix göndərilməmiş əvvəlki məlumatları ötür. Artıq təsdiqlənmiş məlumatlar və göndərilməyi gözləyən paketlər saxlanılır; bu əməliyyat Clarity tarixçəsini silmir və sıfırlamır.\n\nTətbiq etmək üçün Clarity ekranında \'Yadda saxla\' seçin.</string>
+    <string name="clarity_categories">Kateqoriyalar</string>
+    <string name="clarity_save_settings_error">Clarity tənzimləmələri saxlanıla bilmir</string>
+    <string name="clarity_category_choose">Kateqoriya seçin</string>
+    <string name="clarity_category_fast">Teztəsirli insulin</string>
+    <string name="clarity_category_long">Uzuntəsirli insulin</string>
+    <string name="clarity_category_carbs">Karbohidrat</string>
+    <string name="clarity_category_comment">Şərh</string>
+    <string name="clarity_category_not">Göndərilməsin</string>
+    <string name="clarity_category_blood">Qlükoza ölçməsi</string>
+    <string name="clarity_read_labels_error">Etiketlər oxuna bilmədi; Kateqoriyalar bölməsini yenidən açın</string>
+    <string name="clarity_category_label">%1$s: %2$s</string>
+    <string name="clarity_category_carbs_weight">%1$s (×%2$s q)</string>
+    <string name="clarity_change_blood_first">Əvvəlcə %1$s üçün qlükoza ölçməsi kateqoriyasını dəyişdirin</string>
+    <string name="clarity_grams_per_unit">Bir vahiddə qram: %1$s</string>
+    <string name="clarity_positive_number">Müsbət ədəd daxil edin</string>
+    <string name="clarity_labels_changed">Etiketlər dəyişib; Kateqoriyalar bölməsini yenidən açın</string>
+    <string name="clarity_save_categories_error">Kateqoriyalar saxlanıla bilmir</string>
+    <string name="clarity_login_success">Daxil oldunuz. Clarity tənzimləmələrinə qayıtmaq üçün Geri düyməsinə basın.</string>
+
+    <string name="dexcomG7NFCtitle">Foto</string>
+    <string name="dexcomG7NFCmessage">Dexcom G7/ONE+ sensorlarının aplikatorundakı Data Matrix kodunu sol menyu → Foto vasitəsilə skan edin</string>
+
+
+</resources>

@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+    <string name="activity_import">Atividades</string>
+    <string name="activity_export_extended">Expandido</string>
+    <string name="activity_details">Atividade</string>
+    <string name="activity_retrieve">Obter</string>
+    <string name="activity_permissions">Permissões</string>
+    <string name="activity_history_granted">Acesso ao histórico concedido.</string>
+    <string name="activity_history_missing">Acesso ao histórico não concedido.</string>
+    <string name="activity_history_unavailable">Acesso ao histórico indisponível.</string>
+    <string name="activity_measure_existing">Os valores já importados utilizam, quando disponíveis, a etiqueta, a medida e o arredondamento selecionados. As alterações individuais são preservadas.</string>
+    <string name="activity_round_to">Arredondar para:</string>
+    <string name="activity_round_to_invalid">Introduza um incremento de arredondamento positivo, como 1 ou 0.1</string>
+    <string name="activity_from">Obter a partir de</string>
+    <string name="activity_interval">Obtenção automática</string>
+    <string name="activity_create_amounts">Criar valores a partir de atividades</string>
+    <string name="activity_units">Unidades de distância e velocidade</string>
+    <string-array name="activity_units">
+        <item>km e km/h</item><item>mi e mi/h</item>
+    </string-array>
+    <string name="activity_last">Última obtenção:</string>
+    <string name="activity_never">Nunca</string>
+    <string name="activity_retrieving">A obter atividades…</string>
+    <string name="activity_retrieving_details">A obter detalhes das atividades: %1$d de %2$d</string>
+    <string name="activity_quota_wait">Limite de pedidos do Health Connect atingido. A aguardar nova tentativa…</string>
+    <string name="activity_retrieved">Atividades obtidas</string>
+    <string name="activity_labels">Etiquetas</string>
+    <string name="activity_saved">Atividades guardadas</string>
+    <string name="activity_default">Etiqueta geral de atividade</string>
+    <string name="activity_update_existing">Alterar também os valores criados automaticamente anteriormente</string>
+    <string name="activity_new_label">Nova etiqueta</string>
+    <string name="activity_choose_label">Escolher ou criar uma etiqueta de atividade</string>
+    <string name="activity_none">Sem atividades guardadas</string>
+    <string name="activity_unavailable">Os detalhes da atividade não estão disponíveis neste dispositivo</string>
+    <string name="activity_delete_confirm">Eliminar esta atividade do Juggluco e impedir que seja novamente importada? Os valores gerados serão eliminados. Os valores introduzidos ou editados manualmente serão mantidos, mas sem ligação à atividade. Os dados do Health Connect permanecerão inalterados.</string>
+    <string name="activity_remove_source">Remover origem</string>
+    <string name="activity_remove_source_confirm">Remover %1$s como origem desta atividade no Juggluco? Os dados de atividade e frequência cardíaca desta origem serão excluídos de futuras obtenções. As restantes origens e os dados do Health Connect serão mantidos.</string>
+    <string name="activity_mirrored">A obtenção do Health Connect está desativada porque os valores são recebidos por espelhamento.</string>
+    <string name="activity_source">Origem</string>
+    <string name="activity_heart_source">Origem da frequência cardíaca</string>
+    <string name="activity_heart_used">Origem da frequência cardíaca utilizada no resumo</string>
+    <string name="activity_source_deleted">Esta origem foi eliminada do Health Connect</string>
+    <string name="activity_not_returned">Não consta da obtenção atual do Health Connect</string>
+    <string name="activity_excess">FC média − FC em repouso</string>
+    <string name="activity_period_duration">%1$s – %2$s (duração: %3$s)</string>
+    <string name="activity_link">Associar a um valor</string>
+    <string name="activity_no_match">Sem valores de atividade não associados neste intervalo</string>
+    <string name="activity_distance_miles">Distância (mi)</string>
+    <string name="activity_speed_miles">Velocidade média (mi/h)</string>
+    <string-array name="activity_intervals">
+        <item>Desligado</item><item>15 minutos</item><item>30 minutos</item><item>1 hora</item>
+        <item>3 horas</item><item>6 horas</item><item>24 horas</item>
+    </string-array>
+    <string-array name="activity_measures">
+        <item>Duração decorrida (min)</item><item>Distância (km)</item><item>FC média − FC em repouso (bpm)</item>
+        <item>Frequência cardíaca média (bpm)</item><item>Desvio-padrão da FC (bpm)</item><item>Energia ativa (kcal)</item>
+        <item>Velocidade média (km/h)</item><item>Passos</item><item>Desnível positivo (m)</item>
+        <item>Potência média (W)</item><item>Cadência média de pedalada (rpm)</item>
+        <item>@string/activity_distance_miles</item><item>@string/activity_speed_miles</item>
+        <item>Frequência cardíaca máxima (bpm)</item>
+    </string-array>
+    <string-array name="activity_fields">
+        <item>Duração</item><item>Distância</item><item>FC em repouso</item>
+        <item>Frequência cardíaca média</item><item>Desvio-padrão da FC</item><item>Cobertura da FC</item>
+        <item>Energia ativa</item><item>Velocidade média</item><item>Passos</item>
+        <item>Desnível positivo</item><item>Potência média</item><item>Cadência de pedalada</item>
+        <item>Frequência cardíaca máxima</item><item>Velocidade máxima</item>
+    </string-array>
+</resources>

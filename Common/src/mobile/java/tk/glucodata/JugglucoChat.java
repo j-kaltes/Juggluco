@@ -139,6 +139,7 @@ public final class JugglucoChat {
     private static native String nativeListFilesMessages();
     private static native String nativeFileUrlMessages(String id, String file);
     private static native String nativeTakeBrowserFile();
+    private static native long nativeTakeCurveStartTime();
     private static native NativeMessage nativeExportFileMessages(String filesDir, String id, String file, int descriptor);
     private static native NativeMessage nativeWriteChatExportWithStringsMessages(String format, int descriptor, String labels);
     private static native NativeMessage nativeWritePlotExportMessages(String svg, int descriptor);
@@ -378,6 +379,7 @@ public final class JugglucoChat {
         if (activity.isFinishing() || (Build.VERSION.SDK_INT >= 17 && activity.isDestroyed())) return;
         if (running == null) running = new RunController(activity.getApplication());
         running.hostClass = activity.getClass();
+        running.resumedHost = new WeakReference<>(activity);
         ChatWindow previous = current.get();
         if (previous != null && !previous.closed) {
             if (previous.activity == activity) {
@@ -409,6 +411,7 @@ public final class JugglucoChat {
         int selectionStart, selectionEnd, scrollY;
         boolean followTail = true;
         Class<?> hostClass;
+        WeakReference<Activity> resumedHost = new WeakReference<>(null);
 
         RunController(Application app) {
             this.app = app;
@@ -458,6 +461,7 @@ public final class JugglucoChat {
                 }
                 if (!busy) {
                     releaseWake();
+                    if (state.optBoolean("curve_navigation_pending")) applyCurveNavigation();
                     if (operation != completedOperation) {
                         completedOperation = operation;
                         String unanswered = state.optString("pending_question", "");
@@ -480,6 +484,16 @@ public final class JugglucoChat {
                 handler.removeCallbacks(pollTask);
                 if (pollAgain) { pollAgain = false; handler.post(pollTask); }
                 else if (busy || visible()) handler.postDelayed(pollTask, POLL_MS);
+            }
+        }
+        void applyCurveNavigation() {
+            Activity host = resumedHost.get();
+            if (!(host instanceof MainActivity) || host.isFinishing()
+                    || (Build.VERSION.SDK_INT >= 17 && host.isDestroyed())) return;
+            long millis = nativeTakeCurveStartTime();
+            if (millis >= 0) {
+                Natives.setStartTime(millis);
+                ((MainActivity) host).requestRender();
             }
         }
         static Object seconds(long millis) { return millis > 0 ? millis / 1000L : JSONObject.NULL; }
@@ -585,6 +599,7 @@ public final class JugglucoChat {
         }
         @Override public void onActivityResumed(Activity activity) {
             if (activity.getClass() != hostClass) return;
+            resumedHost = new WeakReference<>(activity);
             if (reopenAfterRotation) {
                 reopenAfterRotation = false;
                 handler.post(() -> show(activity));
@@ -594,7 +609,9 @@ public final class JugglucoChat {
         @Override public void onActivityDestroyed(Activity activity) {}
         @Override public void onActivityCreated(Activity a, Bundle state) {}
         @Override public void onActivityStarted(Activity a) {}
-        @Override public void onActivityPaused(Activity a) {}
+        @Override public void onActivityPaused(Activity a) {
+            if (resumedHost.get() == a) resumedHost.clear();
+        }
         @Override public void onActivityStopped(Activity a) {}
         @Override public void onActivitySaveInstanceState(Activity a, Bundle state) {}
     }
@@ -1961,6 +1978,7 @@ public final class JugglucoChat {
             dismissChild();
             if (current.get() == this) current.clear();
             running.refresh();
+            if (resumed && activity instanceof MainActivity) ((MainActivity) activity).requestRender();
         }
         void configureWindow() {
             Window window = dialog.getWindow();

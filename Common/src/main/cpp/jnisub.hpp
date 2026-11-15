@@ -19,6 +19,9 @@
 /*      Fri Jan 27 12:35:09 CET 2023                                                 */
 
 #pragma once
+#include <array>
+#include <cstdint> 
+#include <optional>
 #include <jni.h>
 #include <vector>
 struct jniHistory;
@@ -35,11 +38,14 @@ struct AlgorithmResults {
 /*    const int trendArrow;
     const float rateOfChange;
     */
-     const int alarm;
-    const jboolean isActionable;
+    std::optional<std::array<std::uint16_t, 16>> scanTrendMgL{};
+    const int alarm;
     const int esaMinutesToWait;
+    const jboolean isActionable;
     const jboolean lsaDetected;
     bool inserted,removed;
+
+
     void setremoved(int rem) {
     	removed=rem;
     	}

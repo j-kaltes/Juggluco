@@ -102,7 +102,7 @@
     <string name="stage">المرحلة</string>
     <string name="use_bluetooth">استخدام البلوتوث</string>
     <string name="connection">اتصال</string>
-    <string name="unlock_key">المصافحة</string>
+    <string name="handshake">المصافحة</string>
     <string name="glucose_value">قيمة الغلوكوز</string>
     <string name="info">معلومات</string>
     <string name="devicespecific">إعداد خاص بالجهاز</string>

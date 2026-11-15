@@ -495,11 +495,16 @@ public static native boolean getusexdripwebserver( );
 public static native void setusexdripwebserver(boolean val);
 //public static native void startwatchserver( );
 //public static native void stopwatchserver( );
-public static native int V1( int i, int i2,byte[]  ar1,byte[]  ar2);
-public static native byte[] V2(int i, int i2, byte[] ar1, byte[] ar2);
+// Legacy Gen2 JNI ABI. Phone transport calls the named operations in Gen2Protocol.
+public static native int V1(int operation, int argument, byte[] parameters, byte[] input);
+public static native byte[] V2(int operation, int session, byte[] parameters, byte[] input);
 public static native boolean abbottinit();
 public static native boolean abbottreinit();
 public static native byte[] getstreamingAuthenticationData(long dataptr);
+//public static native boolean hasIndependentLibre2();
+//public static native byte[] garminLibre2Setup(long dataptr, int unit);
+//public static native long garminLibre2Frame(long dataptr, byte[] frame, int receivedSeconds);
+//public static native boolean garminLibre2Counter(String serial, int nextCounter);
 public static native byte[] getsensorident(long dataptr);
 public static native int getLibre2sensorgen(long dataptr);
 public static native int getLibreVersion(long dataptr);

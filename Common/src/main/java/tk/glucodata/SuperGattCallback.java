@@ -123,7 +123,10 @@ public void disconnect() {
         {if(doLog) {Log.i(LOG_ID,"Disconnect mBluetoothGatt==null");};};
       }
     }
+protected boolean canConnectSensor() { return true; }
+
 public boolean reconnect(long now,long delay) {
+    if (!canConnectSensor()) return true;
     final var old=now-showtime+20;
     if(charcha[1]<old&&connectTime<(now-60*1000))  {
         final BluetoothGatt thegatt;
@@ -134,11 +137,11 @@ public boolean reconnect(long now,long delay) {
             constatchange[1] = now;
             synchronized(gattLock) {
                 thegatt=mBluetoothGatt;
-                if(thegatt==null)
-                    return connectDevice(delay);
                 reconnectWaitingGatt=thegatt;
                 generation=++reconnectGeneration;
                 }
+            if(thegatt==null)
+                return connectDevice(delay);
             thegatt.disconnect();
             // Some Android Bluetooth stacks occasionally fail to deliver the
             // DISCONNECTED callback after disconnect().  Normally that callback
@@ -650,6 +653,7 @@ public void searchforDeviceAddress() {
                 }
             try {
                 synchronized(gattLock) {
+                    if (!cb.canConnectSensor()) return;
                     if (cb.mBluetoothGatt != null) {
                         {if(doLog) {Log.d(LOG_ID, SerialNumber + " cb.mBluetoothGatt!=null");};};
                         return;
@@ -687,6 +691,7 @@ public void searchforDeviceAddress() {
     }
 
  public boolean connectDevice(long delayMillis) {
+    if (!canConnectSensor()) return true;
     if(doLog) {Log.i(LOG_ID,"connectDevice("+delayMillis+") "+ SerialNumber);};
     Runnable connect=getConnectDevice();
     if(connect==null) 

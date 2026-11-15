@@ -34,6 +34,9 @@
 #include "nfcdata.hpp"
 #include "sensoren.hpp"
 #include "jnisub.hpp"
+#ifdef LIBRE2_EU_INDEPENDENT
+#include "libre2_imp/backend.hpp"
+#endif
 #define VISIBLE __attribute__((__visibility__("default")))
 
 extern Sensoren *sensors;
@@ -77,6 +80,7 @@ public:
 struct scanresult_t {
 	const AlgorithmResults *res;
 	const ScanData *scan;
+	bool restored_stream_state=false;
     } ;
 string serial;
 int sensorindex=sensors->sensorindex(serial.data());
@@ -157,7 +161,13 @@ struct libre2stream:streamdata {
 	int blueuit;
 	#endif
 public:
-	libre2stream(int sensindex,SensorGlucoseData *sens):streamdata(2, sensindex,sens),startsincebase((((hist->officialendtime()-time(nullptr))<=60*60)?daysecs:0)+hist->getstarttime()-basesecs),state(locknew<scanstate>(hist->mutex,hist->getsensordir())) {
+	libre2stream(int sensindex,SensorGlucoseData *sens):streamdata(2, sensindex,sens),
+		startsincebase(
+#ifndef LIBRE2_EU_INDEPENDENT
+			((hist->officialendtime()-time(nullptr))<=60*60?daysecs:0)+
+#endif
+			hist->getstarttime()-basesecs),
+		state(locknew<scanstate>(hist->mutex,hist->getsensordir())) {
 #ifndef NORAWSTREAM
 		pathconcat uit(hist->getsensordir(),rawstream);
 		blueuit=open(uit.data(),O_APPEND|O_CREAT|O_WRONLY, S_IRUSR |S_IWUSR);
@@ -180,7 +190,11 @@ public:
      delete state;
 	}
 bool good() const override {
+#ifdef LIBRE2_EU_INDEPENDENT
+    return libre2_imp::usable_state(state,getinfo());
+#else
 	return state&&state->good();
+#endif
 	}
 void setstate(scanstate *newstate) {	
 	delete state;

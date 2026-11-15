@@ -197,23 +197,25 @@ virtual ~Open() {
   }
 operator int() {return fp;}
  };
-class Create:public Open {
-public:
-Create(const char *name): Open(name,O_RDWR|O_CREAT|O_TRUNC ,S_IRUSR |S_IWUSR) {
-       }
-/*Create(std::string &name):Create(name.data()) {}
-Create(std::string_view name):Create(name.data()) {}
-*/
-
+class CreateNoTrunc:public Open {
+        public:
+                CreateNoTrunc(const char *name,int extra=0): Open(name,extra|O_RDWR|O_CREAT ,S_IRUSR |S_IWUSR) { }
  };
 
-inline bool writeall(const char *name,const void *data,const int len) {
-      Create file(name);
+class Create:public CreateNoTrunc {
+        public:
+        Create(const char *name): CreateNoTrunc(name,O_TRUNC) { }
+        };
+inline bool writeallNoTrunc(const char *name,const void *data,const int len,int trunc=0) {
+      CreateNoTrunc file(name,trunc);
       if(file==-1||write(file,data,len)!=len) {
           lerror(name);
           return false;
     }
     return true;
+     }
+inline bool writeall(const char *name,const void *data,const int len) {
+     return writeallNoTrunc(name,data, len,O_TRUNC);
      }
 inline int readfile(const char *name,void *data,int len) {
     Open file(name,O_RDONLY);

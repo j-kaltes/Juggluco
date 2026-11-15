@@ -22,3 +22,4 @@
 #pragma once
 constexpr const uint16_t SAS_SENSOR_TERMINATED=13;
 constexpr const uint16_t SAS_SENSOR_REMOVED=14;
+constexpr const uint16_t SAS_STREAM_STATE_RESTORED=0x40;

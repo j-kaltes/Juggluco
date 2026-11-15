@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+    <string name="activity_import">アクティビティ</string>
+    <string name="activity_export_extended">詳細</string>
+    <string name="activity_details">アクティビティ</string>
+    <string name="activity_retrieve">取得</string>
+    <string name="activity_permissions">権限</string>
+    <string name="activity_history_granted">過去のデータへのアクセスが許可されています。</string>
+    <string name="activity_history_missing">過去のデータへのアクセスが許可されていません。</string>
+    <string name="activity_history_unavailable">過去のデータへのアクセスは利用できません。</string>
+    <string name="activity_measure_existing">インポート済みの値には、利用可能な場合、選択されたラベル、指標、丸め設定が適用されます。個別の編集は保持されます。</string>
+    <string name="activity_round_to">丸め単位:</string>
+    <string name="activity_round_to_invalid">1 や 0.1 など、正の丸め幅を入力してください</string>
+    <string name="activity_from">取得開始日時</string>
+    <string name="activity_interval">自動取得</string>
+    <string name="activity_create_amounts">アクティビティから記録を作成</string>
+    <string name="activity_units">距離と速度の単位</string>
+    <string-array name="activity_units">
+        <item>km と km/h</item><item>mi と mi/h</item>
+    </string-array>
+    <string name="activity_last">前回の取得:</string>
+    <string name="activity_never">なし</string>
+    <string name="activity_retrieving">アクティビティを取得中…</string>
+    <string name="activity_retrieving_details">アクティビティの詳細を取得中: %1$d / %2$d</string>
+    <string name="activity_quota_wait">Health Connect のリクエスト上限に達しました。再試行を待っています…</string>
+    <string name="activity_retrieved">アクティビティを取得しました</string>
+    <string name="activity_labels">ラベル</string>
+    <string name="activity_saved">保存済みアクティビティ</string>
+    <string name="activity_default">共通アクティビティラベル</string>
+    <string name="activity_update_existing">以前に自動作成した記録も更新</string>
+    <string name="activity_new_label">新しいラベル</string>
+    <string name="activity_choose_label">アクティビティのラベルを選択または作成</string>
+    <string name="activity_none">保存済みのアクティビティはありません</string>
+    <string name="activity_unavailable">このデバイスではアクティビティの詳細を利用できません</string>
+    <string name="activity_delete_confirm">このアクティビティを Juggluco から削除し、再インポートを防ぎますか？自動生成された記録は削除されます。手動で入力または編集した記録は、アクティビティとの関連付けを解除して保持します。Health Connect のデータは変更されません。</string>
+    <string name="activity_remove_source">データ元を削除</string>
+    <string name="activity_remove_source_confirm">このアクティビティのデータ元 %1$s を Juggluco から削除しますか？このデータ元のアクティビティおよび心拍数データは、今後の取得対象から除外されます。他のデータ元と Health Connect のデータは保持されます。</string>
+    <string name="activity_mirrored">記録はミラーリング経由で受信するため、Health Connect からの取得は無効です。</string>
+    <string name="activity_source">データ元</string>
+    <string name="activity_heart_source">心拍数のデータ元</string>
+    <string name="activity_heart_used">概要に使用した心拍数のデータ元</string>
+    <string name="activity_source_deleted">このデータ元は Health Connect から削除されました</string>
+    <string name="activity_not_returned">今回の Health Connect の取得結果には含まれていません</string>
+    <string name="activity_excess">平均心拍数 − 安静時心拍数</string>
+    <string name="activity_period_duration">%1$s – %2$s（継続時間: %3$s）</string>
+    <string name="activity_link">記録に関連付ける</string>
+    <string name="activity_no_match">この時間帯に未関連付けのアクティビティ記録はありません</string>
+    <string name="activity_distance_miles">距離 (mi)</string>
+    <string name="activity_speed_miles">平均速度 (mi/h)</string>
+    <string-array name="activity_intervals">
+        <item>オフ</item><item>15 分</item><item>30 分</item><item>1 時間</item>
+        <item>3 時間</item><item>6 時間</item><item>24 時間</item>
+    </string-array>
+    <string-array name="activity_measures">
+        <item>経過時間 (min)</item><item>距離 (km)</item><item>平均心拍数 − 安静時心拍数 (拍/分)</item>
+        <item>平均心拍数 (拍/分)</item><item>心拍数の標準偏差 (拍/分)</item><item>活動消費エネルギー (kcal)</item>
+        <item>平均速度 (km/h)</item><item>歩数</item><item>獲得標高 (m)</item>
+        <item>平均パワー (W)</item><item>平均ペダル回転数 (回/分)</item>
+        <item>@string/activity_distance_miles</item><item>@string/activity_speed_miles</item>
+        <item>最大心拍数 (拍/分)</item>
+    </string-array>
+    <string-array name="activity_fields">
+        <item>継続時間</item><item>距離</item><item>安静時心拍数</item>
+        <item>平均心拍数</item><item>心拍数の標準偏差</item><item>心拍数データの網羅率</item>
+        <item>活動消費エネルギー</item><item>平均速度</item><item>歩数</item>
+        <item>獲得標高</item><item>平均パワー</item><item>ペダル回転数</item>
+        <item>最大心拍数</item><item>最高速度</item>
+    </string-array>
+</resources>

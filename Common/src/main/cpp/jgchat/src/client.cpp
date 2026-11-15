@@ -43,7 +43,7 @@
 namespace jgchat {
 namespace {
 constexpr std::size_t tool_preview_bytes = 128 * 1024;
-constexpr const char* juggluco_client_version = "0.1.32";
+constexpr const char* juggluco_client_version = "0.1.33";
 // This query parameter describes Codex protocol compatibility, not our own
 // release number. The Codex catalog carries minimal_client_version constraints;
 // sending Juggluco's 0.1.0 made this client appear older than current models.
@@ -159,6 +159,11 @@ constexpr const char* core_instructions =
     "causation, exact risk probabilities or uncomputed statistics. Label calculated predictions as estimates with explicit assumptions. "
     "Recommendations to consult a clinician must not substitute for the descriptive analysis requested. "
     "Keep medical cautions relevant and brief, and do not prescribe individualized insulin changes.\n"
+    "When the user asks to locate a particular record, event or period, call juggluco_show_curve after finding "
+    "its timestamp so they can see it on the main curve. Also use it for a requested jump to a specific time. "
+    "Pass the requested window start in Unix seconds, using the applicable local offset. Do not invent a position "
+    "if the requested event was not found. For general summaries leave the curve alone. The move is queued until "
+    "the answer succeeds; tell the user they can close chat to see it. The existing zoom and time bounds apply.\n"
     "Do not modify health records or settings, execute generated programs, open URLs, or call unprovided tools. "
     "The supplied calculation and analysis-memory tools may execute bounded read-only SQL and numerical calculations, and save analysis notes/results/models. "
     "Answer in the user's language. Match depth to the question: brief for a simple reading, "
@@ -203,6 +208,21 @@ constexpr const char* core_instructions =
     "HTML content is a body fragment, automatically wrapped with the local Juggluco helper and a same-origin policy. "
     "Use Juggluco.json(path, params) or Juggluco.text(path, params) for web data; no hardcoded ports, secrets, external scripts "
     "or external network requests in generated pages. Read data only; do not change medical records or settings. "
+    "Before writing each supported web read into JavaScript, call juggluco_web_probe with that path and representative "
+    "parameter values (all values are strings). Inspect the HTTP status and actual response to check the format, column "
+    "names, units and empty results. Fix and retry failed probes where possible. A preview can be truncated; use it to "
+    "validate the request and schema, not as a full dataset or live-page data. For a large export, use a representative slice in the probe "
+    "and keep the requested range in the page. Do not claim the page ran: the probe tests the local GET handler only. "
+    "For live pages that need original entered amounts or finger-stick measurements, fetch x/labels, then x/amounts "
+    "with header=1 and extended=1. Join LabelId to labels[].id and use blood_glucose_label_id for finger-stick "
+    "selection, even when that label is a Nightscout note. Do not treat an omitted Nightscout treatment as proof "
+    "the amount is absent. Read the independent LibreView/Clarity mapping for labels categorized as notes in "
+    "Nightscout, including explicitly configured long-acting insulin. For comparisons against finger-sticks, prefer "
+    "x/stream over Nightscout entries for CGM. Compare the two TSV UnixTime fields directly in seconds "
+    "(five minutes is 300 seconds). Omit the calibrated flag for uncalibrated glucose. State the calibration status "
+    "and match the stream's unit-named glucose column to blood_glucose_unit before computing differences. "
+    "Nightscout entries use date in milliseconds and sgv in mg/dL. Use the endpoint schema for conversions; never infer units "
+    "from value magnitudes. Check the response columns and distinguish invalid responses from empty intervals. "
     "Set open_in_browser=true when the user requests opening/running the page; otherwise leave it false. "
     "Files are saved only when the complete answer succeeds. Existing saved files are never overwritten. "
     "For saving a copy elsewhere, tell the user to tap Save as below the files and choose a destination in Android's "
@@ -213,6 +233,17 @@ constexpr const char* core_instructions =
 // Responses requests are stateless. Supply the background on every turn and
 // tool continuation, independently of saved history and the Internet switch.
 const std::string instructions = std::string(core_instructions) + "\n\n" + diabetes_background + "\n\n" + juggluco_background;
+
+constexpr const char* evidence_review_instructions =
+    "\n\nFINAL EVIDENCE CHECK\n"
+    "The input includes a provisional assistant answer to the latest user question. Review it against the actual "
+    "tool results and the user's corrections. The draft is not evidence and will not be shown. "
+    "Check the requested date range, actual coverage, units, calibration, label and sensor IDs, and calculations "
+    "that affect the conclusion. Check whether a competing interpretation or a counterexample fits the records. "
+    "Use the existing tools to resolve consequential errors, missing evidence or incomplete retrieval. Reuse "
+    "complete saved results instead of retrieving them again. Distinguish missing or failed data from a measured "
+    "zero, and current settings from historical observations. If uncertainty remains, say what was actually checked. "
+    "Give the final answer directly, at the depth the question warrants. Do not report the review process.";
 
 constexpr const char* effort_names[] = {"none", "minimal", "low", "medium", "high", "xhigh", "max"};
 bool known_effort(const std::string& effort) {
@@ -276,7 +307,7 @@ UiMessage tool_progress(const std::string& name, const Json& args) {
         (name == "juggluco_iob" || name == "juggluco_iob_series") ? UiCode::calculating_juggluco_iob :
         name == "juggluco_plot" ? UiCode::drawing_plot :
         name == "juggluco_plot_glucose" ? UiCode::drawing_glucose_curve :
-        name == "juggluco_web_context" ? UiCode::reading_web_server_capabilities :
+        (name == "juggluco_web_context" || name == "juggluco_web_probe") ? UiCode::reading_web_server_capabilities :
         name == "juggluco_save_files" ? UiCode::preparing_files :
         name == "juggluco_memory_search" ? UiCode::searching_saved_analysis_and_earlier_conversations :
         name == "juggluco_memory_read" ? UiCode::reopening_saved_evidence :
@@ -407,6 +438,22 @@ void trim_context(Json& history, bool completed) {
         if (starts.size() <= 1 || (starts.size() <= keep && history.size() <= 512 && history.dump().size() <= 256 * 1024)) break;
         history.erase(history.begin(),history.begin() + static_cast<Json::difference_type>(starts[1]));
     }
+}
+
+std::size_t latest_question(const Json& history) {
+    for (auto i = history.size(); i > 0; --i) {
+        const auto& item = history[i - 1];
+        if (string_field(item, "type") == "message" && string_field(item, "role") == "user")
+            return i - 1;
+    }
+    return 0;
+}
+
+bool is_evidence_result(std::string_view name) {
+    // Context, discovery and prepared actions are not evidence reads.
+    return name != "juggluco_context" && name != "juggluco_web_context" &&
+        name != "juggluco_memory_search" && name != "juggluco_files_list" &&
+        name != "juggluco_note" && name != "juggluco_save_files" && name != "juggluco_show_curve";
 }
 
 Json arguments(const Json& item) {
@@ -915,6 +962,7 @@ std::string ChatClient::ask(const std::string& question, const std::string& mode
     }
     Json pending_plots = Json::array();
     Json pending_files = Json::array();
+    std::optional<uint32_t> pending_curve_start;
     working.push_back({{"type", "message"}, {"role", "user"},
                        {"content", Json::array({{{"type", "input_text"}, {"text", question}}})}});
     if (workspace_) trim_context(working,false);
@@ -922,13 +970,20 @@ std::string ChatClient::ask(const std::string& question, const std::string& mode
     std::set<std::string> calls;
     for (const auto& item : history_) if (string_field(item, "type") == "function_call") calls.insert(string_field(item, "call_id"));
     unsigned call_count = 0;
+    unsigned evidence_results = 0, review_start_calls = 0;
+    bool incomplete_or_error = false, review_unavailable = false;
+    Json review_draft = Json::array();
+    std::size_t review_offset = 0;
     std::vector<Tokens> previous_tokens{tokens_};
     try {
         for (unsigned round = 0; ; ++round) {
             trace.stage("model_request");
             diagnostic("ask round=%u tool_calls_so_far=%u input_items=%zu", round + 1, call_count, working.size());
             cancelled(cancel);
-            if (event) event({UiCode::waiting_round, {std::to_string(round + 1)}});
+            if (event) {
+                if (!review_draft.empty()) event({UiCode::checking_completed_response});
+                else event({UiCode::waiting_round, {std::to_string(round + 1)}});
+            }
             auto request_instructions = instructions + (workspace_ ? workspace_->context() : "");
             if (glucose_display_) {
                 // Supplied directly by native settings, independently of model tool choices,
@@ -949,10 +1004,20 @@ std::string ChatClient::ask(const std::string& question, const std::string& mode
                     "Native fields explicitly stored in mg/dL, including calibration b, retain their stated native units. "
                     "These current display settings take precedence over display settings in archived context.\n";
             }
+            if (!review_draft.empty()) request_instructions += evidence_review_instructions;
             Json payload{{"model", model}, {"instructions", std::move(request_instructions)}, {"input", working},
                          {"tools", offered_tools}, {"tool_choice", "auto"}, {"parallel_tool_calls", false},
                          {"store", false}, {"stream", true},
                          {"include", Json::array({"reasoning.encrypted_content"})}};
+            if (!review_draft.empty()) {
+                // The draft lives only in the request, ahead of any review
+                // tool calls. An offset from the user item survives trimming
+                // earlier turns. No synthetic user message enters history.
+                auto& input = payload["input"];
+                const auto at = latest_question(input) + review_offset;
+                input.insert(input.begin() + static_cast<Json::difference_type>(at),
+                    review_draft.cbegin(), review_draft.cend());
+            }
             if (!reasoning_effort.empty()) payload["reasoning"] = {{"effort", reasoning_effort}};
             if (summaries) payload["reasoning"]["summary"] = "auto";
             StreamProgress progress([&](UiMessage message) {
@@ -968,12 +1033,23 @@ std::string ChatClient::ask(const std::string& question, const std::string& mode
             request.headers = {{"Accept", "text/event-stream"}, {"Content-Type", "application/json"}};
             request.on_body = [&](std::string_view bytes) { progress.append(bytes); };
             previous_tokens.push_back(tokens_);
-            const auto response = authenticated(std::move(request), cancel);
-            cancelled(cancel);
-            trace.stage("stream_completion");
-            const auto output = completed_output(response.body, tokens_, cancel);
-            cancelled(cancel);
-            if (output.empty()) throw jgchat::UiError(jgchat::UiCode::completed_response_contained_no_output);
+            Json output;
+            try {
+                const auto response = authenticated(std::move(request), cancel);
+                cancelled(cancel);
+                trace.stage("stream_completion");
+                output = completed_output(response.body, tokens_, cancel);
+                cancelled(cancel);
+                if (output.empty()) throw jgchat::UiError(jgchat::UiCode::completed_response_contained_no_output);
+            } catch (const std::exception&) {
+                // An unavailable first review (e.g. account limit) shouldn't
+                // lose a completed answer. Stop still cancels the whole turn.
+                if (review_draft.empty() || call_count != review_start_calls ||
+                    cancel || is_cancellation(current_ui_error())) throw;
+                diagnostic("ask evidence_review unavailable; using completed draft");
+                review_unavailable = true;
+                output = review_draft;
+            }
             trace.stage("validate_output");
             std::vector<Json> functions;
             std::size_t output_index = 0;
@@ -990,6 +1066,19 @@ std::string ChatClient::ask(const std::string& question, const std::string& mode
                     functions.push_back(item);
                 }
             }
+            if (functions.empty() && review_draft.empty() && (evidence_results >= 2 || incomplete_or_error) &&
+                pending_files.empty() && pending_plots.empty() && !pending_curve_start &&
+                !answer_text(output).empty()) {
+                // Review analysis across sources, or a turn that encountered
+                // missing/partial data. Leave prepared attachments and curve
+                // jumps on their existing commit path.
+                review_offset = working.size() - latest_question(working);
+                review_start_calls = call_count;
+                review_draft = std::move(output);
+                diagnostic("ask evidence_review begin results=%u incomplete_or_error=%d",
+                    evidence_results, incomplete_or_error ? 1 : 0);
+                continue;
+            }
             for (const auto& item : output) working.push_back(item);
             if (workspace_) { workspace_->compact(working,true); trim_context(working,false); }
             check_history_size(working);
@@ -1002,9 +1091,7 @@ std::string ChatClient::ask(const std::string& question, const std::string& mode
                 cancelled(cancel);
                 auto citations = answer_citations(output);
                 if (workspace_) {
-                    auto start = working.size();
-                    while (start && !(string_field(working[start-1],"type") == "message" && string_field(working[start-1],"role") == "user")) --start;
-                    if (start) --start;
+                    const auto start = latest_question(working);
                     workspace_->remember_turn(Json(working.begin() + static_cast<Json::difference_type>(start),working.end()));
                     workspace_->compact(working,false);
                     trim_context(working,true);
@@ -1013,7 +1100,9 @@ std::string ChatClient::ask(const std::string& question, const std::string& mode
                 history_ = std::move(working);
                 plots_ = std::move(pending_plots);
                 files_ = std::move(pending_files);
+                curve_start_ = pending_curve_start;
                 citations_ = std::move(citations);
+                if (!review_draft.empty() && !review_unavailable) diagnostic("ask evidence_review complete");
                 diagnostic("ask complete rounds=%u tool_calls=%u answer_bytes=%zu history_items=%zu",
                     round + 1, call_count, answer.size(), history_.size());
                 trace.success();
@@ -1054,6 +1143,12 @@ std::string ChatClient::ask(const std::string& question, const std::string& mode
                         {"message", safe_text(e.what(), tokens_, previous_tokens)}}}};
                 }
                 cancelled(cancel);
+                if (is_evidence_result(name)) {
+                    const auto status = result.value("status", "");
+                    if (status == "ok") ++evidence_results;
+                    if (status == "error" || (result.contains("truncated") && result["truncated"] == true) ||
+                        (result.contains("next_offset") && !result["next_offset"].is_null())) incomplete_or_error = true;
+                }
                 if ((name == "juggluco_plot_glucose" || name == "juggluco_plot" || name == "juggluco_plot_table") && result.value("status", "error") == "ok" && result.contains("plot")) {
                     const auto& plot = result.at("plot");
                     if (!plot.is_object() || !plot.contains("svg") || !plot["svg"].is_string() ||
@@ -1071,7 +1166,9 @@ std::string ChatClient::ask(const std::string& question, const std::string& mode
                     result["bundle_number"] = pending_files.size();
                     result["delivery"] = "Prepared; will be saved locally when the answer succeeds. Links will appear below the answer.";
                 }
-                if (workspace_ && !is_workspace_tool(name) && result.value("status", "error") == "ok") {
+                if (name == "juggluco_show_curve" && result.value("status", "error") == "ok")
+                    pending_curve_start = result.at("start").get<uint32_t>();
+                if (workspace_ && name != "juggluco_show_curve" && !is_workspace_tool(name) && result.value("status", "error") == "ok") {
                     const auto descriptor = workspace_->capture(name,args,result);
                     result["_saved_result"] = descriptor;
                     if (name == "juggluco_glucose_dataset" || result.dump().size() > tool_preview_bytes)
@@ -1099,15 +1196,17 @@ std::string ChatClient::ask(const std::string& question, const std::string& mode
     }
 }
 
-void ChatClient::reset() { history_ = Json::array(); plots_ = Json::array(); files_ = Json::array(); citations_ = Json::array(); }
+void ChatClient::reset() { history_ = Json::array(); plots_ = Json::array(); files_ = Json::array(); citations_ = Json::array(); curve_start_.reset(); }
 Json ChatClient::history() const { return history_; }
 Json ChatClient::plots() const { return plots_; }
 Json ChatClient::files() const { return files_; }
+std::optional<uint32_t> ChatClient::curve_start() const { return curve_start_; }
 Json ChatClient::citations() const { return citations_; }
 void ChatClient::restore_history(const Json& history) {
     const auto definitions = client_tools(workspace_ != nullptr);
     diagnostic("restore_history items=%zu local_tools=%zu workspace=%d", history.size(), definitions.size(), workspace_ ? 1 : 0);
     validate_history(history, allowed_tools(definitions));
     history_ = history;
+    curve_start_.reset();
 }
 } // namespace jgchat

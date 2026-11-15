@@ -111,6 +111,8 @@ private final SpannableString newcolor(String nameaddress) {
          }
 static private int aidexXindex(String name) {
     String serial= AidexXGattCallback.deviceName2name(name);
+    if(serial==null)
+        return -1;
     return Natives.sensorIndex(serial);
     }
       @Override

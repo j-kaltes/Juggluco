@@ -585,6 +585,8 @@ public static boolean hasDeviceName(String deviceName) {
        }
 public static String deviceName2name(String deviceName) {
         final int namelen=deviceName.length();
+        if(namelen<10)
+            return null;
         if(deviceName.startsWith(AidexXGattCallback.startLumi)) {
                 return "i"+deviceName.substring(namelen-10);
                 }

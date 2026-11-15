@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+    <string name="activity_import">Faoliyatlar</string>
+    <string name="activity_export_extended">Kengaytirilgan</string>
+    <string name="activity_details">Faoliyat</string>
+    <string name="activity_retrieve">Olish</string>
+    <string name="activity_permissions">Ruxsatlar</string>
+    <string name="activity_history_granted">Oldingi ma’lumotlarga kirish ruxsati berildi.</string>
+    <string name="activity_history_missing">Oldingi ma’lumotlarga kirish ruxsati berilmadi.</string>
+    <string name="activity_history_unavailable">Oldingi ma’lumotlarga kirish imkonsiz.</string>
+    <string name="activity_measure_existing">Avval import qilingan miqdorlar mavjud bo‘lsa, tanlangan yorliq, o‘lchov va yaxlitlashdan foydalanadi. Alohida tahrirlar saqlanadi.</string>
+    <string name="activity_round_to">Yaxlitlash qadami:</string>
+    <string name="activity_round_to_invalid">1 yoki 0.1 kabi musbat yaxlitlash qadamini kiriting</string>
+    <string name="activity_from">Shu vaqtdan olish</string>
+    <string name="activity_interval">Avtomatik olish</string>
+    <string name="activity_create_amounts">Faoliyatlardan miqdorlar yaratish</string>
+    <string name="activity_units">Masofa va tezlik birliklari</string>
+    <string-array name="activity_units">
+        <item>km va km/h</item><item>mi va mi/h</item>
+    </string-array>
+    <string name="activity_last">Oxirgi olish:</string>
+    <string name="activity_never">Hech qachon</string>
+    <string name="activity_retrieving">Faoliyatlar olinmoqda…</string>
+    <string name="activity_retrieving_details">Faoliyat tafsilotlari olinmoqda: %1$d / %2$d</string>
+    <string name="activity_quota_wait">Health Connect so‘rovlar chegarasiga yetildi. Qayta urinish kutilmoqda…</string>
+    <string name="activity_retrieved">Faoliyatlar olindi</string>
+    <string name="activity_labels">Yorliqlar</string>
+    <string name="activity_saved">Saqlangan faoliyatlar</string>
+    <string name="activity_default">Umumiy faoliyat yorlig‘i</string>
+    <string name="activity_update_existing">Avval avtomatik yaratilgan miqdorlarni ham o‘zgartirish</string>
+    <string name="activity_new_label">Yangi yorliq</string>
+    <string name="activity_choose_label">Faoliyat yorlig‘ini tanlang yoki yarating</string>
+    <string name="activity_none">Saqlangan faoliyatlar yo‘q</string>
+    <string name="activity_unavailable">Bu qurilmada faoliyat tafsilotlari mavjud emas</string>
+    <string name="activity_delete_confirm">Bu faoliyat Juggluco’dan o‘chirilsin va qayta import qilinishi to‘xtatilsinmi? Avtomatik yaratilgan miqdorlar o‘chiriladi. Qo‘lda kiritilgan yoki tahrirlangan miqdorlar faoliyat bilan bog‘lanmagan holda saqlanadi. Health Connect ma’lumotlari o‘zgarmaydi.</string>
+    <string name="activity_remove_source">Manbani olib tashlash</string>
+    <string name="activity_remove_source_confirm">%1$s Juggluco’dagi ushbu faoliyat manbasi sifatida olib tashlansinmi? Bu manbadagi faoliyat va yurak urishi ma’lumotlari keyingi olishlardan chiqariladi. Boshqa manbalar va Health Connect ma’lumotlari saqlanadi.</string>
+    <string name="activity_mirrored">Miqdorlar akslantirish orqali olinayotgani sababli Health Connect’dan olish o‘chirilgan.</string>
+    <string name="activity_source">Manba</string>
+    <string name="activity_heart_source">Yurak urishi manbasi</string>
+    <string name="activity_heart_used">Xulosada ishlatilgan yurak urishi manbasi</string>
+    <string name="activity_source_deleted">Bu manba Health Connect’dan o‘chirilgan</string>
+    <string name="activity_not_returned">Health Connect’dan joriy olingan ma’lumotlarda yo‘q</string>
+    <string name="activity_excess">O‘rtacha yurak urishi − tinch holatdagi yurak urishi</string>
+    <string name="activity_period_duration">%1$s – %2$s (davomiylik: %3$s)</string>
+    <string name="activity_link">Miqdorga bog‘lash</string>
+    <string name="activity_no_match">Bu oraliqda bog‘lanmagan faoliyat miqdorlari yo‘q</string>
+    <string name="activity_distance_miles">Masofa (mi)</string>
+    <string name="activity_speed_miles">O‘rtacha tezlik (mi/h)</string>
+    <string-array name="activity_intervals">
+        <item>O‘chiq</item><item>15 daqiqa</item><item>30 daqiqa</item><item>1 soat</item>
+        <item>3 soat</item><item>6 soat</item><item>24 soat</item>
+    </string-array>
+    <string-array name="activity_measures">
+        <item>O‘tgan vaqt (min)</item><item>Masofa (km)</item><item>O‘rtacha yurak urishi − tinch holatdagi yurak urishi (urish/min)</item>
+        <item>O‘rtacha yurak urishi (urish/min)</item><item>Yurak urishining standart og‘ishi (urish/min)</item><item>Faol energiya (kcal)</item>
+        <item>O‘rtacha tezlik (km/h)</item><item>Qadamlar</item><item>Balandlik ortishi (m)</item>
+        <item>O‘rtacha quvvat (W)</item><item>O‘rtacha pedal aylantirish chastotasi (ayl/min)</item>
+        <item>@string/activity_distance_miles</item><item>@string/activity_speed_miles</item>
+        <item>Eng yuqori yurak urishi (urish/min)</item>
+    </string-array>
+    <string-array name="activity_fields">
+        <item>Davomiylik</item><item>Masofa</item><item>Tinch holatdagi yurak urishi</item>
+        <item>O‘rtacha yurak urishi</item><item>Yurak urishining standart og‘ishi</item><item>Yurak urishi ma’lumotlari qamrovi</item>
+        <item>Faol energiya</item><item>O‘rtacha tezlik</item><item>Qadamlar</item>
+        <item>Balandlik ortishi</item><item>O‘rtacha quvvat</item><item>Pedal aylantirish chastotasi</item>
+        <item>Eng yuqori yurak urishi</item><item>Eng yuqori tezlik</item>
+    </string-array>
+</resources>

@@ -204,6 +204,11 @@ if(!dataptr) {
       timeres.data()[1]=0LL;
       return false;
      }
+  if(!sens->getinfo()) {
+      LOGAR("dexcomProcessData getinfo()==null");
+      timeres.data()[1]=0LL;
+      return false;
+     }
    const auto arlen=envin->GetArrayLength(bluetoothdata);
   if(arlen< 19) {
       LOGGER("dexcomProcessData: too small %d<19\n", arlen) ;
@@ -632,7 +637,21 @@ extern "C" JNIEXPORT jboolean JNICALL   fromjava(dexCandidate)(JNIEnv *env, jcla
         return false;
         }
    destruct   _([jdeviceName,deviceName,env]() {env->ReleaseStringUTFChars(jdeviceName, deviceName);});
+
+  if(!dataptr) {
+      LOGAR("dexCandidate dataptr==0");
+      return false;
+     }
+
    SensorGlucoseData *sens=reinterpret_cast<const streamdata *>(dataptr)->hist;
+  if(!sens) {
+      LOGAR("dexCandidate SensorGlucoseData sens==null");
+      return false;
+     }
+  if(!sens->getinfo()) {
+      LOGAR("dexCandidate getinfo()==null");
+      return false;
+     }
 #ifndef NOLOG
    const auto pinar=  sens->getDexPin();
    const auto *pin=pinar.data();

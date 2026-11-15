@@ -585,7 +585,7 @@ static std::pair<int,bool> calibrateIndices2(const vector<int> &sens,uint32_t ol
             int waithere;
             if(sensor->hasHistory()) {
                 allsuccess&=make_calibrator<Glucose>(sensor).changeCali(oldtime,tim,num,numdata);
-                waithere=sensor->isAir()?31:21;
+                waithere=sensor->isLibre3()?21:31;
                 }
             else
                 waithere=5;

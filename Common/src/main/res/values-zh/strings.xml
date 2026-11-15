@@ -108,7 +108,7 @@
  <string name="stage">阶段</string>
  <string name="use_bluetooth">使用蓝牙</string>
  <string name="connection">连接</string>
- <string name="unlock_key">握手</string>
+ <string name="handshake">握手</string>
  <string name="glucose_value">葡萄糖值</string>
  <string name="info">信息</string>
  <string name="devicespecific">设置设备特定设置</string>

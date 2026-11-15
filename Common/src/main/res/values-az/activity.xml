@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+    <string name="activity_import">Fəaliyyətlər</string>
+    <string name="activity_export_extended">Ətraflı</string>
+    <string name="activity_details">Fəaliyyət</string>
+    <string name="activity_retrieve">Məlumatları al</string>
+    <string name="activity_permissions">İcazələr</string>
+    <string name="activity_history_granted">Əvvəlki məlumatlara giriş icazəsi verilib.</string>
+    <string name="activity_history_missing">Əvvəlki məlumatlara giriş icazəsi verilməyib.</string>
+    <string name="activity_history_unavailable">Əvvəlki məlumatlara giriş mümkün deyil.</string>
+    <string name="activity_measure_existing">Əvvəllər idxal olunmuş miqdarlara, mövcud olduqda, seçilmiş etiket, ölçü və yuvarlaqlaşdırma tətbiq olunur. Əl ilə edilmiş fərdi düzəlişlər saxlanılır.</string>
+    <string name="activity_round_to">Buna yuvarlaqlaşdır:</string>
+    <string name="activity_round_to_invalid">1 və ya 0.1 kimi müsbət yuvarlaqlaşdırma addımı daxil edin</string>
+    <string name="activity_from">Buradan al</string>
+    <string name="activity_interval">Avtomatik məlumat alma</string>
+    <string name="activity_create_amounts">Fəaliyyətlərdən miqdar qeydləri yarat</string>
+    <string name="activity_units">Məsafə və sürət vahidləri</string>
+    <string-array name="activity_units">
+        <item>km və km/saat</item><item>mil və mil/saat</item>
+    </string-array>
+    <string name="activity_last">Son məlumat alma:</string>
+    <string name="activity_never">Heç vaxt</string>
+    <string name="activity_retrieving">Fəaliyyətlər alınır…</string>
+    <string name="activity_retrieving_details">Fəaliyyət təfərrüatları alınır: %2$d-dən %1$d</string>
+    <string name="activity_quota_wait">Health Connect sorğu limiti keçilib. Yenidən cəhd üçün gözlənilir…</string>
+    <string name="activity_retrieved">Fəaliyyətlər alındı</string>
+    <string name="activity_labels">Etiketlər</string>
+    <string name="activity_saved">Saxlanmış fəaliyyətlər</string>
+    <string name="activity_default">Ümumi fəaliyyət etiketi</string>
+    <string name="activity_update_existing">Əvvəllər avtomatik yaradılmış miqdarları da dəyiş</string>
+    <string name="activity_new_label">Yeni etiket</string>
+    <string name="activity_choose_label">Fəaliyyət etiketi seçin və ya yaradın</string>
+    <string name="activity_none">Saxlanmış fəaliyyət yoxdur</string>
+    <string name="activity_unavailable">Bu qurğuda fəaliyyət təfərrüatları əlçatan deyil</string>
+    <string name="activity_delete_confirm">Bu fəaliyyət Juggluco-dan silinsin və yenidən idxal olunması bloklansın? Ondan yaradılmış miqdarlar silinəcək. Əl ilə daxil edilmiş və ya düzəldilmiş miqdarlar fəaliyyətlə əlaqəsi olmadan saxlanılacaq. Health Connect-dəki məlumatlar dəyişməyəcək.</string>
+    <string name="activity_remove_source">Mənbəni sil</string>
+    <string name="activity_remove_source_confirm">%1$s mənbəyi Juggluco-da bu fəaliyyətdən çıxarılsın? Onun fəaliyyət və ürək döyüntüsü məlumatları gələcək idxallarda nəzərə alınmayacaq. Digər mənbələr və Health Connect məlumatları saxlanılacaq.</string>
+    <string name="activity_mirrored">Miqdarlar Güzgü bağlantısı vasitəsilə alındığından Health Connect-dən məlumat almaq deaktivdir.</string>
+    <string name="activity_source">Mənbə</string>
+    <string name="activity_heart_source">Ürək döyüntülərinin mənbəyi</string>
+    <string name="activity_heart_used">Xülasədə istifadə olunan ürək döyüntüsü mənbəyi</string>
+    <string name="activity_source_deleted">Bu mənbə Health Connect-dən silinib</string>
+    <string name="activity_not_returned">Cari Health Connect sorğusunda yoxdur</string>
+    <string name="activity_excess">Orta nəbz − istirahət nəbzi</string>
+    <string name="activity_period_duration">%1$s – %2$s (müddət: %3$s)</string>
+    <string name="activity_link">Miqdar qeydinə bağla</string>
+    <string name="activity_no_match">Bu vaxt aralığında əlaqələndirilməmiş fəaliyyət miqdarları yoxdur</string>
+    <string name="activity_distance_miles">Məsafə (mil)</string>
+    <string name="activity_speed_miles">Orta sürət (mil/saat)</string>
+    <string-array name="activity_intervals">
+        <item>Sönülü</item><item>15 dəqiqə</item><item>30 dəqiqə</item><item>1 saat</item>
+        <item>3 saat</item><item>6 saat</item><item>24 saat</item>
+    </string-array>
+    <string-array name="activity_measures">
+        <item>Keçən müddət (dəq.)</item><item>Məsafə (km)</item><item>Orta nəbz − istirahət nəbzi (vuruş/dəq.)</item>
+        <item>Orta nəbz (vuruş/dəq.)</item><item>Nəbzin standart sapması (vuruş/dəq.)</item><item>Aktiv enerji (kkal)</item>
+        <item>Orta sürət (km/saat)</item><item>Addımlar</item><item>Hündürlük artımı (m)</item>
+        <item>Orta güc (Vt)</item><item>Velosiped sürmə zamanı orta pedal dövriyyəsi (dövr/dəq.)</item>
+        <item>@string/activity_distance_miles</item><item>@string/activity_speed_miles</item>
+        <item>Maksimum nəbz (vuruş/dəq.)</item>
+    </string-array>
+    <string-array name="activity_fields">
+        <item>Müddət</item><item>Məsafə</item><item>İstirahət nəbzi</item>
+        <item>Orta nəbz</item><item>Nəbzin standart sapması</item><item>Nəbz məlumatlarının əhatəsi</item>
+        <item>Aktiv enerji</item><item>Orta sürət</item><item>Addımlar</item>
+        <item>Hündürlük artımı</item><item>Orta güc</item><item>Pedal dövriyyəsi</item>
+        <item>Maksimum nəbz</item><item>Maksimum sürət</item>
+    </string-array>
+</resources>

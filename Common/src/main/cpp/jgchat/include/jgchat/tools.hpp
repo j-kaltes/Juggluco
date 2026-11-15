@@ -32,6 +32,8 @@ namespace jgchat {
 using Json = nlohmann::json;
 using ToolHandler = std::function<Json(std::string_view, const Json&)>;
 Json data_tool_definitions();
+// Validate a curve position without touching the UI from the chat worker.
+Json prepare_curve_navigation(const Json& arguments);
 // Fixed data/plot operations and file preparation; file writes happen later in
 // the Android bridge after a successful answer. Throws for invalid arguments.
 Json execute_data_tool(std::string_view name, const Json& arguments,

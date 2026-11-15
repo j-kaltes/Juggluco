@@ -38,6 +38,7 @@ struct geo_t;
 struct jugglucotext;
 extern const jugglucotext engtext;
 extern jugglucotext artext;
+extern jugglucotext fatext;
 
 struct JCurve {
 protected:
@@ -80,7 +81,7 @@ inline int userunit2mgL(const float unit) const {
 const jugglucotext *usedtext=&engtext;
 
 bool isRTL() const {
-    return usedtext==&artext;
+    return usedtext==&artext||usedtext==&fatext;
     }
 
 

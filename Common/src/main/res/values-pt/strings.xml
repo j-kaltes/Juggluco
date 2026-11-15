@@ -108,7 +108,7 @@
 <string name="stage">Palco</string>
 <string name="use_bluetooth">Usar Bluetooth</string>
 <string name="connection">Conexão</string>
-<string name="unlock_key">Desbloquear</string>
+<string name="handshake">Desbloquear</string>
 <string name="glucose_value">Valor da glicose</string>
 <string name="info">Informações</string>
 <string name="devicespecific">Definir configuração específica do dispositivo</string>

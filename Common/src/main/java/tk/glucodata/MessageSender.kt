@@ -43,7 +43,7 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
-
+import com.google.android.gms.wearable.MessageClient
 //import tk.glucodata.Applic.messagesender
 
 
@@ -495,6 +495,10 @@ companion object {
     public fun getMessageSender(): MessageSender? {
         return messagesender
     }
+    @JvmStatic
+    public fun getMessageClientS(): MessageClient? {
+        return  getMessageSender()?.messageClient;
+       }
 
     @JvmStatic
     fun rememberMirrorNode(label:String,nodeId:String) {

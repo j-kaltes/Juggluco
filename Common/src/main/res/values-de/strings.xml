@@ -99,7 +99,7 @@
   <string name="stage">Stufe</string>
   <string name="use_bluetooth">Bluetooth nutzen</string>
   <string name="connection">Verbindung</string>
-  <string name="unlock_key">Handshake</string>
+  <string name="handshake">Handshake</string>
   <string name="glucose_value">Glukosewert</string>
   <string name="info">Info</string>
   <string name="devicespecific">Gerätespezifische Einstellung festlegen</string>

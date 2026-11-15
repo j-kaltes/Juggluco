@@ -241,7 +241,7 @@ public:
 
    uint32_t timefirstdata()  {
       std::lock_guard<std::recursive_mutex> lock(sensorlistMutex);
-      static uint32_t first = UINT32_MAX;
+      uint32_t first = UINT32_MAX;
      if(last()>=0) {
          int i=getstartindex();
           for(int it = 0; it <= 3; it++) {
@@ -493,6 +493,12 @@ std::pair<int,SensorGlucoseData *> addSensorInitgetPair(const string_view name,i
    }
 
 std::pair<int,SensorGlucoseData *> newmakeDexComSensorindex(const std::string_view serial,const std::string_view pin,const std::string_view GTIN, const std::string_view gegs,uint32_t now) {
+    if(serial.empty() || serial.size() > 12 || pin.size() < 4 || !pin.data() || GTIN.size() < (12 - serial.size())) {
+        LOGGER("newmakeDexComSensorindex Invalid barcode: serial=%zu pin=%zu GTIN=%zu\n", serial.size(), pin.size(), GTIN.size());
+        return {-1, nullptr};
+        }
+
+
    std::array<char,16> name;
    std::copy_n(serial.data(),serial.size(),name.data());
    if(serial.size()<12) {
@@ -1949,11 +1955,26 @@ int getstartindex()  {
             return -1;
         int first=0;
         sensor *sens=getsensor(first);
+        bool madeindices;
         if(sens->next==0&&sens->prev==0) {
             setindices();
+            madeindices=true;
             }
-        for(;sens->prev!=LISTEND;sens=getsensor(first))  {
-                first=sens->prev;
+       else
+            madeindices=false;
+        
+        for(int it=0;sens->prev!=LISTEND;sens=getsensor(first))  {
+                if(!madeindices&&it>=std::min(5,lastindex)) {
+                    setindices();
+                    it=0;
+                    first=0;
+                    sens=getsensor(first);
+                    madeindices=true;
+                    }
+                else {
+                    ++it;
+                    first=sens->prev;
+                    }
                 }
         return first;         
         }

@@ -108,7 +108,7 @@
  <string name="stage">단계</string>
  <string name="use_bluetooth">Bluetooth 사용</string>
  <string name="connection">연결</string>
- <string name="unlock_key">핸드셰이크</string>
+ <string name="handshake">핸드셰이크</string>
  <string name="glucose_value">혈당값</string>
  <string name="info">정보</string>
  <string name="devicespecific">기기별 설정 지정</string>

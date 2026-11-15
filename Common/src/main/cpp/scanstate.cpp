@@ -21,6 +21,8 @@
 
 #include "scanstate.hpp"
 #include <string.h>
+#include <cstdlib>
+#include <string>
 #include "timestr.h"
 data_t *scanstate::fromfile(const char *filename) {
     Open file(filename,O_RDONLY);
@@ -48,8 +50,20 @@ bool scanstate::makelink(string_view filename) {
     char buf[buflen];
     memcpy(buf,&filename[0],pos);
     memcpy(buf+pos,linkend,sizeof(linkend));
-//    return writeall(buf,filename.data(),filename.length());
+#ifdef LIBRE2_EU_INDEPENDENT
+    // Keep the previous link readable until the replacement is complete.
+    std::string temporary=std::string(buf)+".XXXXXX";
+    const int fd=mkstemp(temporary.data());
+    if(fd<0)return false;
+    const auto length=filename.length()-pos;
+    const bool written=write(fd,filename.data()+pos,length)==static_cast<ssize_t>(length);
+    const bool closed=close(fd)==0;
+    if(written&&closed&&rename(temporary.c_str(),buf)==0)return true;
+    unlink(temporary.c_str());
+    return false;
+#else
     return writeall(buf,filename.data()+pos,filename.length()-pos);
+#endif
 }
 string_view scanstate::makefilename(const string_view sbasedir,const time_t tim) { //Has to be deleted
     constexpr const char start[]="/state";

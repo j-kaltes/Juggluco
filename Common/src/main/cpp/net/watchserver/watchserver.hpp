@@ -59,3 +59,7 @@ using livestopfunc=bool (*)(void *context);
 
 bool streamlive(void *context,livewritefunc write,livestopfunc stopped,const livestreamoptions &options);
 bool givestatistics(Getopts &opts,std::string_view origin,recdata *outdata);
+
+// In-process GET for the chat web probe. The target is the already validated,
+// encoded relative path and query, without its authentication prefix.
+bool watchcommands_probe(char *request,int len,recdata *outdata,std::string_view target);

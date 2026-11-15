@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Read-only local data dispatcher, reused by the native model client.
 #include "jgchat/ui_messages.hpp"
+#include "jgchat/web_probe.hpp"
 #include "juggluco_data.hpp"
 #include "juggluco_extra.hpp"
 #include "jgchat/meal_layout.hpp"
@@ -22,6 +23,11 @@
 #include <stdexcept>
 #include <utility>
 #include <vector>
+
+#if defined(__ANDROID__) || defined(JGICE_WEB_PROBE_TEST_BACKEND)
+#include "../../net/watchserver/watchserver.hpp"
+#include <array>
+#endif
 
 #ifdef JGICE_DATA_TEST_BACKEND
 #include "data_test_backend.hpp"
@@ -355,6 +361,10 @@ jgchat::Json glucose_display_preferences() {
         {"multiplier_from_mmol_l", mmol ? 1.0 : convfactordL}};
 }
 
+static std::string web_secret_prefix(std::string_view secret) {
+    return secret.empty() ? std::string{} : "/" + jgchat::web_encode(secret, false);
+}
+
 WebConfig web_config() {
     if (!settings) throw jgchat::UiError(jgchat::UiCode::juggluco_settings_are_not_initialized);
     const auto* data = settings->data();
@@ -369,16 +379,40 @@ std::string web_file_url(std::string_view relative) {
     const auto config = web_config();
     if (!config.enabled) throw jgchat::UiError(jgchat::UiCode::the_file_is_saved_enable_web_server_in_settings_exchange_data_web_server_then_open_it);
     if (config.secret == "." || config.secret == "..") throw jgchat::UiError(jgchat::UiCode::a_web_server_secret_consisting_only_of_one_or_two_dots_cannot_be_used_in_a_browser_pa);
-    constexpr char hex[] = "0123456789ABCDEF";
-    std::string prefix;
-    if (!config.secret.empty()) {
-        prefix = "/";
-        for (unsigned char c : config.secret) {
-            if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '-' || c == '_' || c == '~' || c == '.') prefix += char(c);
-            else { prefix += '%'; prefix += hex[c >> 4]; prefix += hex[c & 15]; }
-        }
+    return "http://127.0.0.1:" + std::to_string(config.port) + web_secret_prefix(config.secret) + "/" + std::string(relative);
+}
+
+jgchat::Json probe_web_get(std::string_view target) {
+    using jgchat::web_probe_error;
+#if defined(__ANDROID__) || defined(JGICE_WEB_PROBE_TEST_BACKEND)
+    const auto config = web_config();
+    if (!config.enabled)
+        return web_probe_error("web_server_disabled", "Enable Juggluco's web server before probing its endpoints.");
+    if (config.secret == "." || config.secret == "..")
+        return web_probe_error("invalid_web_secret", "The configured secret cannot be used as a browser path segment.");
+    const auto request = "GET " + web_secret_prefix(config.secret) + "/" + std::string(target) +
+        " HTTP/1.1\r\nHost: 127.0.0.1:" + std::to_string(config.port) + "\r\nAccept: */*\r\n\r\n";
+    // Use the same buffer shape as a socket request. Several old parsers use
+    // fixed-size lookahead at the end of the request.
+    std::array<char, 4096> wire{};
+    if (request.size() > wire.size() - 64)
+        return web_probe_error("web_request_too_large", "The encoded GET request is too long.");
+    std::copy(request.begin(), request.end(), wire.begin());
+    struct Reply : recdata {
+        ~Reply() { delete[] allbuf; }
+    } reply;
+    try {
+        watchcommands_probe(wire.data(), static_cast<int>(request.size()), &reply, target);
+        if (reply.data() && reply.size() > 0 && !reply.livestream)
+            return jgchat::web_probe_sample({reply.data(), static_cast<std::size_t>(reply.size())});
+    } catch (const std::exception&) {
+        // Never forward raw request/response bytes or exceptions as errors.
     }
-    return "http://127.0.0.1:" + std::to_string(config.port) + prefix + "/" + std::string(relative);
+    return web_probe_error("web_request_failed", "Juggluco could not produce a response for this GET request.");
+#else
+    (void)target;
+    return web_probe_error("web_probe_unavailable", "The local web probe is only available in Juggluco on Android.");
+#endif
 }
 
 std::string handle_request(std::string_view target) {

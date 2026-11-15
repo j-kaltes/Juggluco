@@ -64,6 +64,7 @@
 
 #include "logs.hpp"
 #include "watchserver.hpp"
+#include "labelcategories.hpp"
 
 #include "datestring.hpp"
 
@@ -1554,6 +1555,7 @@ extern   std::span<char> gethistory(int startpos, int len, uint32_t starttime, u
 extern   std::span<char> getstream(int startpos, int len, uint32_t starttime, uint32_t endtime,bool,int,bool,int,bool,bool);
 extern   std::span<char> getscans(int startpos, int len, uint32_t starttime, uint32_t endtime,bool,int,bool,int,bool,bool);
 extern   std::span<char> getamounts(int startpos, int len, uint32_t starttime, uint32_t endtime,bool,int,bool,int,bool,bool);
+extern   std::span<char> getextendedamounts(int startpos, int len, uint32_t starttime, uint32_t endtime,bool,int,bool,int,bool,bool);
 extern std::span<char> getmeals(int startpos, int len, uint32_t starttime, uint32_t endtime,bool header,int,bool,int,bool,bool);
 extern std::span<char> getactivities(int startpos,int len,uint32_t starttime,uint32_t endtime,bool header,int,bool,int,bool,bool);
 extern std::span<char> getextendedactivities(int startpos,int len,uint32_t starttime,uint32_t endtime,bool header,int,bool,int,bool,bool);
@@ -2436,8 +2438,30 @@ static bool giveredir(const char *posptr,int size,std::string_view origin,recdat
 
 extern bool isLargeCurve(Getopts &opts);
 extern bool givestatistics(Getopts &opts,std::string_view origin,recdata *outdata);
+static bool givelabelcategories(bool headonly, std::string_view origin, recdata *outdata) {
+   const auto *data = settings->data();
+   std::array<juggluco::web::AmountLabel, maxvarnr> labels;
+   const int count = std::clamp(settings->getlabelcount(), 0, int(maxvarnr));
+   for (int i = 0; i < count; ++i) {
+      const auto &night = data->Nightnums[i], &libre = data->librenums[i];
+      labels[i] = {settings->getlabel(i), {night.kind, night.weight}, {libre.kind, libre.weight}};
+      }
+   const auto body = juggluco::web::label_categories_json(std::span(labels).first(count), data->bloodvar,
+      settings->getunitlabel(), convfactordL);
+   auto *buffer = new(std::nothrow) char[webheaderreserve + body.size() + 1];
+   if (!buffer)
+      return outofmemory(outdata);
+   outdata->allbuf = buffer;
+   auto *start = buffer + webheaderreserve;
+   memcpy(start, body.c_str(), body.size() + 1);
+   mkjsonheader(start, start + body.size(), headonly, outdata, origin);
+   return true;
+   }
 static bool jugglucos(const char * const input,int size, std::string_view hostname,uint16_t lang, bool secure,bool headonly,bool wantsjson,std::string_view origin,recdata *outdata) {
    const char *posptr=input;
+   const std::string_view target(input, std::max(size, 0));
+   if (target.substr(0, target.find_first_of(" ?\r\n")) == "labels"sv)
+      return givelabelcategories(headonly, origin, outdata);
     {constexpr const char liveexample[]="live.html";
     if(!strarcmp(liveexample,input)) {
         constexpr const int namesize=sizeof(liveexample)-1;
@@ -2553,12 +2577,17 @@ static bool jugglucos(const char * const input,int size, std::string_view hostna
             ++typelen;
             }
          Getopts opts(posptr,size-typelen,(i>=2&&i<=4)?4*daysecs:(i==6?(7*daysecs):5*60*60));
-         const int startlen=((opts.end-opts.start)/(60*60))*perhour[i];
          constexpr const int startpos=webheaderreserve;
+         const int startlen = startpos +((opts.end - opts.start + 60*60 - 1)/(60*60))*perhour[i];
+        // const int startlen=((opts.end-opts.start)/(60*60))*perhour[i];
          bool calibrated=opts.calibratedmode||opts.calibratedhistorymode||opts.calibratedscansmode;
 
 
-         const auto getdata=type=="activities"sv&&opts.extendedmode?getextendedactivities:procs[i];
+         auto getdata=procs[i];
+         if(opts.extendedmode) {
+            if(type=="activities"sv) getdata=getextendedactivities;
+            else if(type=="amounts"sv) getdata=getextendedamounts;
+            }
          std::span<char> res=getdata(startpos,startlen,opts.start,opts.end,opts.headermode,opts.unit,!opts.exclusivemode,opts.datnr,calibrated,opts.pastvaluesmode);
           if(!res.data()) {
                 return outofmemory(outdata);
@@ -2815,8 +2844,10 @@ static  bool consume_encoded_secret(std::string_view& target, std::string_view s
     target.remove_prefix(slash + 1);
     return true;
    }
-bool watchcommands(char *rbuf,int len,recdata *outdata,bool secure) {
-   LOGGERWEB("watchcommands len=%d %.*s",len,len,rbuf);
+static bool watchcommands_impl(char *rbuf,int len,recdata *outdata,bool secure,std::string_view probe_target) {
+   if(probe_target.empty()) {
+      LOGGERWEB("watchcommands len=%d %.*s",len,len,rbuf);
+      }
    const char *start=rbuf;
    const char *ends=rbuf+len;
    const char *nl;
@@ -2946,6 +2977,18 @@ extern uint16_t choose_language( std::string_view accept_language, const std::un
    size_t seclen=settings->data()->apisecretlength;
    bool encoded_secret_path=false;
    encoded_secret_path=consume_encoded_secret(toget,{settings->data()->apisecret,seclen});
+   if(!probe_target.empty()) {
+      // The browser leaves ordinary path characters unescaped.
+      if(seclen&&!encoded_secret_path&&toget.size()>seclen&&toget[seclen]=='/'&&
+         toget.substr(0,seclen)==std::string_view(settings->data()->apisecret,seclen)) {
+         toget.remove_prefix(seclen+1);
+         encoded_secret_path=true;
+         }
+      if((seclen&&!encoded_secret_path)||toget.substr(0,toget.find(' '))!=probe_target) {
+         nosecret(""sv,outdata);
+         return false;
+         }
+      }
    if(seclen&&!encoded_secret_path) {
 
             static constexpr const char token[]="token=";
@@ -3075,6 +3118,14 @@ if(showviewer(toget,outdata))
    }
 
 
+bool watchcommands(char *rbuf,int len,recdata *outdata,bool secure) {
+   return watchcommands_impl(rbuf,len,outdata,secure,{});
+   }
+
+bool watchcommands_probe(char *rbuf,int len,recdata *outdata,std::string_view target) {
+   return !target.empty()&&watchcommands_impl(rbuf,len,outdata,false,target);
+   }
+
 void wrongpath(std::string_view toget, recdata *outdata) {
    const char notfoundtxt[]="HTTP/1.1 400 Bad Request\r\nAccess-Control-Allow-Origin: *\r\nContent-Type: text/plain\r\nContent-Length: ";
    constexpr const int startlen=sizeof(notfoundtxt)-1;
@@ -3146,7 +3197,7 @@ void mktypeheader(char *outstart,char *outiter,const bool headonly,recdata *outd
    else
        totlen=outiter-startheader;
    LOGARWEB("START:");
-   logwriter(startheader,400);
+   logwriter(startheader,std::min(totlen,400));
    outdata->start=startheader;
    outdata->len=totlen;
 

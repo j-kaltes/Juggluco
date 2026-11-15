@@ -108,7 +108,7 @@
  <string name="stage">Stadio</string>
  <string name="use_bluetooth">Usa Bluetooth</string>
  <string name="connection">Connessione</string>
- <string name="unlock_key">Handshake</string>
+ <string name="handshake">Handshake</string>
  <string name="glucose_value">Valore del glucosio</string>
  <string name="info">Info</string>
  <string name="devicespecific">Imposta valori specifici del dispositivo</string>

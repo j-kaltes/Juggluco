@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+    <string name="activity_import">活动</string>
+    <string name="activity_export_extended">扩展</string>
+    <string name="activity_details">活动</string>
+    <string name="activity_retrieve">获取</string>
+    <string name="activity_permissions">权限</string>
+    <string name="activity_history_granted">已授予历史数据访问权限。</string>
+    <string name="activity_history_missing">未授予历史数据访问权限。</string>
+    <string name="activity_history_unavailable">无法访问历史数据。</string>
+    <string name="activity_measure_existing">已导入的数值会在可用时使用所选标签、指标和舍入设置。单独编辑的内容将予以保留。</string>
+    <string name="activity_round_to">舍入到：</string>
+    <string name="activity_round_to_invalid">请输入正数舍入步长，例如 1 或 0.1</string>
+    <string name="activity_from">获取起始时间</string>
+    <string name="activity_interval">自动获取</string>
+    <string name="activity_create_amounts">根据活动创建数值</string>
+    <string name="activity_units">距离和速度单位</string>
+    <string-array name="activity_units">
+        <item>km 和 km/h</item><item>mi 和 mi/h</item>
+    </string-array>
+    <string name="activity_last">上次获取：</string>
+    <string name="activity_never">从不</string>
+    <string name="activity_retrieving">正在获取活动…</string>
+    <string name="activity_retrieving_details">正在获取活动详情：第 %1$d 项，共 %2$d 项</string>
+    <string name="activity_quota_wait">已达到 Health Connect 请求上限，正在等待重试…</string>
+    <string name="activity_retrieved">已获取活动</string>
+    <string name="activity_labels">标签</string>
+    <string name="activity_saved">已保存的活动</string>
+    <string name="activity_default">通用活动标签</string>
+    <string name="activity_update_existing">同时修改以前自动创建的数值</string>
+    <string name="activity_new_label">新建标签</string>
+    <string name="activity_choose_label">选择或创建活动标签</string>
+    <string name="activity_none">没有已保存的活动</string>
+    <string name="activity_unavailable">此设备无法查看活动详情</string>
+    <string name="activity_delete_confirm">是否从 Juggluco 中删除此活动并阻止再次导入？由此自动生成的数值将被删除。手动输入或编辑的数值将保留，但会取消与活动的关联。Health Connect 中的数据不会改变。</string>
+    <string name="activity_remove_source">移除来源</string>
+    <string name="activity_remove_source_confirm">是否在 Juggluco 中移除此活动的数据来源 %1$s？今后获取时将排除此来源的活动和心率数据。其他来源和 Health Connect 中的数据将保留。</string>
+    <string name="activity_mirrored">数值已通过镜像同步接收，因此已禁用从 Health Connect 获取数据。</string>
+    <string name="activity_source">来源</string>
+    <string name="activity_heart_source">心率来源</string>
+    <string name="activity_heart_used">用于摘要的心率来源</string>
+    <string name="activity_source_deleted">此来源已从 Health Connect 删除</string>
+    <string name="activity_not_returned">不在本次 Health Connect 获取结果中</string>
+    <string name="activity_excess">平均心率 − 静息心率</string>
+    <string name="activity_period_duration">%1$s – %2$s（时长：%3$s）</string>
+    <string name="activity_link">关联数值</string>
+    <string name="activity_no_match">此时间段内没有未关联的活动数值</string>
+    <string name="activity_distance_miles">距离 (mi)</string>
+    <string name="activity_speed_miles">平均速度 (mi/h)</string>
+    <string-array name="activity_intervals">
+        <item>关闭</item><item>15 分钟</item><item>30 分钟</item><item>1 小时</item>
+        <item>3 小时</item><item>6 小时</item><item>24 小时</item>
+    </string-array>
+    <string-array name="activity_measures">
+        <item>经过时长 (min)</item><item>距离 (km)</item><item>平均心率 − 静息心率 (次/分)</item>
+        <item>平均心率 (次/分)</item><item>心率标准差 (次/分)</item><item>活动能量 (kcal)</item>
+        <item>平均速度 (km/h)</item><item>步数</item><item>累计爬升 (m)</item>
+        <item>平均功率 (W)</item><item>平均踏频 (转/分)</item>
+        <item>@string/activity_distance_miles</item><item>@string/activity_speed_miles</item>
+        <item>最高心率 (次/分)</item>
+    </string-array>
+    <string-array name="activity_fields">
+        <item>时长</item><item>距离</item><item>静息心率</item>
+        <item>平均心率</item><item>心率标准差</item><item>心率数据覆盖率</item>
+        <item>活动能量</item><item>平均速度</item><item>步数</item>
+        <item>累计爬升</item><item>平均功率</item><item>踏频</item>
+        <item>最高心率</item><item>最高速度</item>
+    </string-array>
+</resources>

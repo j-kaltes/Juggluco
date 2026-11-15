@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+    <string name="activity_import">Aktywności</string>
+    <string name="activity_export_extended">Rozszerzony</string>
+    <string name="activity_details">Aktywność</string>
+    <string name="activity_retrieve">Pobierz</string>
+    <string name="activity_permissions">Uprawnienia</string>
+    <string name="activity_history_granted">Przyznano dostęp do danych historycznych.</string>
+    <string name="activity_history_missing">Nie przyznano dostępu do danych historycznych.</string>
+    <string name="activity_history_unavailable">Dostęp do danych historycznych jest niedostępny.</string>
+    <string name="activity_measure_existing">Istniejące zaimportowane wartości korzystają z wybranej etykiety, miary i zaokrąglania, jeśli są dostępne. Indywidualne zmiany zostają zachowane.</string>
+    <string name="activity_round_to">Zaokrąglij do:</string>
+    <string name="activity_round_to_invalid">Wpisz dodatni krok zaokrąglania, np. 1 lub 0.1</string>
+    <string name="activity_from">Pobieraj od</string>
+    <string name="activity_interval">Automatyczne pobieranie</string>
+    <string name="activity_create_amounts">Twórz wartości na podstawie aktywności</string>
+    <string name="activity_units">Jednostki odległości i prędkości</string>
+    <string-array name="activity_units">
+        <item>km i km/h</item><item>mi i mi/h</item>
+    </string-array>
+    <string name="activity_last">Ostatnie pobranie:</string>
+    <string name="activity_never">Nigdy</string>
+    <string name="activity_retrieving">Pobieranie aktywności…</string>
+    <string name="activity_retrieving_details">Pobieranie szczegółów aktywności: %1$d z %2$d</string>
+    <string name="activity_quota_wait">Osiągnięto limit zapytań Health Connect. Oczekiwanie na ponowienie…</string>
+    <string name="activity_retrieved">Pobrano aktywności</string>
+    <string name="activity_labels">Etykiety</string>
+    <string name="activity_saved">Zapisane aktywności</string>
+    <string name="activity_default">Ogólna etykieta aktywności</string>
+    <string name="activity_update_existing">Zmieniaj też wcześniej automatycznie utworzone wartości</string>
+    <string name="activity_new_label">Nowa etykieta</string>
+    <string name="activity_choose_label">Wybierz lub utwórz etykietę aktywności</string>
+    <string name="activity_none">Brak zapisanych aktywności</string>
+    <string name="activity_unavailable">Szczegóły aktywności nie są dostępne na tym urządzeniu</string>
+    <string name="activity_delete_confirm">Usunąć tę aktywność z Juggluco i zablokować jej ponowny import? Wygenerowane na jej podstawie wartości zostaną usunięte. Wartości wpisane lub zmienione ręcznie pozostaną, ale bez powiązania z aktywnością. Dane w Health Connect pozostaną bez zmian.</string>
+    <string name="activity_remove_source">Usuń źródło</string>
+    <string name="activity_remove_source_confirm">Usunąć %1$s jako źródło tej aktywności w Juggluco? Dane aktywności i tętna z tego źródła będą pomijane podczas kolejnych pobrań. Pozostałe źródła i dane Health Connect zostaną zachowane.</string>
+    <string name="activity_mirrored">Pobieranie z Health Connect jest wyłączone, ponieważ wartości są odbierane przez synchronizację lustrzaną.</string>
+    <string name="activity_source">Źródło</string>
+    <string name="activity_heart_source">Źródło tętna</string>
+    <string name="activity_heart_used">Źródło tętna użyte w podsumowaniu</string>
+    <string name="activity_source_deleted">To źródło zostało usunięte z Health Connect</string>
+    <string name="activity_not_returned">Brak w bieżącym pobraniu z Health Connect</string>
+    <string name="activity_excess">Średnie tętno − tętno spoczynkowe</string>
+    <string name="activity_period_duration">%1$s – %2$s (czas trwania: %3$s)</string>
+    <string name="activity_link">Powiąż z wartością</string>
+    <string name="activity_no_match">Brak niepowiązanych wartości aktywności w tym przedziale czasu</string>
+    <string name="activity_distance_miles">Odległość (mi)</string>
+    <string name="activity_speed_miles">Średnia prędkość (mi/h)</string>
+    <string-array name="activity_intervals">
+        <item>Wył.</item><item>15 minut</item><item>30 minut</item><item>1 godzina</item>
+        <item>3 godziny</item><item>6 godzin</item><item>24 godziny</item>
+    </string-array>
+    <string-array name="activity_measures">
+        <item>Czas trwania (min)</item><item>Odległość (km)</item><item>Średnie tętno − tętno spoczynkowe (ud./min)</item>
+        <item>Średnie tętno (ud./min)</item><item>Odchylenie standardowe tętna (ud./min)</item><item>Energia aktywna (kcal)</item>
+        <item>Średnia prędkość (km/h)</item><item>Kroki</item><item>Przewyższenie (m)</item>
+        <item>Średnia moc (W)</item><item>Średnia kadencja pedałowania (obr./min)</item>
+        <item>@string/activity_distance_miles</item><item>@string/activity_speed_miles</item>
+        <item>Maksymalne tętno (ud./min)</item>
+    </string-array>
+    <string-array name="activity_fields">
+        <item>Czas trwania</item><item>Odległość</item><item>Tętno spoczynkowe</item>
+        <item>Średnie tętno</item><item>Odchylenie standardowe tętna</item><item>Pokrycie pomiarami tętna</item>
+        <item>Energia aktywna</item><item>Średnia prędkość</item><item>Kroki</item>
+        <item>Przewyższenie</item><item>Średnia moc</item><item>Kadencja pedałowania</item>
+        <item>Maksymalne tętno</item><item>Maksymalna prędkość</item>
+    </string-array>
+</resources>

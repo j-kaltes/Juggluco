@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+    <string name="activity_import">فعالیت‌ها</string>
+    <string name="activity_export_extended">گسترده</string>
+    <string name="activity_details">فعالیت</string>
+    <string name="activity_retrieve">دریافت</string>
+    <string name="activity_permissions">مجوزها</string>
+    <string name="activity_history_granted">دسترسی به سوابق فعالیت‌ها داده شده است.</string>
+    <string name="activity_history_missing">مجوز دسترسی به سوابق فعالیت‌ها داده نشده است.</string>
+    <string name="activity_history_unavailable">دسترسی به سوابق فعالیت‌ها ممکن نیست.</string>
+    <string name="activity_measure_existing">«مقدارها»ی واردشدهٔ قبلی، در صورت امکان از برچسب، نوع اندازه‌گیری و روش گردکردن انتخابی استفاده می‌کنند. ویرایش‌های دستی هر مورد حفظ می‌شوند.</string>
+    <string name="activity_round_to">گردکردن به:</string>
+    <string name="activity_round_to_invalid">یک گام مثبت برای گردکردن وارد کنید؛ مثلاً 1 یا 0.1</string>
+    <string name="activity_from">دریافت از</string>
+    <string name="activity_interval">دریافت خودکار</string>
+    <string name="activity_create_amounts">ساخت مقدارها از فعالیت‌ها</string>
+    <string name="activity_units">واحدهای مسافت و سرعت</string>
+    <string-array name="activity_units">
+        <item>کیلومتر و کیلومتر/ساعت</item><item>مایل و مایل/ساعت</item>
+    </string-array>
+    <string name="activity_last">آخرین دریافت:</string>
+    <string name="activity_never">هرگز</string>
+    <string name="activity_retrieving">در حال دریافت فعالیت‌ها…</string>
+    <string name="activity_retrieving_details">در حال دریافت جزئیات فعالیت: %1$d از %2$d</string>
+    <string name="activity_quota_wait">سقف درخواست‌های Health Connect پر شده است. در انتظار تلاش دوباره…</string>
+    <string name="activity_retrieved">فعالیت‌ها دریافت شدند</string>
+    <string name="activity_labels">برچسب‌ها</string>
+    <string name="activity_saved">فعالیت‌های ذخیره‌شده</string>
+    <string name="activity_default">برچسب فعالیت عمومی</string>
+    <string name="activity_update_existing">مقدارهای خودکار ساخته‌شدهٔ قبلی نیز تغییر کنند</string>
+    <string name="activity_new_label">برچسب جدید</string>
+    <string name="activity_choose_label">برچسب فعالیت را انتخاب یا ایجاد کنید</string>
+    <string name="activity_none">فعالیت ذخیره‌شده‌ای نیست</string>
+    <string name="activity_unavailable">جزئیات فعالیت در این دستگاه در دسترس نیست</string>
+    <string name="activity_delete_confirm">این فعالیت از Juggluco حذف و از واردشدن مجدد آن جلوگیری شود؟ «مقدارها»ی ساخته‌شده از آن حذف می‌شوند. مقدارهای دستی یا ویرایش‌شده بدون پیوند فعالیت باقی می‌مانند. داده‌های Health Connect تغییر نمی‌کنند.</string>
+    <string name="activity_remove_source">حذف منبع</string>
+    <string name="activity_remove_source_confirm">منبع %1$s از این فعالیت در Juggluco حذف شود؟ داده‌های فعالیت و ضربان قلب آن در دریافت‌های بعدی لحاظ نخواهند شد. منابع دیگر و داده‌های Health Connect حفظ می‌شوند.</string>
+    <string name="activity_mirrored">دریافت از Health Connect غیرفعال است، زیرا «مقدارها» از طریق آینه‌سازی دریافت می‌شوند.</string>
+    <string name="activity_source">منبع</string>
+    <string name="activity_heart_source">منبع ضربان قلب</string>
+    <string name="activity_heart_used">منبع ضربان قلب مورد استفاده در خلاصه</string>
+    <string name="activity_source_deleted">این منبع در Health Connect حذف شده است</string>
+    <string name="activity_not_returned">در دریافت فعلی Health Connect موجود نیست</string>
+    <string name="activity_excess">میانگین ضربان قلب منهای ضربان قلب در استراحت</string>
+    <string name="activity_period_duration">%1$s تا %2$s (مدت: %3$s)</string>
+    <string name="activity_link">پیوند به مقدار ثبت‌شده</string>
+    <string name="activity_no_match">در این بازهٔ زمانی هیچ مقدار فعالیتِ بدون پیوندی موجود نیست</string>
+    <string name="activity_distance_miles">مسافت (مایل)</string>
+    <string name="activity_speed_miles">میانگین سرعت (مایل/ساعت)</string>
+    <string-array name="activity_intervals">
+        <item>خاموش</item><item>۱۵ دقیقه</item><item>۳۰ دقیقه</item><item>۱ ساعت</item>
+        <item>۳ ساعت</item><item>۶ ساعت</item><item>۲۴ ساعت</item>
+    </string-array>
+    <string-array name="activity_measures">
+        <item>مدت سپری‌شده (دقیقه)</item><item>مسافت (کیلومتر)</item><item>میانگین ضربان قلب − ضربان قلب در استراحت (ضربه/دقیقه)</item>
+        <item>میانگین ضربان قلب (ضربه/دقیقه)</item><item>انحراف معیار ضربان قلب (ضربه/دقیقه)</item><item>انرژی فعال (کیلوکالری)</item>
+        <item>میانگین سرعت (کیلومتر/ساعت)</item><item>گام‌ها</item><item>افزایش ارتفاع (متر)</item>
+        <item>میانگین توان (وات)</item><item>میانگین آهنگ رکاب‌زدن (دور/دقیقه)</item>
+        <item>@string/activity_distance_miles</item><item>@string/activity_speed_miles</item>
+        <item>بیشینهٔ ضربان قلب (ضربه/دقیقه)</item>
+    </string-array>
+    <string-array name="activity_fields">
+        <item>مدت</item><item>مسافت</item><item>ضربان قلب در استراحت</item>
+        <item>میانگین ضربان قلب</item><item>انحراف معیار ضربان قلب</item><item>پوشش داده‌های ضربان قلب</item>
+        <item>انرژی فعال</item><item>میانگین سرعت</item><item>گام‌ها</item>
+        <item>افزایش ارتفاع</item><item>میانگین توان</item><item>آهنگ رکاب‌زدن</item>
+        <item>بیشینهٔ ضربان قلب</item><item>بیشینهٔ سرعت</item>
+    </string-array>
+</resources>

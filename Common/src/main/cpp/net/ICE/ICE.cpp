@@ -617,6 +617,22 @@ class initJuice {
          };
      };
 
+#ifdef TWILIOACCOUNT 
+consteval int compilationDate() {
+    constexpr char d[] = __DATE__;
+    constexpr const char *months[] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+    int month = 1;
+    for (int i = 0; i < 12; ++i)
+        if (d[0] == months[i][0] && d[1] == months[i][1] && d[2] == months[i][2]) {
+            month = i + 1;
+            break;
+            }
+    int day = (d[4] == ' ' ? 0 : d[4] - '0') * 10 + d[5] - '0';
+    int year = (d[7] - '0') * 1000 + (d[8] - '0') * 100 + (d[9] - '0') * 10 + d[10] - '0';
+    return year * 10000 + month * 100 + day;
+}
+
+
 static std::pair<const char *,const char *> getloginpass(char *twiliooutput,const int len) {
      char *endstr=twiliooutput+len;
      char *startsearch=endstr-300;
@@ -643,6 +659,7 @@ static std::pair<const char *,const char *> getloginpass(char *twiliooutput,cons
         }
      return {};
     }
+#endif
 extern time_t oldTwilioTimes;
 time_t oldTwilioTimes=0;
 #include "twilio.hpp"
@@ -683,31 +700,35 @@ juice_agent *createAgent(int allindex) {
         turn_servers=default_turn_servers;
 
 #ifdef TWILIOACCOUNT 
-        {
-        static std::mutex mut;
-        std::lock_guard<std::mutex> lck(mut);
-        auto now=time(nullptr);
-        if(now>=oldTwilioTimes) {
-                const auto url{"https://api.twilio.com/2010-04-01/Accounts/" TWILIOACCOUNT  "/Tokens.json"sv};
-                const std::span<const char> input{(const char *)nullptr,0};
-                const std::string_view header{"\r\nAuthorization: Basic " USERPASSBASE64 };
-                auto [resbody,code]=ContextHTTPS::getContext().postRequest("api.twilio.com",443,url,input,header);
-                if(code==201) {
-                     auto [user,pass]=getloginpass(resbody.data(),resbody.size());
-                     LOGGER("TWILIO: user=%s pass=%s\n",user,pass);
-                     static std::string username;
-                     static std::string password;
-                     username=user;
-                     password=pass;
-                     oldTwilioTimes=now+24*60*60;
-                     default_turn_servers[2].username=username.data();
-                     default_turn_servers[2].password=password.data();
+constexpr const int comptime=compilationDate() ;
+if constexpr (comptime < 20270228) {
+        LOGGER("twilio compiled before %d\n",comptime);
+        const auto now=time(nullptr);
+        if(now< 1803769200) {
+            static std::mutex mut;
+            std::lock_guard<std::mutex> lck(mut);
+            if(now>=oldTwilioTimes) {
+                    const auto url{"https://api.twilio.com/2010-04-01/Accounts/" TWILIOACCOUNT  "/Tokens.json"sv};
+                    const std::span<const char> input{(const char *)nullptr,0};
+                    const std::string_view header{"\r\nAuthorization: Basic " USERPASSBASE64 };
+                    auto [resbody,code]=ContextHTTPS::getContext().postRequest("api.twilio.com",443,url,input,header);
+                    if(code==201) {
+                         auto [user,pass]=getloginpass(resbody.data(),resbody.size());
+                         LOGGER("TWILIO: user=%s pass=%s\n",user,pass);
+                         static std::string username;
+                         static std::string password;
+                         username=user;
+                         password=pass;
+                         oldTwilioTimes=now+24*60*60;
+                         default_turn_servers[2].username=username.data();
+                         default_turn_servers[2].password=password.data();
+                         }
+                   else {
+                      LOGGER("TWILIO ERROR: code=%d\n",code);
+                      }
                      }
-               else {
-                  LOGGER("TWILIO ERROR: code=%d\n",code);
-                  }
-                 }
-           }
+               }
+             }
 #endif
         }
       juice_config_t config1{

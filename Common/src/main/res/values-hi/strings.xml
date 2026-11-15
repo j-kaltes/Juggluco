@@ -108,7 +108,7 @@
  <string name="stage">चरण</string>
  <string name="use_bluetooth">ब्लूटूथ का उपयोग</string>
  <string name="connection">कनेक्शन</string>
- <string name="unlock_key">हैंडशेक</string>
+ <string name="handshake">हैंडशेक</string>
  <string name="glucose_value">ग्लूकोज मान</string>
  <string name="info">जानकारी</string>
  <string name="devicespecific">डिवाइस-विशिष्ट सेटिंग सेट करें</string>

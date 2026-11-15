@@ -108,7 +108,7 @@
  <string name="stage">Stage</string>
  <string name="use_bluetooth">Use Bluetooth</string>
  <string name="connection">Connection</string>
- <string name="unlock_key">Handshake</string>
+ <string name="handshake">Handshake</string>
  <string name="glucose_value">Glucose value</string>
  <string name="info">Info</string>
  <string name="devicespecific">Set device specific setting</string>
@@ -543,6 +543,21 @@
 
     <!-- Garmin status: placeholders hold device names, timestamps or status text. -->
     <string name="garmin_watch_app_id">Garmin Watch app ID:</string>
+    <string name="garmin_app_kerfstok">Kerfstok</string>
+    <string name="garmin_app_libre2">Libre 2 Kerfstok</string>
+    <string name="garmin_app_libre3">Libre 3 Kerfstok</string>
+    <string name="garmin_app_device_row">%1$s - %2$s - %3$s</string>
+    <string name="garmin_app_unconfirmed">%1$s (installation unconfirmed)</string>
+    <string name="garmin_app_sensor_assigned">Choose Phone for the current Kerfstok app before switching apps.</string>
+    <string name="garmin_libre2_open_app">Open Libre 2 Kerfstok on the selected watch and keep it nearby.</string>
+    <string name="garmin_libre2_backend_required">Libre 2 handoff requires Juggluco with the independent native Libre 2 backend.</string>
+    <string name="garmin_libre2_need_sensor">Scan the Libre 2 sensor with Juggluco and wait for a Bluetooth reading before transferring it.</string>
+    <string name="garmin_libre2_busy">The watch already has a Libre 2 assignment. Return that sensor to its phone first.</string>
+    <string name="garmin_libre2_other_watch">Another Garmin watch has the Libre 2 assignment. Select that watch to return the sensor to the phone.</string>
+    <string name="garmin_libre2_release_libre3">Return the Libre 3 sensor to the phone on this watch before assigning a Libre 2.</string>
+    <string name="garmin_libre2_provisioning">Sending setup for %1$s. Keep Libre 2 Kerfstok open.</string>
+    <string name="garmin_libre2_assigned">%1$s is assigned to this watch.</string>
+    <string name="garmin_libre2_releasing">Waiting for the watch to release %1$s. Keep Libre 2 Kerfstok open.</string>
     <string name="garmin_app_id_button" translatable="false">ID</string>
     <string name="garmin_id_length">ID should be 32 characters long (now %1$d)</string>
     <string name="garmin_id_change_failed">Changing ID failed</string>

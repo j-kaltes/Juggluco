@@ -107,7 +107,7 @@
  <string name="stage">Bölüm</string>
  <string name="use_bluetooth">Bluetooth Kullan</string>
  <string name="connection">Bağlantı</string>
- <string name="unlock_key">Handshake</string>
+ <string name="handshake">Handshake</string>
  <string name="glucose_value">Glikoz Değeri</string>
  <string name="info">Bilgi</string>
  <string name="devicespecific">Cihaz ayarını yapın.</string>

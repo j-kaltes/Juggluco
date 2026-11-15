@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+    <string name="activity_import">Etkinlikler</string>
+    <string name="activity_export_extended">Genişletilmiş</string>
+    <string name="activity_details">Etkinlik</string>
+    <string name="activity_retrieve">Getir</string>
+    <string name="activity_permissions">İzinler</string>
+    <string name="activity_history_granted">Geçmiş verilere erişim izni verildi.</string>
+    <string name="activity_history_missing">Geçmiş verilere erişim izni verilmedi.</string>
+    <string name="activity_history_unavailable">Geçmiş verilere erişilemiyor.</string>
+    <string name="activity_measure_existing">Önceden içe aktarılan değerlerde, varsa seçilen etiket, ölçüm ve yuvarlama kullanılır. Tek tek yapılan değişiklikler korunur.</string>
+    <string name="activity_round_to">Şuna yuvarla:</string>
+    <string name="activity_round_to_invalid">1 veya 0.1 gibi pozitif bir yuvarlama adımı girin</string>
+    <string name="activity_from">Şu tarihten itibaren getir</string>
+    <string name="activity_interval">Otomatik veri alma</string>
+    <string name="activity_create_amounts">Etkinliklerden miktar oluştur</string>
+    <string name="activity_units">Mesafe ve hız birimleri</string>
+    <string-array name="activity_units">
+        <item>km ve km/h</item><item>mi ve mi/h</item>
+    </string-array>
+    <string name="activity_last">Son veri alma:</string>
+    <string name="activity_never">Hiçbir zaman</string>
+    <string name="activity_retrieving">Etkinlikler alınıyor…</string>
+    <string name="activity_retrieving_details">Etkinlik ayrıntıları alınıyor: %1$d / %2$d</string>
+    <string name="activity_quota_wait">Health Connect istek sınırına ulaşıldı. Yeniden denemek için bekleniyor…</string>
+    <string name="activity_retrieved">Etkinlikler alındı</string>
+    <string name="activity_labels">Etiketler</string>
+    <string name="activity_saved">Kaydedilmiş etkinlikler</string>
+    <string name="activity_default">Genel etkinlik etiketi</string>
+    <string name="activity_update_existing">Önceden otomatik oluşturulan miktarları da değiştir</string>
+    <string name="activity_new_label">Yeni etiket</string>
+    <string name="activity_choose_label">Etkinlik etiketi seç veya oluştur</string>
+    <string name="activity_none">Kaydedilmiş etkinlik yok</string>
+    <string name="activity_unavailable">Bu cihazda etkinlik ayrıntıları kullanılamıyor</string>
+    <string name="activity_delete_confirm">Bu etkinlik Juggluco\'dan silinsin ve yeniden içe aktarılması engellensin mi? Otomatik oluşturulan miktarlar silinir. Elle girilen veya düzenlenen miktarlar, etkinlik bağlantısı kaldırılarak korunur. Health Connect verileri değişmez.</string>
+    <string name="activity_remove_source">Kaynağı kaldır</string>
+    <string name="activity_remove_source_confirm">%1$s, Juggluco\'da bu etkinliğin kaynağı olmaktan çıkarılsın mı? Bu kaynaktaki etkinlik ve nabız verileri gelecekteki veri alımlarına dahil edilmez. Diğer kaynaklar ve Health Connect verileri korunur.</string>
+    <string name="activity_mirrored">Miktarlar yansıtma yoluyla alındığından Health Connect üzerinden veri alma devre dışı.</string>
+    <string name="activity_source">Kaynak</string>
+    <string name="activity_heart_source">Nabız kaynağı</string>
+    <string name="activity_heart_used">Özet için kullanılan nabız kaynağı</string>
+    <string name="activity_source_deleted">Bu kaynak Health Connect\'ten silindi</string>
+    <string name="activity_not_returned">Mevcut Health Connect veri alımında yok</string>
+    <string name="activity_excess">Ortalama nabız − dinlenme nabzı</string>
+    <string name="activity_period_duration">%1$s – %2$s (süre: %3$s)</string>
+    <string name="activity_link">Miktara bağla</string>
+    <string name="activity_no_match">Bu zaman aralığında bağlantısız etkinlik miktarı yok</string>
+    <string name="activity_distance_miles">Mesafe (mi)</string>
+    <string name="activity_speed_miles">Ortalama hız (mi/h)</string>
+    <string-array name="activity_intervals">
+        <item>Kapalı</item><item>15 dakika</item><item>30 dakika</item><item>1 saat</item>
+        <item>3 saat</item><item>6 saat</item><item>24 saat</item>
+    </string-array>
+    <string-array name="activity_measures">
+        <item>Geçen süre (min)</item><item>Mesafe (km)</item><item>Ortalama nabız − dinlenme nabzı (atım/dk)</item>
+        <item>Ortalama nabız (atım/dk)</item><item>Nabız standart sapması (atım/dk)</item><item>Aktif enerji (kcal)</item>
+        <item>Ortalama hız (km/h)</item><item>Adım</item><item>Kazanılan yükseklik (m)</item>
+        <item>Ortalama güç (W)</item><item>Ortalama pedal kadansı (dev/dk)</item>
+        <item>@string/activity_distance_miles</item><item>@string/activity_speed_miles</item>
+        <item>Maksimum nabız (atım/dk)</item>
+    </string-array>
+    <string-array name="activity_fields">
+        <item>Süre</item><item>Mesafe</item><item>Dinlenme nabzı</item>
+        <item>Ortalama nabız</item><item>Nabız standart sapması</item><item>Nabız ölçümü kapsamı</item>
+        <item>Aktif enerji</item><item>Ortalama hız</item><item>Adım</item>
+        <item>Kazanılan yükseklik</item><item>Ortalama güç</item><item>Pedal çevirme kadansı</item>
+        <item>Maksimum nabız</item><item>Maksimum hız</item>
+    </string-array>
+</resources>

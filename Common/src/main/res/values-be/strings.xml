@@ -107,7 +107,7 @@
  <string name="stage">Этап</string>
  <string name="use_bluetooth">Выкарыстоўвайць Bluetooth</string>
  <string name="connection">Злучэнне</string>
- <string name="unlock_key">Поціск рукі</string>
+ <string name="handshake">Поціск рукі</string>
  <string name="glucose_value">Значэнне глюкозы</string>
  <string name="info">Інфармацыя</string>
  <string name="devicespecific">Усталюйце налады для канкрэтнай прылады</string>

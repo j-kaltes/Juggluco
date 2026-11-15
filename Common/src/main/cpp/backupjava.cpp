@@ -648,7 +648,8 @@ extern "C" JNIEXPORT jboolean JNICALL   fromjava(getHostDeactivated)(JNIEnv *env
     return true;
     }
 extern "C" JNIEXPORT void JNICALL   fromjava(setHostDeactivated)(JNIEnv *envin, jclass cl,jint pos,jboolean val) {
-    backup->deactivateHost(pos,val);
+    std::thread th(&Backup::deactivateHost,backup,pos,val);
+    th.detach();
     }
 
 

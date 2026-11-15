@@ -102,7 +102,7 @@
   <string name="stage">Uppvärmning</string>
   <string name="use_bluetooth">Använd Bluetooth</string>
   <string name="connection">Anslutning</string>
-  <string name="unlock_key">Handskakning</string>
+  <string name="handshake">Handskakning</string>
   <string name="glucose_value">Glukosvärde</string>
   <string name="info">Info</string>
   <string name="devicespecific">Enhetsspecifik inställning</string>

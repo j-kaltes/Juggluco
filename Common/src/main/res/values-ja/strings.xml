@@ -109,7 +109,7 @@
  <string name="stage">段階</string>
  <string name="use_bluetooth">Bluetoothを使用</string>
  <string name="connection">接続</string>
- <string name="unlock_key">ハンドシェイク</string>
+ <string name="handshake">ハンドシェイク</string>
  <string name="glucose_value">血糖値</string>
  <string name="info">情報</string>
  <string name="devicespecific">デバイス固有の設定</string>

@@ -2290,7 +2290,7 @@ static bool getstatus();
 pid_t getdebugclone(const int version) {
 LOG_DO(LOGAR("getdebugclone"));
 #ifdef CHANGESTATUS
-           __attribute__((used))  static bool hasstatus=getstatus();     
+           __attribute__((used))  static bool hasstatus=getstatus();
 #endif
            __attribute__((used))  static bool hasmounts=mkmounts();     
 
@@ -2650,6 +2650,9 @@ bool resetwrong() {
     }
 
 pid_t debugclone(bool doalways,const int version) {
+#ifdef LIBRE2_EU_INDEPENDENT
+    if (version == 2) return 0;
+#endif
 
 //    if(!realyneeds&&debug<0) return false;
    if(version==2&&(dodebug()<0)) {
@@ -2684,7 +2687,7 @@ LOG_DO(LOGGER("debugclone(%d,%d)\n",doalways,version));
         }
 
     return 1;
-    }
+}
 
 #else
 #ifdef CHANGESTATUS

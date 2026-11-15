@@ -212,6 +212,10 @@ passhost_t * getwearoshost(const bool create,const char *label,bool galaxy,bool 
     }
 static void setdefaults(const char *infolabel,bool galaxy) {
    const std::lock_guard<std::mutex> netinfolock(netinfomutex);
+   if(!backup ||!backup->getupdatedata()) {
+    LOGARTAG("setdefaults: backup not initialized");
+    return;
+    }
    usedversion=peerversion(infolabel);
    passhost_t *host=getwearoshost(false,infolabel,galaxy);
    if(host) {

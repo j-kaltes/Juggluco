@@ -277,13 +277,14 @@ static public synchronized void scan(GlucoseCurve curve,Tag tag) {
                         value = uit & 0xFFFF;
                         Log.format("glucose=%.1f\n",(float)value/mgdLmult);
                         ret = uit >> 16;
-                        if(newdevice!=null&& Arrays.equals(newdevice,uid)&& Applic.app.canusebluetooth() ) {
-                            if(value!=0|| (ret&0xFF)==5||(ret&0xFF)==7) {
-//                                sensorident=Natives.getserial(uid,info);
-                                if(SensorBluetooth.resetDevice(sensorident))
-                                    askpermission=true;
-                                newdevice=null;
-                                }
+                        final int restoredStreamState = 0x40; // SAS_STREAM_STATE_RESTORED
+                        final boolean reconnect = (ret & restoredStreamState) != 0;
+                        ret &= ~restoredStreamState;
+                        final boolean justActivated = newdevice != null && Arrays.equals(newdevice, uid);
+                        if ((reconnect || (justActivated && (value != 0 || (ret & 0xFF) == 5 || (ret & 0xFF) == 7)))
+                                && Applic.app.canusebluetooth()) {
+                            if (SensorBluetooth.resetDevice(sensorident)) askpermission = true;
+                            if (justActivated) newdevice = null;
                             }
                         {if(doLog) {Log.d(LOG_ID,"Badscan "+ret);};};
                         vibrator.cancel();

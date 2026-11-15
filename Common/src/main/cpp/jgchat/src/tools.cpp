@@ -26,12 +26,16 @@
 #include "jgchat/plot.hpp"
 #include "jgchat/files.hpp"
 #include "jgchat/timeline.hpp"
+#include "jgchat/web_probe.hpp"
 #include "../android/juggluco_data.hpp"
 #include "../android/juggluco_extra.hpp"
 #include "../android/juggluco_system.hpp"
 
 #include <algorithm>
+#include <array>
 #include <charconv>
+#include <cmath>
+#include <cstdlib>
 #include <cstdint>
 #include <ctime>
 #include <initializer_list>
@@ -112,6 +116,113 @@ bool bool_value(const Json &args, const char *key) {
     if (!args.at(key).is_boolean()) bad(std::string(key) + " must be a boolean.");
     return args.at(key).get<bool>();
 }
+
+constexpr std::array probe_paths{
+    "x/labels", "x/amounts", "x/stream", "x/history", "x/scans", "x/activities", "x/meals", "x/libreview",
+    "api/v1/entries.json", "api/v1/treatments", "api/v1/treatments.json", "sgv.json", "pebble", "status.json"
+};
+bool one_of(std::string_view value, std::initializer_list<std::string_view> choices) {
+    return std::find(choices.begin(), choices.end(), value) != choices.end();
+}
+uint64_t probe_uint(std::string_view value, uint64_t maximum) {
+    uint64_t n = 0;
+    const auto [p, ec] = std::from_chars(value.data(), value.data() + value.size(), n);
+    if (ec != std::errc{} || p != value.data() + value.size() || n > maximum)
+        bad("Invalid numeric web probe parameter.");
+    return n;
+}
+uint64_t probe_date(const std::string& value, bool utc = false) {
+    if (value.size() != 10 && value.size() != 19) bad("Use YYYY-MM-DD or YYYY-MM-DDTHH:MM:SS.");
+    constexpr std::string_view pattern = "dddd-dd-ddTdd:dd:dd";
+    for (std::size_t i = 0; i < value.size(); ++i)
+        if (pattern[i] == 'd' ? value[i] < '0' || value[i] > '9' : value[i] != pattern[i])
+            bad("Invalid web probe date.");
+    std::tm tm{};
+    tm.tm_isdst = utc ? 0 : -1;
+    const auto end = strptime(value.c_str(), value.size() == 10 ? "%Y-%m-%d" : "%Y-%m-%dT%H:%M:%S", &tm);
+    if (end != value.data() + value.size()) bad("Invalid web probe date.");
+    const auto timestamp = utc ? timegm(&tm) : std::mktime(&tm);
+    if (timestamp < 0 || static_cast<uint64_t>(timestamp) > UINT32_MAX) bad("Web probe date is out of range.");
+    return static_cast<uint64_t>(timestamp);
+}
+
+// Only documented read routes and parameters reach the existing web server.
+// No origin, path suffix, headers, method or credentials are supplied by chat.
+std::string web_probe_target(const Json& args) {
+    shape(args, {"path", "parameters"});
+    const auto path = string_value(args, "path");
+    if (std::find(probe_paths.begin(), probe_paths.end(), path) == probe_paths.end())
+        bad("Choose a documented Juggluco read endpoint for the web probe.");
+    const auto& parameters = args.at("parameters");
+    if (!parameters.is_array()) bad("parameters must be a list of name/value pairs.");
+    const bool no_params = path == "x/labels" || path == "status.json";
+    const bool native = path.starts_with("x/") && !no_params;
+    uint64_t start = 0, end = 0, duration = 0;
+    bool start_set = false, end_set = false;
+    std::string target = path;
+    std::set<std::string> seen;
+    for (const auto& pair : parameters) {
+        shape(pair, {"name", "value"});
+        const auto name = string_value(pair, "name"), value = string_value(pair, "value");
+        if (no_params || !seen.insert(name).second || value.size() > 64)
+            bad("Unexpected, duplicate or oversized web probe parameter.");
+        bool flag = false;
+        if (native) {
+            if (name == "starttime" || name == "start") {
+                if (start_set) bad("Specify one web probe start time.");
+                start = name == "starttime" ? probe_uint(value, UINT32_MAX) : probe_date(value);
+                start_set = true;
+            } else if (name == "endtime" || name == "end") {
+                if (end_set) bad("Specify one web probe end time.");
+                end = name == "endtime" ? probe_uint(value, UINT32_MAX) : probe_date(value);
+                end_set = true;
+            } else if (name == "days") {
+                if (value.empty() || value.find_first_not_of("0123456789.") != value.npos)
+                    bad("days must be a nonnegative number.");
+                char* last = nullptr;
+                const double days = std::strtod(value.c_str(), &last);
+                if (last != value.c_str() + value.size() || days > double(INT32_MAX) / 86400)
+                    bad("days is out of range.");
+                duration += static_cast<uint64_t>(std::round(days * 86400));
+            } else if (name == "duration") duration += probe_uint(value, INT32_MAX);
+            else if (name == "maxcount") (void)probe_uint(value, INT32_MAX);
+            else if (one_of(name, {"header", "extended", "calibrated", "calibratedstream", "calibratedhistory",
+                                   "calibratedscans", "pastvalues", "exclusive", "allvalues", "mmol/L", "mg/dL"})) flag = true;
+            else bad("This parameter is not supported for the native web probe.");
+        } else {
+            if (name == "count") (void)probe_uint(value, 100000); // 36 MiB in the Nightscout exporter.
+            else if (name == "interval") (void)probe_uint(value, INT32_MAX);
+            else if (one_of(name, {"find[date][$gte]", "find[date][$gt]", "find[date][$lt]", "find[date][$lte]"}))
+                (void)probe_uint(value, uint64_t(UINT32_MAX) * 1000 - 1000);
+            else if (one_of(name, {"find[dateString][$gte]", "find[dateString][$gt]", "find[dateString][$lt]", "find[dateString][$lte]"}))
+                (void)probe_date(value, true);
+            else if (name == "units" && one_of(value, {"mmol", "mg"})) {}
+            else if (one_of(name, {"brief_mode", "sensor", "all_data", "no_empty"})) flag = true;
+            else bad("This parameter is not supported for the Nightscout web probe.");
+        }
+        if (flag && !one_of(value, {"", "0", "1", "true", "false", "Y", "N"}))
+            bad("Invalid web probe flag value.");
+        target += seen.size() == 1 ? '?' : '&';
+        target += web_encode(name, true);
+        target += '=';
+        target += web_encode(value, true);
+    }
+    if (native) {
+        if (duration > INT32_MAX || (start && end && end <= start))
+            bad("Use a valid increasing web probe interval.");
+        // Protect the exporter's initial response allocation. A probe of a
+        // large export can use a representative slice; page queries are unchanged.
+        const auto span = start && end ? end - start : duration ? duration : 7 * 86400;
+        const uint64_t per_hour = path == "x/stream" ? 4860 : path == "x/history" ? 744 :
+            path == "x/amounts" ? 425 : path == "x/scans" ? 162 :
+            path == "x/meals" ? 200 : path == "x/libreview" ? 700 : 0;
+        if ((!start && end && span > end) || (start && !end && start + span > UINT32_MAX) ||
+            (span + 3599) / 3600 * per_hour > 64 * 1024 * 1024)
+            bad("Use a representative interval for this web probe.");
+    }
+    return target;
+}
+
 std::string interval_query(const Json &args) {
     const auto start = uint_value(args, "start"), end = uint_value(args, "end"), limit = uint_value(args, "limit");
     if (end <= start) bad("require start < end.");
@@ -257,6 +368,9 @@ Json data_tool_definitions() {
     plot["name"] = "juggluco_plot_glucose";
     plot["description"] = "Create a glucose-curve SVG image displayed with your answer. Reads actual Juggluco records using the same arguments as juggluco_glucose; never invent coordinates. Truncated intervals produce an error: split into shorter windows. Separate sensors and gaps remain separate; scans are points. Returns the plotted readings and summary for interpretation.";
     definitions.push_back(std::move(plot));
+    definitions.push_back(definition("juggluco_show_curve",
+        "Move the main Juggluco glucose curve to the requested time after the answer succeeds. start is the requested left edge in Unix seconds, not milliseconds. Keeps the current zoom and applies Juggluco's normal time bounds. Use when the user asks to go to a time or to find a particular event or record, after locating its timestamp. The user can close chat to see the curve.",
+        {{"start", timestamp_schema()}}, Json::array({"start"})));
     auto dataset = definitions[1];
     dataset["name"] = "juggluco_glucose_dataset";
     dataset["description"] = "Retrieve a complete glucose dataset for local calculation/model fitting. Same source/unit/calibration/time semantics as juggluco_glucose; no imposed date, row or byte cap. limit=0 returns all records. The full result is saved privately; you receive an ID/metadata instead of a raw dump. Query its /data TSV with juggluco_query, CAST numeric columns and preserve IDs/gaps. Check coverage and complete the requested calculation before answering. This is a snapshot, not a trained model. Available only with analysis workspace.";
@@ -287,6 +401,15 @@ Json data_tool_definitions() {
     definitions.push_back(definition("juggluco_web_context",
         "Get web-server status and the JavaScript helper/endpoint contract before creating an interactive page. Does not expose the API secret.",
         Json::object(), Json::array()));
+    const Json probe_parameter = {
+        {"type", "object"}, {"properties", {{"name", {{"type", "string"}}}, {"value", {{"type", "string"}}}}},
+        {"required", Json::array({"name", "value"})}, {"additionalProperties", false}
+    };
+    definitions.push_back(definition("juggluco_web_probe",
+        "Try a real GET in Juggluco's local web-server handler before writing JavaScript. Give the same relative path and query parameters as Juggluco.text/json; convert parameter values to strings as URLSearchParams does. Returns HTTP status, media type and a bounded preview of the actual response. Use a representative interval for large exports. No external URLs, credentials, writes, JavaScript execution or browser test.",
+        {{"path", {{"type", "string"}, {"enum", probe_paths}}},
+         {"parameters", {{"type", "array"}, {"items", probe_parameter}, {"description", "List of unique query name/value pairs. Use [] for an endpoint without parameters."}}}},
+        Json::array({"path", "parameters"})));
     definitions.push_back(file_tool_definition());
     definitions.push_back(definition("juggluco_meals",
         "Read recorded meal contents in [start,end), without a date-range cap, for the current configured meal label. Includes entered number, linked ingredient quantities, units and carbohydrate grams from current ingredient definitions; these are not historical nutrient snapshots. Empty/missing/invalid meals are distinguished. Does not infer a database food match or fat/protein. Split truncated results; use a small limit because meals contain nested items.",
@@ -374,8 +497,15 @@ Json data_tool_definitions() {
     return definitions;
 }
 
+Json prepare_curve_navigation(const Json& args) {
+    shape(args, {"start"});
+    return {{"status", "ok"}, {"start", uint_value(args, "start")},
+        {"delivery", "Queued until the answer succeeds. Close chat to see the main curve at the requested time, with its existing zoom and normal time bounds."}};
+}
+
 Json execute_data_tool(std::string_view name, const Json &args, const std::atomic_bool* cancel) {
     if (cancel && cancel->load()) throw jgchat::UiError(jgchat::UiCode::request_cancelled);
+    if (name == "juggluco_show_curve") return prepare_curve_navigation(args);
     if (name == "juggluco_activities") {
         shape(args, {"start", "end", "offset", "limit", "revision"});
         (void)interval_query(args);
@@ -511,15 +641,27 @@ Json execute_data_tool(std::string_view name, const Json &args, const std::atomi
         return jgchatdata::meal_details(unwrap(jgchatdata::handle_request("/v1/meals" + query), "meals"), cancel);
     }
     if (name == "juggluco_save_files") return prepare_files(args);
+    if (name == "juggluco_web_probe") {
+        auto result = jgchatdata::probe_web_get(web_probe_target(args));
+        if (cancel && cancel->load()) throw UiError(UiCode::request_cancelled);
+        return result;
+    }
     if (name == "juggluco_web_context") {
         shape(args, {});
         const auto web = jgchatdata::web_config();
         return {{"status", "ok"}, {"enabled", web.enabled}, {"http_port", web.port}, {"authentication_required", !web.secret.empty()},
             {"browser", "Chrome; same-origin page served by the phone's existing Juggluco web server. Server must be enabled to open."},
+            {"probe", "Before writing JavaScript, call juggluco_web_probe with the intended relative path and representative runtime query values. Example: path=x/stream, parameters=[{name:header,value:1},{name:starttime,value:startSec},{name:endtime,value:endSec}], with each value passed as a string. Check the actual HTTP status, body_preview and preview_truncated. This checks the server response, not the browser or JavaScript."},
             {"helper", "Every HTML file includes window.Juggluco: await Juggluco.json(relativePath, parameters), Juggluco.text(relativePath, parameters), or Juggluco.fetch(relativePath, parameters) returning a Response. Parameters is an object; helper URL-encodes it. Use only read endpoints. Relative sibling JS/CSS/data files work."},
             {"html", "Supply body markup (style and script tags allowed). The app supplies UTF-8, viewport, title, light/dark defaults, helper and same-origin CSP. No external libraries, scripts, network, workers or eval; use browser APIs such as Canvas/SVG. Show loading/errors and never invent missing values."},
             {"endpoints", Json::array({
-                {{"path", "api/v1/entries.json"}, {"description", "Nightscout glucose entries. count limits records; find[date][$gte] and find[date][$lt] use Unix milliseconds. Values and units follow Juggluco's Nightscout endpoint; sort by date and preserve gaps."},
+                {{"path", "x/labels"}, {"description", "JSON for current amount-label settings. labels[].id is the LabelId in extended x/amounts. Each label has independent nightscout and libreview mappings (category_id, category, carbohydrate_grams_per_value) and clarity_category. Calibration and Clarity share blood_glucose_label_id (null if unset). A label can be a Nightscout note and still be long_acting_insulin in LibreView/Clarity. blood_glucose_unit is the current unit used to interpret finger-stick values; mg_dl_per_mmol_l is Juggluco's conversion factor. Fetch at runtime rather than hardcoding label names."},
+                 {"example", "await Juggluco.json('x/labels')"}},
+                {{"path", "x/amounts"}, {"description", "TSV of original stored amounts, including notes and labels omitted by Nightscout treatments. Use header=1 and extended=1 for the numeric LabelId column. Join LabelId to x/labels labels[].id; select blood glucose by blood_glucose_label_id. UnixTime is in seconds and Value is the original entered number. Use starttime/endtime in Unix seconds, and omit maxcount to retrieve the full interval."},
+                 {"example", "await Juggluco.text('x/amounts', {header: 1, extended: 1, starttime: startSec, endtime: endSec})"}},
+                {{"path", "x/stream"}, {"description", "Native CGM stream TSV; prefer it for matching individual CGM readings with x/amounts. UnixTime and starttime/endtime are Unix seconds in both exports. Use header=1. Omit calibrated for raw values: even calibrated=0 enables calibration because it is a presence flag. Read the mmol/L or mg/dL column by its header; compare in x/labels blood_glucose_unit. Omit maxcount for the full interval. x/history is the separate sensor history export."},
+                 {"example", "await Juggluco.text('x/stream', {header: 1, starttime: startSec, endtime: endSec})"}},
+                {{"path", "api/v1/entries.json"}, {"description", "Nightscout glucose entries. The response date and find[date][$gte]/find[date][$lt] filters use Unix milliseconds. sgv is always mg/dL, regardless of display units or value magnitude. count limits records; sort by date and preserve gaps. Use x/stream for the native stream."},
                  {"example", "await Juggluco.json('api/v1/entries.json', {count: 1000, 'find[date][$gte]': startMs, 'find[date][$lt]': endMs})"}},
                 {{"path", "api/v1/treatments"}, {"description", "Entered amounts mapped through the user's web-server categories. Same count/date filters. Requires treatments enabled in Juggluco; not all original labels necessarily appear."}},
                 {{"path", "pebble"}, {"description", "Latest glucose and current Juggluco IOB. units=mmol or units=mg; count is the number of readings. This endpoint does not provide historical IOB; for that retrieve juggluco_iob_series and embed the actual returned data."}},

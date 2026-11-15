@@ -23,6 +23,9 @@ public final class UnpairOverlayHost {
         }
     public void postFinished(final String message, final boolean success) {
         }
+    public void postMessage(final String message) {
+        Log.i(LOG_ID,message);
+        }
     public void postCloser() {
         }
 

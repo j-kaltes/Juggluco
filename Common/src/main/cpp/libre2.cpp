@@ -40,6 +40,9 @@
 #include "libre2.hpp"
 #include "jnisubin.hpp"
 #include "hexstr.hpp"
+#ifdef LIBRE2_EU_INDEPENDENT
+#include "libre2_imp/backend.hpp"
+#endif
 #if !defined(__aarch64__)        //||!defined(NOLOG)
 #define GEN2ROOTSHECK 1
 #endif
@@ -149,6 +152,10 @@ oldprocessStream_t  oldprocessStream=nullptr;
 #define setfuncneed(nam)   {if(strcmp(#nam,methods[it].name)) {LOGGER("%s!=%s\n",#nam,methods[it].name);} {if(!nam) {*(void **) (&nam)= methods[it].fnPtr;};++it;};}
 #endif
 jint         subRegisterNatives(JNIEnv*, jclass name, const JNINativeMethod*methods, jint nr) {
+#ifdef LIBRE2_EU_INDEPENDENT
+    return JNI_ERR;
+#else
+
     if(nr!=20&&nr!=22) {
         LOGGER("ERROR: RegisterNatives %d\n",nr);
         for(int i=0;i<nr;i++) {
@@ -206,7 +213,9 @@ jint         subRegisterNatives(JNIEnv*, jclass name, const JNINativeMethod*meth
     setfunc(P2);
         LOGGER("end myRegisterNatives %d\n",it);
         return 0;
-        }
+
+#endif
+}
 
 #if __ANDROID_API__ >= 24
 #define usedlsym(han,name) dlvsym(han,name,nullptr)
@@ -229,6 +238,10 @@ extern JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved) ;
 //#include "calibrat2_runtime_patch_v3.hpp"
 static void *dynlibhandle=nullptr;
 bool linklib(const char *filename) {
+#ifdef LIBRE2_EU_INDEPENDENT
+    return false;
+#else
+
 LOGGER("linklib %s %p\n",filename,dynlibhandle);
 debugclone();
 
@@ -304,6 +317,8 @@ else {
     LOGGER("Can't open: %s %s\n",filename,dlerror());
     return  false;
     }
+
+#endif
 }
 
 #endif
@@ -445,6 +460,11 @@ static void replayGlucose(unsigned long long id,const char *function,
 
 extern jclasser AlarmC, NonActiona, GluRange, attconf;
 AlgorithmResults *callAbbottAlg(data_t *uid,int startsincebase,scanstate *oldstate,scandata *data,scanstate *newstate,outobj *starttime,outobj *endtime,jobject person,int warmup,int wear) {
+#ifdef LIBRE2_EU_INDEPENDENT
+    const unsigned known_start=startsincebase>0?unsigned(startsincebase):0;
+    return libre2_imp::scan(uid,data->info,data->data,oldstate,newstate,unsigned(data->gettime()-basesecs),starttime,endtime,warmup,known_start);
+#else
+
     LOGSTRING("start callAbbottAlg/3\n");
     const time_t nutime=data->gettime();
     const int lastsincebase=nutime-basesecs;
@@ -568,7 +588,9 @@ AlgorithmResults *alg=(AlgorithmResults *)outalgres.ptr;
         delete alg;
         return nullptr;
         }
-    }
+
+#endif
+}
 
 //AlgorithmResults *callAbbottAlg(data_t *uid,int startsincebase,scanstate *oldstate,scandata *data,scanstate *newstate,outobj *starttime,outobj *endtime,jobject person) {
 AlgorithmResults *Abbott::callAbbottAlg(int startsincebase,scanstate *oldstate,scandata *data,scanstate *newstate,outobj *starttime,outobj *endtime,jobject person) {
@@ -594,6 +616,14 @@ Abbott::scanresult_t Abbott::callAbbottAlg(scandata *data) {
         return {nullptr,nullptr};
         }
     scanstate *newstate=new scanstate(sensordir,data->gettime());
+#ifdef LIBRE2_EU_INDEPENDENT
+    if(!newstate->map.data()) {
+        delete newstate;
+        return {nullptr,nullptr};
+        }
+    const bool restore_stream=hist->streamingIsEnabled()==1&&libre2_imp::bluetooth_supported(data->info)&&
+        !libre2_imp::usable_state(state,data->info);
+#endif
 
     time_t nutime=data->gettime();
 
@@ -605,6 +635,7 @@ Abbott::scanresult_t Abbott::callAbbottAlg(scandata *data) {
     LOGGER("startdate: %s",ctime_r(&startDate,timebuf)?timebuf:"null");
 #endif
     int startsincebase=startDate-basesecs;
+#ifndef LIBRE2_EU_INDEPENDENT
 //    const int timelast=nutime-startDate; LOGGER("timelast=%d endsensorsecs=%d\n",timelast,endsensorsecs);
 const    int timeleft=hist->officialendtime()-nutime;
 LOGGER("timeleft=%d\n",timeleft); 
@@ -621,6 +652,7 @@ LOGGER("timeleft=%d\n",timeleft);
         else
             startsincebase+=daysecs;
         }
+#endif
     outobj person,starttime,endtime;
     AlgorithmResults *res=callAbbottAlg(startsincebase,state,data,newstate,&starttime,&endtime,person);
     if(res) {
@@ -647,15 +679,35 @@ extern bool saveSputnik_PG2(const jniHistory &hist,time_t nutime,int nuid,const 
         else {
             LOGGER("senso->finished was %d, set to 0\n",senso->finished);
         //    senso->finished=0;
-            hist->saveglucose(data,newnu,gid,gl.getValue(),res->trend(),res->RateOfChange()); 
+            //hist->saveglucose(data,newnu,gid,gl.getValue(),res->trend(),res->RateOfChange()); 
+
+            const auto &points = res->scanTrendMgL;
+            hist->saveglucose(data, newnu, gid, gl.getValue(), res->trend(), res->RateOfChange(), points ? &*points : nullptr);
+
+
+
             auto last= hist->getScandata();
 //            lastscan=&last.back();
 
+#ifdef LIBRE2_EU_INDEPENDENT
+            bool saved;
+            {
+                std::lock_guard lock(hist->mutex);
+                std::unique_ptr<const char[]> oldfile(getpreviousstate(sensordir).data());
+                saved=newstate->makelink();
+                if(saved&&oldfile&&newstate->filename!=oldfile.get())unlink(oldfile.get());
+            }
+#else
             newstate->makelink();
             state->removefile();
+#endif
             delete state;
             state=newstate;
+#ifdef LIBRE2_EU_INDEPENDENT
+            return {res,&last.back(),saved&&restore_stream};
+#else
             return {res,&last.back()};
+#endif
             }
 
         }
@@ -665,6 +717,11 @@ extern bool saveSputnik_PG2(const jniHistory &hist,time_t nutime,int nuid,const 
     return {res,nullptr};
     }
 Abbott::scanresult_t Abbott::ProcessOne(scandata *data) {
+#ifdef LIBRE2_EU_INDEPENDENT
+    // Recover from NFC with the saved clock and provisioning if the state
+    // file was lost. A first scan takes the initialization path below.
+    if(hist&&hist->getstarttime()>basesecs)return callAbbottAlg(data);
+#endif
     if(!state||!state->good()) {
         delete state;
         state=initnewsensor( data) ;
@@ -697,7 +754,11 @@ scanstate *Abbott::initnewsensor( scandata *data) {
     if(int sindex=sensors->sensorindex(serial.data());sindex>=0) {
         sensorindex=sindex;
          hist=sensors->getSensorData(sindex);
-
+        if(!hist) {
+            LOGGER("initnewsensor: getSensorData(%d)==null\n", sindex);
+            delete alg;
+            return nullptr;
+           }
         if(hist->streamingIsEnabled()==1)
             hist->setbluetoothOn(0);
         }
@@ -727,12 +788,20 @@ extern bool streamHistory() ;
     constexpr const int    threeyear=94694400 ;//2013
     constexpr const int sec_per_day=60*60*24;
     scanstate *newstateptr=new scanstate(sensordir,data->gettime());
+#ifdef LIBRE2_EU_INDEPENDENT
+    if(!newstateptr->map.data()) {
+        delete alg;
+        delete newstateptr;
+        return nullptr;
+        }
+#endif
     jnidata_t  hierjnidata={&envbuf,newstateptr};
     JNIEnv *hiersubenv=(JNIEnv *) &hierjnidata;
 
     data_t *messuit;
 
 
+#ifndef LIBRE2_EU_INDEPENDENT
     const int timeleft=hist->officialendtime()-data->gettime();
     const bool oldsensor=timeleft<=(60*60);
     LOGGER("timeleft=%d oldsensor=%d\n",timeleft,oldsensor); 
@@ -740,6 +809,7 @@ extern bool streamHistory() ;
         startminbase+=daysecs;
         LOGSTRING("Tijdelijk erbij\n");
         }
+#endif
     LOGSTRING("voor activationComplete ");
     debugclone();//Al gedaan
     if( (messuit=reinterpret_cast<data_t *>( abbottcall(activationComplete)(hiersubenv,nullptr,juid, (startminbase > threeyear ? startminbase - threeyear : 0) / sec_per_day, startminbase, (jbyteArray)newstate.get(MESS),casttoken)))&&messuit->length()>0) {
@@ -753,12 +823,17 @@ extern bool streamHistory() ;
         messuit=newstateptr->alloc(messwas->length());
         memcpy(messuit->data(),messwas->data(),messwas->length());
         }
+#ifndef LIBRE2_EU_INDEPENDENT
     if(oldsensor)
         newstateptr->datpos(FAKE)=1;
+#endif
         
     delete alg;
-    newstateptr->makelink();
     newstateptr->setpos(MESS,messuit);
+    if(!newstateptr->makelink()) {
+        delete newstateptr;
+        return nullptr;
+        }
     return newstateptr;
     }
 
@@ -914,6 +989,16 @@ bool doinitnative=false;;
 bool rootcheck=false;
 
 static int doabbottinit(bool dochmod) {
+#ifdef LIBRE2_EU_INDEPENDENT
+    getProductFamily=libre2_imp::family;getPatchTimeValues=libre2_imp::times;
+    getActivationCommand=libre2_imp::activation_command;getActivationPayload=libre2_imp::activation_payload;
+    getEnableStreamingPayload=libre2_imp::enable_payload;getStreamingUnlockPayload=libre2_imp::unlock_payload;
+    activationComplete=libre2_imp::activate_state;
+    P1=libre2_imp::protocol_p1;P2=libre2_imp::protocol_p2;
+    if(settings){settings->setnodebug(true);settings->data()->crashed=false;}
+    rootcheck=false;return 0;
+#else
+
 LOGAR("doabbottinit");
       settings->data()->crashed=true;
 
@@ -1049,6 +1134,8 @@ unlink(libpath);
     LOGGER("end getNeedsReaderInfoForActivation=%d\n",res); */
     #endif
         return 0;
+#endif
+
 }
 
 static AlgorithmResults * processBlue(data_t * bluedata, jbyte person,
@@ -1336,8 +1423,14 @@ extern "C" JNIEXPORT jbyteArray  JNICALL fromjava(activationpayload)(JNIEnv *env
         }
 
 bool streamHistory() {
+#ifdef LIBRE2_EU_INDEPENDENT
+    return true;
+#else
+
     return processStream2_10;
-    }
+
+#endif
+}
 
 //info and startsincebase should be the same as used by getEnableStreamingPayload
 #define MODTIME
@@ -1368,6 +1461,10 @@ const data_t *info,
 #endif
 scanstate *state,
 scanstate *newstate,uint32_t startsincebase,uint32_t nutime,int warmup,int wear) {
+#ifdef LIBRE2_EU_INDEPENDENT
+    return libre2_imp::stream(ident,info,bluedata,state,newstate,unsigned(nutime-basesecs),startsincebase);
+#else
+
     jint nusincebase=nutime-basesecs;
     algobj alarm{&AlarmC},nonAction{&NonActiona};
     algobj range{&GluRange}, attenconf{&attconf};
@@ -1471,6 +1568,8 @@ newstate->setpos(COMP,static_cast<data_t *>(compo.ptr));
 newstate->setpos(ATTE,static_cast<data_t *>(attenu.ptr));
 newstate->setpos(MESS,static_cast<data_t *>(messstate.ptr));
 return (AlgorithmResults *)outalgres.ptr;
+
+#endif
 };
 
 
@@ -1621,6 +1720,11 @@ extern "C" JNIEXPORT void  JNICALL fromjava(bluetoothback)(JNIEnv *envin, jclass
 //extern "C" JNIEXPORT jbyteArray  JNICALL fromjava(hasBluetooth)(JNIEnv *envin, jclass cl,jbyteArray sensorident,jbyteArray patchinfo,jlong tim) {
 extern "C" JNIEXPORT jboolean  JNICALL fromjava(hasBluetooth)(JNIEnv *envin, jclass cl,jbyteArray sensorident,jbyteArray patchinfo) {
     abbottinit();
+#ifdef LIBRE2_EU_INDEPENDENT
+    if(!patchinfo||envin->GetArrayLength(patchinfo)!=6)return JNI_FALSE;
+    auto info=fromjbyteArray(envin,patchinfo);const bool capable=libre2_imp::bluetooth_supported(info);
+    data_t::deleteex(info);return capable;
+#else
     const jint timeminbase= time(NULL)-basesecs;
     LOGAR("start getStreamingPayload");
     debugclone();
@@ -1633,6 +1737,7 @@ extern "C" JNIEXPORT jboolean  JNICALL fromjava(hasBluetooth)(JNIEnv *envin, jcl
            sensorhex.c_str(),infohex.c_str(),timeminbase,replayJavaHex(envin,res).c_str());
 #endif
     return res!=nullptr;
+#endif
     }
 
 #include "hex.hpp"

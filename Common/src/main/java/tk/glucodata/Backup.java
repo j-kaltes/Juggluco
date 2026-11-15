@@ -776,11 +776,11 @@ CheckDirectionBox ICE;
             final int[] ret = {w, h};
             return ret;
 
-         }, firstrow,new View[]{ICE,ICElabellabel,ICElabel,zero,one},editIPs, new View[]{testip, haslabel, label},
+         }, firstrow,new View[]{ICE,zero,one},new  View[]{ICElabellabel,ICElabel},editIPs, new View[]{testip, haslabel, label},
                directions, new View[]{receive, Sendlabel, Amounts, Scans, Stream, restore}, fromrow, withqr,new View[]{transportLabel,transportAutomatic,transportTcp,transportBluetooth,transportMessages}, new View[]{delete, Close, reset, Help, save})
             .portraitLayout(
 new View[]{Portlabel,portedit,checkhostname},new View[]{IPslabel,detect},
-               new View[]{ICE,ICElabellabel},new View[]{ICElabel},new View[]{zero,one},
+               new View[]{ICE,zero,one},new View[]{ICElabellabel},new View[]{ICElabel},
                new View[]{editIPs[0],editIPs[1]},new View[]{editIPs[2],editIPs[3]},
                new View[]{testip,haslabel},new View[]{label},directions,
                new View[]{receive,Sendlabel},new View[]{Amounts,Scans,Stream},new View[]{restore},

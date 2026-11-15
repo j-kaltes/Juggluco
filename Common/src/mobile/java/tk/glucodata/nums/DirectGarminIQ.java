@@ -33,6 +33,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
@@ -90,16 +91,16 @@ final class DirectGarminIQ {
     private final Context context;
     private final AllData owner;
     private final long peerId;
-    // Direct BLE can serve either compatible foreground Garmin application on
-    // the same physical watch. appId is the currently selected endpoint;
-    // alternateAppId lets an unsolicited START/open from the other app switch
-    // ownership without reconnecting the watch GATT link.
+    // The compatible applications share one physical Garmin link.
+    private final List<String> appIds;
+    private final byte[][] appIdBytes;
+    private final boolean[] appInfoTried;
+    private int appIndex;
     private byte[] appId;
-    private byte[] alternateAppId;
     private String appIdHex;
-    private String alternateAppIdHex;
-    // Probe each compatible UUID at most once during one app-info attempt.
-    private boolean appInfoFallbackTried;
+    // Only this query can complete startup. Other app-info replies are
+    // installation evidence for Garmin Status.
+    private int pendingAppInfo=-1;
     private final String requestedAddress;
     // A link-recovery probe joins the same physical Garmin GATT connection.  It
     // performs service discovery and the idempotent cd28 CCCD write, then sends
@@ -114,10 +115,12 @@ final class DirectGarminIQ {
         final Object message;
         final boolean expectReply;
         final int numbersGeneration;
-        MessageOp(Object message, boolean expectReply,int numbersGeneration) {
+        final String requiredAppId;
+        MessageOp(Object message, boolean expectReply,int numbersGeneration,String requiredAppId) {
             this.message=message;
             this.expectReply=expectReply;
             this.numbersGeneration=numbersGeneration;
+            this.requiredAppId=requiredAppId;
         }
     }
     private final ArrayDeque<MessageOp> messages = new ArrayDeque<>();
@@ -253,41 +256,35 @@ final class DirectGarminIQ {
     private int linkRecoveryToken;
     private int linkRecoveryConnectionId=KERFSTOK_REPLY_CONNECTION_ID;
 
-    DirectGarminIQ(Context context, AllData owner, String appIdHex, String address) {
-        this(context,owner,appIdHex,null,address,0L,false);
-    }
-
-    DirectGarminIQ(Context context, AllData owner, String appIdHex, String address, long peerId) {
-        this(context,owner,appIdHex,null,address,peerId,false);
-    }
-
-    DirectGarminIQ(Context context, AllData owner, String appIdHex, String alternateAppIdHex,
+    DirectGarminIQ(Context context, AllData owner, String appIdHex, List<String> appIds,
                    String address, long peerId) {
-        this(context,owner,appIdHex,alternateAppIdHex,address,peerId,false);
+        this(context,owner,appIdHex,appIds,address,peerId,false);
     }
 
     private DirectGarminIQ(Context context, AllData owner, String selectedAppIdHex,
-                           String otherAppIdHex, String address, long peerId,
+                           List<String> appIds, String address, long peerId,
                            boolean linkProbeOnly) {
         this.context = context.getApplicationContext();
         this.owner = owner;
         this.peerId = peerId;
-        this.appIdHex = selectedAppIdHex.replace("-", "").toLowerCase(java.util.Locale.US);
-        this.appId = GarminIQCodec.hex(this.appIdHex);
-        if (this.appId.length != 16) throw new IllegalArgumentException("Garmin app id must be 16 bytes");
-        if(otherAppIdHex!=null) {
-            this.alternateAppIdHex=otherAppIdHex.replace("-", "").toLowerCase(java.util.Locale.US);
-            this.alternateAppId=GarminIQCodec.hex(this.alternateAppIdHex);
-            if(this.alternateAppId.length!=16) throw new IllegalArgumentException("alternate Garmin app id must be 16 bytes");
-            if(this.alternateAppIdHex.equals(this.appIdHex)) { this.alternateAppId=null; this.alternateAppIdHex=null; }
+        this.appIds = new ArrayList<>(appIds);
+        appIdBytes = new byte[appIds.size()][];
+        appInfoTried = new boolean[appIds.size()];
+        for(int i=0;i<appIds.size();i++) {
+            appIdBytes[i]=GarminIQCodec.hex(appIds.get(i));
+            if(appIdBytes[i].length!=16) throw new IllegalArgumentException("Garmin app id must be 16 bytes");
         }
+        appIndex=appIds.indexOf(selectedAppIdHex);
+        if(appIndex<0) throw new IllegalArgumentException("Unknown Garmin app id");
+        appId=appIdBytes[appIndex];
+        appIdHex=selectedAppIdHex;
         this.requestedAddress = address;
         this.linkProbeOnly = linkProbeOnly;
     }
 
     static DirectGarminIQ linkProbe(Context context, AllData owner, String appIdHex,
                                     String address, long peerId) {
-        return new DirectGarminIQ(context,owner,appIdHex,null,address,peerId,true);
+        return new DirectGarminIQ(context,owner,appIdHex,Collections.singletonList(appIdHex),address,peerId,true);
     }
 
     boolean isActive() { return !stopped; }
@@ -643,15 +640,24 @@ final class DirectGarminIQ {
     /** Queue a normal Connect-IQ object.  The existing AllData application-level
      * acknowledgement remains authoritative; this method only replaces GCM transport. */
     boolean send(Object message) {
-        return enqueueMessage(message,true);
+        return enqueueMessage(message,true,null);
     }
 
     /** Send a Connect-IQ object whose application is not expected to reply. */
     boolean sendNoReply(Object message) {
-        return enqueueMessage(message,false);
+        return sendNoReply(message,null);
     }
 
-    private boolean enqueueMessage(Object message, boolean expectReply) {
+    boolean sendNoReply(Object message,String requiredAppId) {
+        return enqueueMessage(message,false,requiredAppId);
+    }
+
+    private boolean acceptsMessage(MessageOp op) {
+        return (op.requiredAppId==null || op.requiredAppId.equals(appIdHex)) &&
+                owner.acceptsQueuedGarminMessage(peerId,op.message,op.numbersGeneration);
+    }
+
+    private boolean enqueueMessage(Object message, boolean expectReply,String requiredAppId) {
         if (linkProbeOnly || stopped || gracefulStopRequested) return false;
         final int numbersGeneration=owner.numbersGeneration();
         handler.post(new Runnable() {
@@ -662,7 +668,7 @@ final class DirectGarminIQ {
                 java.util.Iterator<MessageOp> pending=messages.iterator();
                 while(pending.hasNext()) {
                     MessageOp queued=pending.next();
-                    if(!owner.acceptsQueuedGarminMessage(peerId,queued.message,queued.numbersGeneration)) pending.remove();
+                    if(!acceptsMessage(queued)) pending.remove();
                 }
                 // Lifecycle retries retain one command while this watch is
                 // offline; ending a sensor invalidates an older queued ADD.
@@ -688,7 +694,7 @@ final class DirectGarminIQ {
                         }
                     }
                 }
-                MessageOp operation=new MessageOp(message,expectReply,numbersGeneration);
+                MessageOp operation=new MessageOp(message,expectReply,numbersGeneration,requiredAppId);
                 // Apply the role before retained history after a START reply.
                 // Libre3 ACK priority is selected in startNextIfPossible().
                 if(isNumberRole(message) || isStart(message)) messages.addFirst(operation);
@@ -1092,22 +1098,29 @@ final class DirectGarminIQ {
     // separate 00 06 openApplication operation is allowed only when an explicit
     // user Reinit armed launchRequested.
     private void beginApplicationInfo() {
-        appInfoFallbackTried=false;
-        queryApplicationInfo();
+        Arrays.fill(appInfoTried,false);
+        queryApplicationInfo(appIndex);
     }
 
-    private void queryApplicationInfo() {
+    private void writeApplicationInfo(int index) {
+        final byte[] query=new byte[18];
+        query[1]=5;
+        System.arraycopy(appIdBytes[index],0,query,2,16);
+        log("query Kerfstok application info peer="+peerId+" app="+appIds.get(index));
+        queueWrite(query);
+    }
+
+    private void queryApplicationInfo(int index) {
         if (stopped || applicationPaused || !ready) return;
         appLaunchOpenSent=false;
         ownerReadyNotified=false;
-        final byte[] query=new byte[18];
-        query[0]=0; query[1]=5;
-        System.arraycopy(appId,0,query,2,16);
-        log("query Kerfstok application info peer="+peerId+" app="+appIdHex);
-        queueWrite(query);
+        pendingAppInfo=index;
+        appInfoTried[index]=true;
+        writeApplicationInfo(index);
         final int token=++appLaunchToken;
         handler.postDelayed(new Runnable() { @Override public void run() {
             if (stopped || !ready || token != appLaunchToken || ownerReadyNotified) return;
+            pendingAppInfo=-1;
             if(launchRequested) {
                 // A CCCD write only proves ATT setup, not a working CIQ
                 // application-control channel. In nostart2, 00 05 and the
@@ -1122,6 +1135,19 @@ final class DirectGarminIQ {
                 finishDirectReady();
             }
         }}, launchRequested ? OPEN_TIMEOUT_MS : APP_INFO_TIMEOUT_MS);
+    }
+
+    private void discoverOtherApps() {
+        for(int i=0;i<appIds.size();i++) {
+            if(!appInfoTried[i]) writeApplicationInfo(i);
+        }
+    }
+
+    void refreshAppInstallations() {
+        handler.post(() -> {
+            if(stopped || !ready || pendingAppInfo>=0 || reinitRequested || appLaunchOpenSent) return;
+            for(int i=0;i<appIds.size();i++) writeApplicationInfo(i);
+        });
     }
 
     private void sendApplicationLaunch() {
@@ -1154,7 +1180,10 @@ final class DirectGarminIQ {
         if (stopped || !ready || ownerReadyNotified) return;
         ownerReadyNotified=true;
         reinitRequested=false;
+        pendingAppInfo=-1;
+        appLaunchOpenSent=false;
         appLaunchToken++;
+        discoverOtherApps();
         owner.onDirectGarminReady(peerId);
         startNextIfPossible();
     }
@@ -1162,6 +1191,7 @@ final class DirectGarminIQ {
     private void resetAppLaunchState() {
         appLaunchToken++;
         appLaunchOpenSent=false;
+        pendingAppInfo=-1;
         ownerReadyNotified=false;
     }
 
@@ -1187,7 +1217,7 @@ final class DirectGarminIQ {
                 return;
             }
             pending.remove();
-            if(owner.acceptsQueuedGarminMessage(peerId,next.message,next.numbersGeneration)) {
+            if(acceptsMessage(next)) {
                 currentOp=next;
                 log("send priority Libre3 return ACK: "+next.message+
                         " reinit="+reinitRequested);
@@ -1207,7 +1237,7 @@ final class DirectGarminIQ {
         if(currentOp==null && (!ownerReadyNotified || messages.isEmpty())) return;
         while(currentOp==null && !messages.isEmpty()) {
             MessageOp next=messages.poll();
-            if(owner.acceptsQueuedGarminMessage(peerId,next.message,next.numbersGeneration)) {
+            if(acceptsMessage(next)) {
                 currentOp=next;
                 break;
             }
@@ -1317,44 +1347,48 @@ final class DirectGarminIQ {
     private void handleApplicationControl(byte[] p) {
         if (p.length < 2) return;
         final int cmd=p[1]&0xff;
-        if (cmd == 5 && p.length >= 18 && sameApp(p,2)) {
+        if (cmd == 5 && p.length >= 18) {
             // 00 05 <app uuid> <version-le16> is getApplicationInfo().
+            final int found=knownApp(p,2);
+            if(found<0) return;
+            final String foundId=appIds.get(found);
+            final boolean startup=found==pendingAppInfo && !applicationTransaction && incomingConnectionId==0;
             if (p.length >= 20) {
                 final int version=(p[18]&0xff)|((p[19]&0xff)<<8);
-                log("Kerfstok application info peer="+peerId+" app="+appIdHex+" version="+version);
-                owner.onDirectGarminAppInfo(peerId,appIdHex,version);
+                log("Kerfstok application info peer="+peerId+" app="+foundId+" version="+version);
+                owner.onDirectGarminAppInfo(peerId,foundId,version,startup);
+                if(!startup) return;
                 if(version==0xffff) {
-                    // The missing-app sentinel is not an installed version.
-                    // Do not launch/open it or reconnect to repeat the same UUID.
-                    // Never redirect a provisioned sensor's queue to the small app.
-                    if(appLaunchOpenSent || ownerReadyNotified || currentMessage!=null ||
-                            applicationTransaction || incomingConnectionId!=0) return;
+                    pendingAppInfo=-1;
                     appLaunchToken++;
-                    if(alternateAppId!=null && !appInfoFallbackTried &&
-                            !owner.isGarminLibre3Direct(peerId)) {
-                        appInfoFallbackTried=true;
-                        switchToAlternateApp();
-                        log("missing Garmin app; query alternate peer="+peerId+" app="+appIdHex);
-                        queryApplicationInfo();
-                    } else {
-                        // Keep the queued messages and existing GATT link. A user
-                        // Reinit or a START from an installed app can retry later.
-                        owner.onDirectGarminError(peerId,null,"Garmin app not installed: "+appIdHex);
+                    for(int i=0;i<appIds.size();i++) {
+                        if(!appInfoTried[i] && owner.canChangeGarminApp(peerId,appIds.get(i))) {
+                            queryApplicationInfo(i);
+                            return;
+                        }
                     }
+                    // Keep the link for a later Reinit or START. Other UUIDs
+                    // can still be discovered while a sensor is assigned.
+                    discoverOtherApps();
+                    boolean allTried=true;
+                    for(boolean tried:appInfoTried) allTried&=tried;
+                    owner.onDirectGarminError(peerId,null,allTried?"No compatible Kerfstok app installed":
+                            "Assigned Kerfstok app not installed: "+appIdHex);
                     return;
                 }
+                if(!owner.canChangeGarminApp(peerId,foundId)) return;
+                setApplication(found);
             } else {
+                if(!startup || found!=appIndex) return;
                 log("Kerfstok application info " + hex(p));
             }
-            // If 00 06 has already been sent for this explicit Reinit, a
-            // duplicate/delayed 00 05 response must not finish the launch early.
-            if(appLaunchOpenSent) return;
+            pendingAppInfo=-1;
             appLaunchToken++;
             if(launchRequested) sendApplicationLaunch();
             else finishDirectReady();
             return;
         }
-        if (cmd == 6 && p.length >= 19 && sameApp(p,2)) {
+        if (cmd == 6 && p.length >= 19 && sameApp(p,2) && appLaunchOpenSent) {
             // openApplication response.  Garmin exposes several symbolic statuses
             // (prompt shown/not shown, already running, ...); the legacy wire value
             // is kept numeric because only completion matters here.
@@ -1412,18 +1446,13 @@ final class DirectGarminIQ {
             // app must not receive a guessed final ACK for the old channel.
             if(cid!=0 && cid==strandedStartupConnectionId) cancelStrandedStartupRecovery();
             // Watch opens an application channel, including unsolicited number
-            // entries. Accept either Juggluco Garmin app. If the other app is now
-            // foreground, switch this already-live Direct transport to its UUID;
-            // there is no reason to reconnect the physical watch.
+            // entries. Follow the foreground app while no sensor assignment
+            // or transaction binds this Direct link to its current app.
             final int appMatch=knownApp(p,2);
             if(appMatch<0) return;
-            if(appMatch==1) {
-                if(currentMessage!=null || connectionId!=0 || incomingConnectionId!=0 || applicationTransaction) {
-                    log("defer alternate Garmin app while transaction active");
-                    return;
-                }
-                switchToAlternateApp();
-            }
+            if(appMatch!=appIndex && (!owner.canChangeGarminApp(peerId,appIds.get(appMatch)) ||
+                    (launchRequested && pendingAppInfo>=0) || appLaunchOpenSent ||
+                    garminConnectProbePaused || !selectApplication(appIds.get(appMatch)))) return;
             // A shared-bearer glucose transfer can be completed from Direct's
             // outbound transport acknowledgement alone. Kerfstok still emits [229],
             // but Garmin Connect is also subscribed and will answer its return
@@ -1514,34 +1543,28 @@ final class DirectGarminIQ {
 
     private boolean sameApp(byte[] p, int off) { return matchesApp(p,off,appId); }
 
-    // 0=current app, 1=the other compatible app, -1=unrelated Connect IQ app.
     private int knownApp(byte[] p,int off) {
-        if(matchesApp(p,off,appId)) return 0;
-        if(matchesApp(p,off,alternateAppId)) return 1;
+        for(int i=0;i<appIdBytes.length;i++) if(matchesApp(p,off,appIdBytes[i])) return i;
         return -1;
     }
 
-    private void switchToAlternateApp() {
-        if(alternateAppId==null) return;
-        byte[] oldId=appId; appId=alternateAppId; alternateAppId=oldId;
-        String oldHex=appIdHex; appIdHex=alternateAppIdHex; alternateAppIdHex=oldHex;
-        resetAppLaunchState();
-        ownerReadyNotified=ready;
-        log("foreground Garmin app changed to "+appIdHex);
+    private void setApplication(int index) {
+        appIndex=index;
+        appId=appIdBytes[index];
+        appIdHex=appIds.get(index);
     }
 
-    /** Switch the Connect-IQ application channel without dropping the physical
-     * BLE link to the Garmin watch. Both compatible app UUIDs were supplied when
-     * this DirectGarminIQ was constructed. */
+    /** Switch the application channel on an idle Direct link. */
     synchronized boolean selectApplication(String wantedHex) {
-        if(wantedHex==null) return false;
-        String wanted=wantedHex.replace("-","").toLowerCase(java.util.Locale.US);
-        if(wanted.equals(appIdHex)) return true;
-        if(alternateAppIdHex!=null && wanted.equals(alternateAppIdHex)) {
-            switchToAlternateApp();
-            return true;
-        }
-        return false;
+        int index=appIds.indexOf(wantedHex);
+        if(index==appIndex) return true;
+        if(index<0 || currentMessage!=null || connectionId!=0 || incomingConnectionId!=0 ||
+                applicationTransaction) return false;
+        setApplication(index);
+        resetAppLaunchState();
+        ownerReadyNotified=ready;
+        log("Direct Garmin app changed to "+appIdHex);
+        return true;
     }
 
     private byte[] incomingKeyPacket(int cid) {
@@ -1648,6 +1671,13 @@ final class DirectGarminIQ {
                         currentOp=null;
                         currentMessage=null;
                         outgoingState=OutgoingState.IDLE;
+                    }
+                    if(ready && !ownerReadyNotified && !launchRequested && !appLaunchOpenSent) {
+                        // A valid incoming message also proves this app is reachable.
+                        pendingAppInfo=-1;
+                        appLaunchToken++;
+                        ownerReadyNotified=true;
+                        discoverOtherApps();
                     }
                     owner.onDirectGarminMessage(peerId,appIdHex,decoded);
                 } catch (Throwable t) {

@@ -29,8 +29,7 @@ import android.os.Build;
 import java.io.IOException;
 import java.util.Arrays;
 
-import static tk.glucodata.Gen2.gen2enablestreaming;
-import static tk.glucodata.Gen2.getuspatch;
+import static tk.glucodata.Gen2.readAuthenticatedFram;
 import static tk.glucodata.Gen2.getversion;
 import static tk.glucodata.Log.doLog;
 import static tk.glucodata.Natives.bluetoothOnKey;
@@ -55,8 +54,11 @@ public class AlgNfcV {
         return nfccmd(tag, new byte[]{38, 1, 0}) != null;
     }
     static boolean enableStreaming(final Tag tag, byte[] info) {
-    if(getversion(info)==2) 
-        return gen2enablestreaming(tag);
+    final int generation=getversion(info);
+    if(BuildConfig.LIBRE2_INDEPENDENT && generation==0)
+        return false;
+    if(generation==2)
+        return Gen2.enableStreaming(tag);
     return EUenableStreaming(tag, info);
     }
 
@@ -134,6 +136,8 @@ public class AlgNfcV {
         log("command=" + activationCommand);
         byte person = 0;
         byte[] activationPayload = Natives.activationpayload(uid, info, person);
+        if(activationPayload==null||activationPayload.length==0)
+            return false;
         {if(doLog) {Log.i(LOG_ID,"Non US libre 2");};};
         byte[] precmd = {2, activationCommand, 7};
         byte[] cmd = new byte[(precmd.length + activationPayload.length)];
@@ -145,6 +149,7 @@ public class AlgNfcV {
             return false;
         }
         }
+        if(BuildConfig.LIBRE2_INDEPENDENT && getversion(info)==0) return true;
         if(enableStreaming(tag, info)) {
             log("Streaming enabled");
             return true;
@@ -280,7 +285,7 @@ static private byte[] nfccmdtimes(final Tag tag, final byte[] cmd,int times) {
 static public byte[] readpatchdata(NfcV nfc, byte[] uid, byte[] info) {
     final  int start=0,len=344;
     final boolean us=getversion(info)==2;
-    return  us?getuspatch(nfc, uid,start, len):readoncedata(nfc, uid,start, len);
+    return us ? readAuthenticatedFram(nfc, uid, start, len) : readoncedata(nfc, uid, start, len);
     }
 
 

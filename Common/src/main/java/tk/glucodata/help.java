@@ -155,7 +155,7 @@ public static void setHtmlIgnoringHtmlColors(TextView textView, String html) {
         cleaned.removeSpan(span);
     }
 
-    textView.setText(cleaned, TextView.BufferType.SPANNABLE);
+    textView.setText( HelpCheckboxAlignment.alignLeft(cleaned,textView), TextView.BufferType.SPANNABLE);
 }
 /*
 public static void setHtmlIgnoringHtmlColors(TextView textView, String html) {

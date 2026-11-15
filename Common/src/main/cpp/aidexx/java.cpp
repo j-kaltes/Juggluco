@@ -72,7 +72,6 @@ static constexpr float AidexTrend2RateOfChange(int trend) {
 static bool savepast(SensorGlucoseData *sens, int id,const struct HistoryGlucose *glu) {
      if(!glu->valid) {
         LOGGER("savepast %d not valid\n",id);
-        return false;
         }
      int mgdL=glu->glucose;
     if(!validGlucose(mgdL)) {
@@ -85,7 +84,7 @@ static bool savepast(SensorGlucoseData *sens, int id,const struct NextGlucose *g
     }
 
  extern void wakewithcurrent();
-static jlong saveGlucose(SensorGlucoseData *sens,bool valid,int id,int mgdL,int trend,jlong &nowmmsec) {
+static jlong saveGlucose(SensorGlucoseData *sens,int id,int mgdL,int trend,jlong &nowmmsec) {
  
     if(!sens->getinfo()->aidexXdat.hasTime) {
         LOGAR("saveGlucose !hasTime");
@@ -102,13 +101,13 @@ static jlong saveGlucose(SensorGlucoseData *sens,bool valid,int id,int mgdL,int 
           }
     sens->timelastcurrent=eventtime;
     sens->lastlifecount=id;
-    if(valid&&mgdL<1023) {
+    if(mgdL<1023) {
         nowmmsec=eventtime*1000LL;
         float rate=AidexTrend2RateOfChange(trend);
         int abbotttrend=rate2changeindex(rate);
         sens->savepollallIDs<60,false>(eventtime,id,mgdL,abbotttrend,rate);
         sens->consecutivelifecount();
-        LOGGER("saveGlucose %d  %d mg/dL %.1f mmol/L rate=%.2f valid\n",id,mgdL,mgdL/18.0f,rate);
+        LOGGER("saveGlucose %d  %d mg/dL %.1f mmol/L rate=%.2f \n",id,mgdL,mgdL/18.0f,rate);
         jlong res;
         if((now-eventtime)<maxbluetoothage) {
              sens->sensorerror=false;
@@ -222,8 +221,8 @@ extern "C" JNIEXPORT jlong JNICALL   fromjava(aidexXscanBytes)(JNIEnv *env, jcla
     CritArSave<jlong> timeres(env,jtimeres);
 
     sens->getinfo()->lastHistoricLifeCountReceivedPos=id;
-    LOGGER("lastHistoricLifeCountReceivedPos=%d\n",id);
-    return saveGlucose(sens,cur->valid,id,cur->glucose,cur->trend,*timeres.data());
+    LOGGER("lastHistoricLifeCountReceivedPos=%d valid=%d\n",id,cur->valid);
+    return saveGlucose(sens,id,cur->glucose,cur->trend,*timeres.data());
     } 
 
 extern int aes_cfb128_encrypt(const unsigned char *plaintext, int plaintext_len, const unsigned char key[16], const unsigned char iv[16], unsigned char *ciphertext);
@@ -386,10 +385,10 @@ static jbyteArray onceOld(JNIEnv *env, SensorGlucoseData *sens,const uint8_t *da
    const int minfromstart=sens->siAddedIndex(preminfromstart); 
 
    const int count=sens->pollcount();
-   LOGGER("onceOld preminfromstart=%d total=%d\n",preminfromstart,minfromstart);
    if(minfromstart>=count) {
+       LOGGER("onceOld preminfromstart=%d total=%d valid=%d\n",preminfromstart,minfromstart,cur->valid);
        jlong mmsec=time(nullptr)*1000LL;
-       jlong res=saveGlucose(sens,cur->valid,minfromstart,cur->glucose,cur->trend,mmsec);
+       jlong res=saveGlucose(sens,minfromstart,cur->glucose,cur->trend,mmsec);
        #ifndef NOLOG
        const uint32_t start=sens->getRestartTime();
        cur->log("onceOld"sv,start);
@@ -622,7 +621,6 @@ static jbyteArray getPastValues(JNIEnv *env, SensorGlucoseData *sens,const uint8
         auto el=histglus[it];
         if(!el.valid)  {
             LOGGER("getPastValues id=%d invalid\n",curID);
-            continue;
             }
          auto glu=el.glucose;
          if(glu<aidexXlowest) {
@@ -833,7 +831,7 @@ static  jlong saveCurrent(SensorGlucoseData *sens,const uint8_t *data,int len,jl
    const CurrentGlucose *cur=reinterpret_cast<const CurrentGlucose*>(data);
 
    const int totalMinfromStart=sens->siAddedIndex(cur->minfromstart); 
-   jlong res=saveGlucose(sens,cur->valid,totalMinfromStart,cur->glucose,cur->trend,time);
+   jlong res=saveGlucose(sens,totalMinfromStart,cur->glucose,cur->trend,time);
    if(data[0]==3) {
         LOGAR("sensor ended");
         return 1LL;

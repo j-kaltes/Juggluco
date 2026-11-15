@@ -291,7 +291,7 @@
     <string name="type">"Тип: "</string>
     <string name="unit">"Порция: "</string>
     <string name="unknown">Неизвестный</string>
-    <string name="unlock_key">Разблок.ключ </string>
+    <string name="handshake">Разблок.ключ </string>
     <string name="use_bluetooth">Исп. Bluetooth</string>
     <string name="uselibreview">Использовать Libreview</string>
     <string name="usessl">Использовать SSL</string>
