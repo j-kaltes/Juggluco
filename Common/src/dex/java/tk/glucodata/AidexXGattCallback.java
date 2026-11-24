@@ -45,6 +45,7 @@ import android.os.Build;
 import androidx.annotation.NonNull;
 
 import java.util.UUID;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 
@@ -99,12 +100,27 @@ public void onDescriptorWrite(BluetoothGatt bluetoothGatt, BluetoothGattDescript
             }
         }
     else {
+        if(mActiveBluetoothDevice.getBondState()==BluetoothDevice.BOND_BONDING) {
+            if(doLog) {Log.i(LOG_ID,"onDescriptorWrite deferring during BOND_BONDING "+cha.getUuid());};
+            pendingbondchar=cha;
+            return;
+            }
         if(instance==privateBondedinstance) {
                enableNotification(bluetoothGatt, charactPrivateBonded);
                }
          else {
            if(instance==privateUnbondedinstance) {
-               enableNotification(bluetoothGatt, charactPrivateUnbonded);
+               if((status==5||status==8||status==15)&&mActiveBluetoothDevice.getBondState()==BluetoothDevice.BOND_NONE) {
+                   if(doLog) {Log.i(LOG_ID,"onDescriptorWrite F001 auth status="+status+", calling createBond");};
+                   pendingbondchar=cha;
+                   if(DexGattCallback.createBond(mActiveBluetoothDevice)) {
+                       return;
+                       }
+                   if(doLog) {Log.i(LOG_ID,"createBond returned false, proceeding to F002");};
+                   }
+               if(doLog) {Log.i(LOG_ID,"onDescriptorWrite F001 failed status="+status+", proceeding to F002");};
+               pendingbondchar=charactPrivateUnbonded;
+               enableNotification(bluetoothGatt, charact);
                }                
             else {
                 enableNotification(bluetoothGatt,charact);
@@ -118,6 +134,8 @@ public void onDescriptorWrite(BluetoothGatt bluetoothGatt, BluetoothGattDescript
 private int bondstate;
 private boolean keywhenconnecting=false;
 private boolean connected=false;
+private boolean sessionstarted=false;
+private BluetoothGattCharacteristic pendingbondchar=null;
     @SuppressLint("MissingPermission")
     @Override
     public void onConnectionStateChange(BluetoothGatt bluetoothGatt, int status, int newState) {
@@ -140,6 +158,10 @@ private boolean connected=false;
              setUnpairMessage("Connecting "+SerialNumber);
              constatchange[0] = tim;
              connected=true;
+             sessionstarted=false;
+             pendingbondchar=null;
+             unbondedwrite=false;
+             unbondedchange=false;
              keywhenconnecting=Natives.aidexHasKey(dataptr)&&bondstate==BOND_BONDED;
              bluetoothGatt.discoverServices();
         } else {
@@ -318,6 +340,7 @@ private byte[] cmdlater;
             };
        int instance= bluetoothGattCharacteristic.getInstanceId();
        if(instance== charactInstance) {
+           sessionstarted=true;
            var cmd = Natives.aidexXstartCommand(keywhenconnecting,dataptr, value);
            if(cmd == null) {
                handshake = "key failed";
@@ -391,16 +414,29 @@ private int changed=0;
 private boolean didOtaControl=false;
 private static final boolean retrywrite=false;
 BooleanConsumer  divorce=null;
+private ScheduledFuture<?> divorcetimeout=null;
+private void cancelDivorceTimeout() {
+    final var fut=divorcetimeout;
+    if(fut!=null) {
+        divorcetimeout=null;
+        fut.cancel(false);
+        }
+    }
+private void startDivorce(BooleanConsumer runa) {
+    cancelDivorceTimeout();
+    divorce=runa;
+    disconnect();
+    divorcetimeout=Applic.scheduler.schedule(() -> { 
+               setUnpairReady(Applic.app.getString(R.string.timedout),false);
+           },130, TimeUnit.SECONDS);
+    }
 void unpair(BooleanConsumer runa) {
     Log.i(LOG_ID,"unpair");
-    divorce=runa;
     Natives.aidexXunpair(dataptr);
-    disconnect();
-     Applic.scheduler.schedule(() -> { 
-               setUnpairReady(Applic.app.getString(R.string.timedout),false);
-           },60, TimeUnit.SECONDS);
+    startDivorce(runa);
     }
 private void divorcer(boolean success) {
+       cancelDivorceTimeout();
        final var di=divorce;
        if(di!=null) {
             Log.i(LOG_ID,"divorcer divorce!=null");
@@ -412,12 +448,8 @@ private void divorcer(boolean success) {
         }
 void clear(BooleanConsumer runa) {
     Log.i(LOG_ID,"clear");
-    divorce=runa;
     Natives.aidexXclear(dataptr);
-    disconnect();
-     Applic.scheduler.schedule(() -> { 
-               setUnpairReady(Applic.app.getString(R.string.timedout),false);
-           },60, TimeUnit.SECONDS);
+    startDivorce(runa);
     }
 private int refreshiter=0;
     @Override // android.bluetooth.BluetoothGattCallback
@@ -459,6 +491,7 @@ private int refreshiter=0;
                                    Log.i(LOG_ID,mess);
                                    setUnpairReady(mess,true);
 //                                   Applic.Toast(mess, Toast.LENGTH_LONG);
+                                   unbond();
                                    disconnect();
                                    return;
                                    }
@@ -623,6 +656,7 @@ public void close() {
    super.close();
    }
 
+@SuppressLint("MissingPermission")
 @Override
 public void bonded() {
     final var bondstate = mActiveBluetoothDevice.getBondState();
@@ -645,9 +679,35 @@ public void bonded() {
         case  BOND_BONDED:  {
             wrotepass[0] = System.currentTimeMillis();
             if(doLog) {Log.i(LOG_ID,"bonded");};
+            final var gatt=mBluetoothGatt;
+            if(gatt!=null&&connected&&!stop&&!keywhenconnecting) {
+                Applic.scheduler.schedule(() -> resumeAfterBond(gatt), 500, TimeUnit.MILLISECONDS);
+                }
             };break;
     }
 }
+
+@SuppressLint("MissingPermission")
+private void resumeAfterBond(BluetoothGatt gatt) {
+    if(mBluetoothGatt!=gatt||!connected||stop)
+        return;
+    final var cha=pendingbondchar;
+    if(cha!=null) {
+        pendingbondchar=null;
+        if(doLog) {Log.i(LOG_ID,"bonded: resuming notification "+cha.getUuid());};
+        enableNotification(gatt, cha);
+        return;
+        }
+    if(!unbondedchange&&charactPrivateUnbonded!=null) {
+        if(doLog) {Log.i(LOG_ID,"bonded: restarting askKey");};
+        askKey(gatt);
+        return;
+        }
+    if(unbondedchange&&!sessionstarted&&charact!=null) {
+        if(doLog) {Log.i(LOG_ID,"bonded: reading F002");};
+        gatt.readCharacteristic(charact);
+        }
+    }
 
 @Override
 public void free() {
@@ -738,6 +798,3 @@ private void       setUnpairReady(String mess,boolean success) {
     divorcer(success);
    }
 }
-
-
-
